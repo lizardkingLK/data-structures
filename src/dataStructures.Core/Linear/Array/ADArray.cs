@@ -125,6 +125,7 @@ public class ADArray<T>
 
     private void GrowArray()
     {
+        Capacity *= 2;
         T?[] tempArray = new T[Capacity * 2];
         int i;
         for (i = 0; i < Capacity; i++)
@@ -132,29 +133,21 @@ public class ADArray<T>
             tempArray[i] = values[i];
         }
 
-        values = new T[Capacity * 2];
-        for (i = 0; i < Capacity; i++)
-        {
-            values[i] = tempArray[i];
-        }
+        values = tempArray;
 
         Capacity *= 2;
     }
 
     private void ShrinkArray()
     {
-        T?[] tempArray = new T[Size];
+        Capacity = Size * 2;
+        T?[] tempArray = new T[Capacity];
         for (int i = 0; i < Size; i++)
         {
             tempArray[i] = values[i];
         }
 
-        Capacity = Size * 2;
-        values = new T[Capacity];
-        for (int i = 0; i < Size; i++)
-        {
-            values[i] = tempArray[i];
-        }
+        values = tempArray;
     }
 
     public void Display(bool? shouldIncludeCapacity = false)
