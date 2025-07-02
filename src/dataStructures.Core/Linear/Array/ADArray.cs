@@ -125,7 +125,6 @@ public class ADArray<T>
 
     private void GrowArray()
     {
-        Capacity *= 2;
         T?[] tempArray = new T[Capacity * 2];
         int i;
         for (i = 0; i < Capacity; i++)
