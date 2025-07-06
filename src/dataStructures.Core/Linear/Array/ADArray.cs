@@ -149,6 +149,21 @@ public class ADArray<T>
         values = tempArray;
     }
 
+    public T? GetValue(int index)
+    {
+        if (Size == 0)
+        {
+            throw new Exception("error. array is empty");
+        }
+
+        if (index < 0 || index > Size - 1)
+        {
+            throw new Exception("error. index is invalid");
+        }
+
+        return values[index];
+    }
+
     public void Display(bool? shouldIncludeCapacity = false)
     {
         Console.WriteLine("\ninfo. elements of dynamic array below");
