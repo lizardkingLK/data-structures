@@ -42,13 +42,13 @@ public class AHashMap<K, V>
     public void Insert(K key, V value)
     {
         ArgumentNullException.ThrowIfNull(key, nameof(key));
-        if (Size / Capacity > LOAD_FACTOR)
+        if (Size / Capacity > LoadFactor)
         {
             ReHash();
         }
 
         ALinkedList<HashNode<K, V>> bucketValues = GetBucketForKey(key);
-        HashNode<K, V>? existingNode = Search(key);
+        HashNode<K, V>? existingNode = Search(bucketValues, key);
         if (existingNode.HasValue)
         {
             throw new Exception("error. cannot insert. key already exist");
@@ -63,7 +63,7 @@ public class AHashMap<K, V>
         ArgumentNullException.ThrowIfNull(key, nameof(key));
 
         ALinkedList<HashNode<K, V>> bucketValues = GetBucketForKey(key);
-        HashNode<K, V>? existingNode = Search(key);
+        HashNode<K, V>? existingNode = Search(bucketValues, key);
         if (!existingNode.HasValue)
         {
             throw new Exception("error. cannot remove. key does not exist");
@@ -75,16 +75,19 @@ public class AHashMap<K, V>
         return existingNode.Value;
     }
 
-    public HashNode<K, V>? Search(K key)
+    public HashNode<K, V>? Search(ALinkedList<HashNode<K, V>> bucketValues, K key)
     {
-        ALinkedList<HashNode<K, V>> bucketValues = GetBucketForKey(key);
-        HashNode<K, V>? value = bucketValues.Search(hashNode => hashNode.Key!.Equals(key));
+        if (bucketValues.Search(hashNode => hashNode.Key!.Equals(key), out HashNode<K, V> value))
+        {
+            return value;
+        }
 
-        return value;
+        return null;
     }
 
     public void Display()
     {
+        Console.WriteLine("info. DISPLAYING VALUES OF HASHMAP/////////////////");
         for (int i = 0; i < Capacity; i++)
         {
             Console.WriteLine("bucket index {0} values are below", i);
@@ -95,7 +98,39 @@ public class AHashMap<K, V>
 
     private void ReHash()
     {
+        int newCapacity = Capacity * 2;
+        ADArray<ALinkedList<HashNode<K, V>>> tempBuckets = new(newCapacity);
+        int i;
+        for (i = 0; i < newCapacity; i++)
+        {
+            tempBuckets.Insert(i, new());
+        }
 
+        ALinkedList<HashNode<K, V>>? currentBucket;
+        IEnumerator<HashNode<K, V>> currentBucketEnumerator;
+        HashNode<K, V> currentHashNode;
+        int newHashCode;
+        ALinkedList<HashNode<K, V>> newBucket;
+        for (i = 0; i < Capacity; i++)
+        {
+            currentBucket = buckets.GetValue(i);
+            if (currentBucket == null)
+            {
+                throw new NullReferenceException(nameof(currentBucket));
+            }
+
+            currentBucketEnumerator = currentBucket.GetEnumerator();
+            while (currentBucketEnumerator.MoveNext())
+            {
+                currentHashNode = currentBucketEnumerator.Current;
+                newHashCode = GetHashCodeValue(currentHashNode.Key, newCapacity);
+                newBucket = tempBuckets.GetValue(newHashCode)!;
+                newBucket.InsertToEnd(currentHashNode);
+            }
+        }
+
+        Capacity = newCapacity;
+        buckets = tempBuckets;
     }
 
     private ALinkedList<HashNode<K, V>> GetBucketForKey(K key)
@@ -107,12 +142,14 @@ public class AHashMap<K, V>
         return bucketValues;
     }
 
-    private int GetHashCodeValue(K key)
+    private int GetHashCodeValue(K key, int? newCapacity = null)
     {
+        newCapacity ??= Capacity;
+
         int value = -1;
         if (typeof(K) == typeof(int))
         {
-            return GetHashCodeValueForInt(int.Parse(key?.ToString() ?? string.Empty));
+            return GetHashCodeValueForInt(int.Parse(key?.ToString() ?? string.Empty), newCapacity.Value);
         }
 
         if (typeof(K) == typeof(string))
@@ -135,9 +172,9 @@ public class AHashMap<K, V>
         return hashCode;
     }
 
-    private int GetHashCodeValueForInt(int key)
+    private static int GetHashCodeValueForInt(int key, int capacity)
     {
-        return key % Capacity;
+        return key % capacity;
     }
 
     private static int GetPowerForValue(int baseValue, int powerValue, int currentValue = 1)

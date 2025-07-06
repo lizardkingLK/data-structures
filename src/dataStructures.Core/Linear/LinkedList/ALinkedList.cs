@@ -54,9 +54,14 @@ public class ALinkedList<T>
 
     public LinkNode<T>? RemoveFromEnd()
     {
-        LinkNode<T>? parent = null;
         LinkNode<T>? current = Head;
-        while (current?.Next != null)
+        if (current == null)
+        {
+            return default;
+        }
+
+        LinkNode<T>? parent = null;
+        while (current.Next != null)
         {
             parent = current;
             current = current.Next;
@@ -82,8 +87,19 @@ public class ALinkedList<T>
 
     public LinkNode<T>? RemoveLinkNodeAtFirstOccurrence(T value)
     {
-        LinkNode<T>? parent = null;
         LinkNode<T>? current = Head;
+        if (current == null)
+        {
+            return default;
+        }
+
+        if (current.Value!.Equals(value))
+        {
+            Head = Head!.Next;
+            return current;
+        }
+
+        LinkNode<T>? parent = null;
         while (current != null)
         {
             if (current.Value!.Equals(value))
@@ -99,21 +115,35 @@ public class ALinkedList<T>
         return current;
     }
 
-    public T? Search(Func<T, bool> searchFunction)
+    public bool Search(Func<T, bool> searchFunction, out T? value)
     {
+        bool foundValue = false;
+
+        value = default;
         LinkNode<T>? current = Head;
-        T? value = default;
         while (current != null)
         {
             if (searchFunction(current.Value))
             {
                 value = current.Value;
+                foundValue = true;
                 break;
             }
 
             current = current.Next;
         }
 
-        return value;
+        return foundValue;
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        LinkNode<T>? current = Head;
+        while (current != null)
+        {
+            yield return current.Value;
+
+            current = current.Next;
+        }
     }
 }

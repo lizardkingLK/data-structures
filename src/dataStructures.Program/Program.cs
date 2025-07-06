@@ -225,13 +225,22 @@ class Program
 
     private static void TestAHashSet()
     {
-        AHashMap<int, int> hashSet = new(13, .5f);
-        hashSet.Insert(1, 11);
+        AHashMap<int, int> hashSet = new(2, .5f);
+        hashSet.Insert(2, 11);
+        hashSet.Insert(4, 22);
         hashSet.Display();
-        return;
-        hashSet.Insert(2, 22);
 
-        hashSet.Remove(1);
+        hashSet.Insert(3, 33);
+        hashSet.Display();
+
+        hashSet.Insert(1, 0);
+        hashSet.Display();
+
+        hashSet.Insert(8, 44);
+        hashSet.Insert(12, 122);
+        hashSet.Display();
+
+        hashSet.Remove(12);
         hashSet.Display();
     }
 
