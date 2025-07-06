@@ -1,6 +1,7 @@
 ﻿using dataStructures.Core.Linear.Array;
 using dataStructures.Core.Linear.LinkedList;
 using dataStructures.Core.Linear.Queue;
+using dataStructures.Core.NonLinear.HashMap;
 using dataStructures.Core.Shared;
 
 namespace dataStructures.Program;
@@ -155,6 +156,9 @@ class Program
     private static void TestADArray()
     {
         ADArray<int> dArray = new(2);
+        dArray.Add(0);
+        Console.WriteLine(dArray.GetValue(0));
+
         dArray.Add(1);
         dArray.Add(2);
         dArray.Display();
@@ -219,13 +223,27 @@ class Program
         throw new NotImplementedException();
     }
 
+    private static void TestAHashSet()
+    {
+        AHashMap<int, int> hashSet = new(13, .5f);
+        hashSet.Insert(1, 11);
+        hashSet.Display();
+        return;
+        hashSet.Insert(2, 22);
+
+        hashSet.Remove(1);
+        hashSet.Display();
+    }
+
     static void Main()
     {
-        TestADArray();
+        TestAHashSet();
+        // TestADArray();
         // TestAStack();
         // TestAQueue();
         // TestACQueue();
         // TestALinkedList();
         // TestADLinkedList();
     }
+
 }

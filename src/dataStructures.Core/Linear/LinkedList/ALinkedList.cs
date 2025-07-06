@@ -54,14 +54,9 @@ public class ALinkedList<T>
 
     public LinkNode<T>? RemoveFromEnd()
     {
-        LinkNode<T>? current = Head;
-        if (current == null)
-        {
-            return default;
-        }
-
         LinkNode<T>? parent = null;
-        while (current.Next != null)
+        LinkNode<T>? current = Head;
+        while (current?.Next != null)
         {
             parent = current;
             current = current.Next;
@@ -87,19 +82,8 @@ public class ALinkedList<T>
 
     public LinkNode<T>? RemoveLinkNodeAtFirstOccurrence(T value)
     {
-        LinkNode<T>? current = Head;
-        if (current == null)
-        {
-            return default;
-        }
-
-        if (current.Value!.Equals(value))
-        {
-            Head = Head!.Next;
-            return current;
-        }
-
         LinkNode<T>? parent = null;
+        LinkNode<T>? current = Head;
         while (current != null)
         {
             if (current.Value!.Equals(value))
@@ -113,5 +97,23 @@ public class ALinkedList<T>
         }
 
         return current;
+    }
+
+    public T? Search(Func<T, bool> searchFunction)
+    {
+        LinkNode<T>? current = Head;
+        T? value = default;
+        while (current != null)
+        {
+            if (searchFunction(current.Value))
+            {
+                value = current.Value;
+                break;
+            }
+
+            current = current.Next;
+        }
+
+        return value;
     }
 }
