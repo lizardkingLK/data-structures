@@ -10,9 +10,9 @@ public class AHashMap<K, V>
 
     public const float LOAD_FACTOR = .75f;
 
-    public int Capacity { get; private set; } = CAPACITY;
+    public int Capacity { get; private set; }
 
-    public float LoadFactor { get; private set; } = LOAD_FACTOR;
+    public float LoadFactor { get; private set; }
 
     public int Size { get; private set; } = 0;
 
@@ -20,7 +20,14 @@ public class AHashMap<K, V>
 
     public AHashMap()
     {
+        Capacity = CAPACITY;
+        LoadFactor = LOAD_FACTOR;
+
         buckets = new(Capacity);
+        for (int i = 0; i < Capacity; i++)
+        {
+            buckets.Insert(i, new());
+        }
     }
 
     public AHashMap(int capacity, float loadFactor)
@@ -84,7 +91,7 @@ public class AHashMap<K, V>
 
         return null;
     }
-
+    
     public void Display()
     {
         Console.WriteLine("info. DISPLAYING VALUES OF HASHMAP/////////////////");
@@ -154,13 +161,13 @@ public class AHashMap<K, V>
 
         if (typeof(K) == typeof(string))
         {
-            return GetHashCodeValueForString(key?.ToString() ?? string.Empty);
+            return GetHashCodeValueForString(key?.ToString() ?? string.Empty, newCapacity.Value);
         }
 
         return value;
     }
 
-    private static int GetHashCodeValueForString(string key)
+    private static int GetHashCodeValueForString(string key, int capacity)
     {
         int length = key.Length;
         int hashCode = 0;
@@ -169,7 +176,7 @@ public class AHashMap<K, V>
             hashCode += key[i] * GetPowerForValue(31, length - i - 1);
         }
 
-        return hashCode;
+        return hashCode % capacity;
     }
 
     private static int GetHashCodeValueForInt(int key, int capacity)
