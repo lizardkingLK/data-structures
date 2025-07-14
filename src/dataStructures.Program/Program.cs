@@ -244,15 +244,38 @@ class Program
         hashSet.Display();
     }
 
+    private static void TestADeque()
+    {
+        LinkNode<int> front = new(1);
+        ADeque<int> deq1 = new(front);
+
+        deq1.InsertToRear(2);
+        deq1.InsertToRear(3);
+        // deq1.DisplayFrontToRear();
+
+        deq1.InsertToFront(0);
+        deq1.InsertToFront(-1);
+        deq1.InsertToFront(-2);
+        deq1.InsertToFront(-3);
+        // deq1.DisplayFrontToRear();
+
+        deq1.RemoveFromRear();
+        deq1.RemoveFromFront();
+        // deq1.DisplayFrontToRear();
+
+        Console.WriteLine(deq1.SeekFront());
+        Console.WriteLine(deq1.SeekRear());
+    }
+
     static void Main()
     {
-        TestAHashSet();
+        // TestAHashSet();
         // TestADArray();
         // TestAStack();
         // TestAQueue();
         // TestACQueue();
         // TestALinkedList();
         // TestADLinkedList();
+        TestADeque();
     }
-
 }
