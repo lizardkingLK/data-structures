@@ -48,9 +48,11 @@ public class ADeque<T>(LinkNode<T> head)
 		LinkNode<T>? headNode = front;
 		while (headNode != null)
 		{
-			Console.WriteLine(headNode.Value);
+			Console.Write($"{headNode.Value} ");
 			headNode = headNode.Next;
 		}
+
+		Console.WriteLine();
 	}
 
 	public T RemoveFromRear()
@@ -82,9 +84,11 @@ public class ADeque<T>(LinkNode<T> head)
 		LinkNode<T>? tailNode = rear;
 		while (tailNode != null)
 		{
-			Console.WriteLine(tailNode.Value);
+			Console.Write($"{tailNode.Value} ");
 			tailNode = tailNode.Previous;
 		}
+
+		Console.WriteLine();
 	}
 
 	public T SeekRear()
