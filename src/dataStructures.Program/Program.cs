@@ -261,8 +261,8 @@ class Program
 
         deq1.RemoveFromRear();
         deq1.RemoveFromFront();
-        // deq1.DisplayFrontToRear();
-
+        // deq1.DisplayRearToFront();
+        
         Console.WriteLine(deq1.SeekFront());
         Console.WriteLine(deq1.SeekRear());
     }

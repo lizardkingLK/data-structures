@@ -77,6 +77,16 @@ public class ADeque<T>(LinkNode<T> head)
 		return headNode.Value;
 	}
 
+	public void DisplayRearToFront()
+	{
+		LinkNode<T>? tailNode = rear;
+		while (tailNode != null)
+		{
+			Console.WriteLine(tailNode.Value);
+			tailNode = tailNode.Previous;
+		}
+	}
+
 	public T SeekRear()
 	{
 		LinkNode<T>? tailNode = rear
