@@ -246,8 +246,7 @@ class Program
 
     private static void TestADeque()
     {
-        LinkNode<int> front = new(1);
-        ADeque<int> deq1 = new(front);
+        ADeque<int> deq1 = new(1);
 
         deq1.InsertToRear(2);
         deq1.InsertToRear(3);
