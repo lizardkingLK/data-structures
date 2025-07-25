@@ -8,7 +8,7 @@ namespace dataStructures.Program;
 
 class Program
 {
-    static void TestAQueue()
+    static void TestQueue()
     {
         AQueue<int> queue = new(3);
         queue.Insert(1);
@@ -42,7 +42,7 @@ class Program
         Console.WriteLine(peeked5);
     }
 
-    static void TestACQueue()
+    static void TestCQueue()
     {
         ACQueue<int> queue = new(5);
 
@@ -84,9 +84,9 @@ class Program
         Console.WriteLine(peeked);
     }
 
-    static void TestALinkedList()
+    static void TestLinkedList()
     {
-        ALinkedList<int> linkedList = new()
+        Core.Linear.LinkedList.LinkedList<int> linkedList = new()
         {
             Head = new(1, null)
         };
@@ -124,9 +124,9 @@ class Program
         linkedList.Display();
     }
 
-    static void TestADLinkedList()
+    static void TestDLinkedList()
     {
-        ADLinkedList<int> linkedList = new();
+        DoublyLinkedList<int> linkedList = new();
         linkedList.InsertToFront(3);
         linkedList.InsertToFront(2);
         linkedList.InsertToFront(1);
@@ -141,7 +141,7 @@ class Program
 
         linkedList.RemoveFromEnd();
         // linkedList.DisplayForwardWay(1);
-        // linkedList.DisplayBackwardWay(5);
+        linkedList.DisplayBackwardWay(5);
 
         linkedList.RemoveFromFront();
         linkedList.DisplayForwardWay(2);
@@ -153,9 +153,9 @@ class Program
         // linkedList.DisplayBackwardWay(6);
     }
 
-    private static void TestADArray()
+    private static void TestDArray()
     {
-        ADArray<int> dArray = new(2);
+        DynamicArray<int> dArray = new(2);
         dArray.Add(0);
         Console.WriteLine(dArray.GetValue(0));
 
@@ -218,35 +218,35 @@ class Program
         dArray.Display(true);
     }
 
-    private static void TestAStack()
+    private static void TestStack()
     {
         throw new NotImplementedException();
     }
 
-    private static void TestAHashSet()
+    private static void TesthashMap()
     {
-        AHashMap<int, int> hashSet = new(2, .5f);
-        hashSet.Insert(2, 11);
-        hashSet.Insert(4, 22);
-        hashSet.Display();
+        HashMap<int, int> hashMap = new(2, .5f);
+        hashMap.Insert(2, 11);
+        hashMap.Insert(4, 22);
+        hashMap.Display();
 
-        hashSet.Insert(3, 33);
-        hashSet.Display();
+        hashMap.Insert(3, 33);
+        hashMap.Display();
 
-        hashSet.Insert(1, 0);
-        hashSet.Display();
+        hashMap.Insert(1, 0);
+        hashMap.Display();
 
-        hashSet.Insert(8, 44);
-        hashSet.Insert(12, 122);
-        hashSet.Display();
+        hashMap.Insert(8, 44);
+        hashMap.Insert(12, 122);
+        hashMap.Display();
 
-        hashSet.Remove(12);
-        hashSet.Display();
+        hashMap.Remove(12);
+        hashMap.Display();
     }
 
-    private static void TestADeque()
+    private static void TestDeque()
     {
-        ADeque<int> deq1 = new(1);
+        Deque<int> deq1 = new(1);
 
         deq1.InsertToRear(2);
         deq1.InsertToRear(3);
@@ -267,13 +267,13 @@ class Program
 
     static void Main()
     {
-        // TestAHashSet();
-        // TestADArray();
-        // TestAStack();
-        // TestAQueue();
-        // TestACQueue();
-        // TestALinkedList();
-        // TestADLinkedList();
-        TestADeque();
+        TesthashMap();
+        // TestDArray();
+        // TestStack();
+        // TestQueue();
+        // TestCQueue();
+        // TestLinkedList();
+        // TestDLinkedList();
+        // TestDeque();
     }
 }

@@ -1,13 +1,20 @@
 namespace dataStructures.Core.Shared;
 
-public struct HashNode<K, V>(K key, V value)
+public record HashNode<K, V>
 {
-    public readonly K Key { get; } = key;
+    public K Key { get; init; }
 
-    public V Value { get; set; } = value;
+    public V Value { get; set; }
 
-    public override readonly string ToString()
+    public HashNode(K key, V value)
     {
-        return string.Format("Key = {0}, Value = {1}", Key, Value);
+        Key = key;
+        Value = value;
+    }
+
+    public void Deconstruct(out K key, out V value)
+    {
+        key = Key;
+        value = Value;
     }
 }

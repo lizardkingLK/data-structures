@@ -2,7 +2,7 @@ using dataStructures.Core.Shared;
 
 namespace dataStructures.Core.Linear.LinkedList;
 
-public class ADLinkedList<T>
+public class DoublyLinkedList<T>
 {
     public LinkNode<T>? Head { get; set; }
 
@@ -52,21 +52,6 @@ public class ADLinkedList<T>
         }
 
 
-    }
-
-    public void DisplayForwardWay(T value)
-    {
-        Console.WriteLine("info. {0} from {1}", nameof(DisplayForwardWay), value);
-        if (!FindValue(value, out LinkNode<T>? current))
-        {
-            return;
-        }
-
-        while (current != null)
-        {
-            Console.WriteLine(current.Value);
-            current = current.Next;
-        }
     }
 
     private bool FindValue(T? value, out LinkNode<T>? current)
@@ -139,6 +124,21 @@ public class ADLinkedList<T>
         current.Next!.Previous = previous;
 
         return current;
+    }
+
+    public void DisplayForwardWay(T value)
+    {
+        Console.WriteLine("info. {0} from {1}", nameof(DisplayForwardWay), value);
+        if (!FindValue(value, out LinkNode<T>? current))
+        {
+            return;
+        }
+
+        while (current != null)
+        {
+            Console.WriteLine(current.Value);
+            current = current.Next;
+        }
     }
 
     public void DisplayBackwardWay(T value)
