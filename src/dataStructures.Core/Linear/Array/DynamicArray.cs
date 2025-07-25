@@ -1,6 +1,6 @@
 namespace dataStructures.Core.Linear.Array;
 
-public class ADArray<T>
+public class DynamicArray<T>
 {
     public int Capacity { get; private set; } = 1;
 
@@ -8,12 +8,12 @@ public class ADArray<T>
 
     public T?[] values;
 
-    public ADArray()
+    public DynamicArray()
     {
         values = new T[Capacity];
     }
 
-    public ADArray(int capacity)
+    public DynamicArray(int capacity)
     {
         if (capacity <= 0)
         {
@@ -123,6 +123,91 @@ public class ADArray<T>
         return removed;
     }
 
+    public T? Remove(T? value)
+    {
+        if (Size == 0)
+        {
+            throw new Exception("error. cannot remove, array is empty");
+        }
+
+        T? removed = default;
+        int i;
+        for (i = 0; i < Size; i++)
+        {
+            removed = values[i];
+            if (ReferenceEquals(value, removed))
+            {
+                break;
+            }
+        }
+
+        int index = i;
+
+        values[index] = default;
+        int length = Size - i - 1;
+        for (i = 0; i < length; i++)
+        {
+            value = values[index + 1 + i];
+            values[index + 1 + i] = default;
+            values[index + i] = value;
+        }
+
+        Size--;
+        if (Size <= Capacity / 3)
+        {
+            ShrinkArray();
+        }
+
+        return removed;
+    }
+
+    public T? Remove(Func<T, bool> searchFunction)
+    {
+        for (int i = 0; i < Size; i++)
+        {
+            if (searchFunction(values[i]!))
+            {
+                return Remove(i);
+            }
+        }
+
+        return default;
+    }
+
+    public T? GetValue(int index)
+    {
+        if (Size == 0)
+        {
+            throw new Exception("error. array is empty");
+        }
+
+        if (index < 0 || index > Size - 1)
+        {
+            throw new Exception("error. index is invalid");
+        }
+
+        return values[index];
+    }
+
+    public bool TryGetValue(int index, out T? value)
+    {
+        value = default;
+
+        if (Size == 0 || index < 0 || index > Size - 1)
+        {
+            return false;
+        }
+
+        value = values[index];
+
+        return true;
+    }
+
+    public T?[] ToArray()
+    {
+        return values;
+    }
+
     private void GrowArray()
     {
         T?[] tempArray = new T[Capacity * 2];
@@ -147,21 +232,6 @@ public class ADArray<T>
         }
 
         values = tempArray;
-    }
-
-    public T? GetValue(int index)
-    {
-        if (Size == 0)
-        {
-            throw new Exception("error. array is empty");
-        }
-
-        if (index < 0 || index > Size - 1)
-        {
-            throw new Exception("error. index is invalid");
-        }
-
-        return values[index];
     }
 
     public void Display(bool? shouldIncludeCapacity = false)

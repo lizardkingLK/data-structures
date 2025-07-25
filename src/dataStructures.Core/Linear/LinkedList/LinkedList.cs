@@ -2,7 +2,7 @@ using dataStructures.Core.Shared;
 
 namespace dataStructures.Core.Linear.LinkedList;
 
-public class ALinkedList<T>
+public class LinkedList<T>
 {
     public LinkNode<T>? Head { get; set; }
 

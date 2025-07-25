@@ -1,10 +1,9 @@
 using dataStructures.Core.Linear.Array;
-using dataStructures.Core.Linear.LinkedList;
 using dataStructures.Core.Shared;
 
 namespace dataStructures.Core.NonLinear.HashMap;
 
-public class AHashMap<K, V>
+public class HashMap<K, V>
 {
     public const int CAPACITY = 11;
 
@@ -16,9 +15,9 @@ public class AHashMap<K, V>
 
     public int Size { get; private set; } = 0;
 
-    private ADArray<ALinkedList<HashNode<K, V>>> buckets;
+    private DynamicArray<Linear.LinkedList.LinkedList<HashNode<K, V>>> buckets;
 
-    public AHashMap()
+    public HashMap()
     {
         Capacity = CAPACITY;
         LoadFactor = LOAD_FACTOR;
@@ -30,7 +29,7 @@ public class AHashMap<K, V>
         }
     }
 
-    public AHashMap(int capacity, float loadFactor)
+    public HashMap(int capacity, float loadFactor)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(capacity);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(loadFactor, 0.1f, nameof(loadFactor));
@@ -54,14 +53,12 @@ public class AHashMap<K, V>
             ReHash();
         }
 
-        ALinkedList<HashNode<K, V>> bucketValues = GetBucketForKey(key);
-        HashNode<K, V>? existingNode = Search(bucketValues, key);
-        if (existingNode.HasValue)
+        if (TryGetValue(key, out var bucketValues, out _))
         {
             throw new Exception("error. cannot insert. key already exist");
         }
 
-        bucketValues.InsertToEnd(new(key, value));
+        bucketValues!.InsertToEnd(new(key, value));
         Size++;
     }
 
@@ -69,55 +66,58 @@ public class AHashMap<K, V>
     {
         ArgumentNullException.ThrowIfNull(key, nameof(key));
 
-        ALinkedList<HashNode<K, V>> bucketValues = GetBucketForKey(key);
-        HashNode<K, V>? existingNode = Search(bucketValues, key);
-        if (!existingNode.HasValue)
+        if (!TryGetValue(key, out Linear.LinkedList.LinkedList<HashNode<K, V>>? bucketValues, out _))
         {
             throw new Exception("error. cannot remove. key does not exist");
         }
 
-        bucketValues.RemoveLinkNodeAtFirstOccurrence(existingNode.Value);
+        HashNode<K, V>? existingNode = HashMap<K, V>.Search(bucketValues!, key);
+        bucketValues!.RemoveLinkNodeAtFirstOccurrence(existingNode!);
         Size--;
 
-        return existingNode.Value;
+        return existingNode!;
     }
 
-    public HashNode<K, V>? Search(ALinkedList<HashNode<K, V>> bucketValues, K key)
+    public bool TryGetValue(K key, out Linear.LinkedList.LinkedList<HashNode<K, V>>? bucketValues, out V? value)
     {
-        if (bucketValues.Search(hashNode => hashNode.Key!.Equals(key), out HashNode<K, V> value))
+        value = default;
+
+        bucketValues = GetBucketForKey(key);
+        HashNode<K, V>? existingNode = HashMap<K, V>.Search(bucketValues, key);
+        if (existingNode != null)
+        {
+            value = existingNode.Value;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static HashNode<K, V>? Search(Linear.LinkedList.LinkedList<HashNode<K, V>> bucketValues, K key)
+    {
+        if (bucketValues.Search(hashNode => hashNode.Key!.Equals(key), out HashNode<K, V>? value))
         {
             return value;
         }
 
         return null;
     }
-    
-    public void Display()
-    {
-        Console.WriteLine("info. DISPLAYING VALUES OF HASHMAP/////////////////");
-        for (int i = 0; i < Capacity; i++)
-        {
-            Console.WriteLine("bucket index {0} values are below", i);
-            buckets.GetValue(i)!.Display();
-            Console.WriteLine();
-        }
-    }
 
     private void ReHash()
     {
         int newCapacity = Capacity * 2;
-        ADArray<ALinkedList<HashNode<K, V>>> tempBuckets = new(newCapacity);
+        DynamicArray<Linear.LinkedList.LinkedList<HashNode<K, V>>> tempBuckets = new(newCapacity);
         int i;
         for (i = 0; i < newCapacity; i++)
         {
             tempBuckets.Insert(i, new());
         }
 
-        ALinkedList<HashNode<K, V>>? currentBucket;
+        Linear.LinkedList.LinkedList<HashNode<K, V>>? currentBucket;
         IEnumerator<HashNode<K, V>> currentBucketEnumerator;
         HashNode<K, V> currentHashNode;
         int newHashCode;
-        ALinkedList<HashNode<K, V>> newBucket;
+        Linear.LinkedList.LinkedList<HashNode<K, V>> newBucket;
         for (i = 0; i < Capacity; i++)
         {
             currentBucket = buckets.GetValue(i);
@@ -140,43 +140,47 @@ public class AHashMap<K, V>
         buckets = tempBuckets;
     }
 
-    private ALinkedList<HashNode<K, V>> GetBucketForKey(K key)
+    private Linear.LinkedList.LinkedList<HashNode<K, V>> GetBucketForKey(K key)
     {
         int hashCode = GetHashCodeValue(key);
-        ALinkedList<HashNode<K, V>> bucketValues = buckets.GetValue(hashCode)
-            ?? throw new NullReferenceException("error. bucket for key does not exist");
+        if (!buckets.TryGetValue(hashCode, out Linear.LinkedList.LinkedList<HashNode<K, V>>? bucketValues))
+        {
+            throw new NullReferenceException("error. bucket for key does not exist");
+        }
 
-        return bucketValues;
+        return bucketValues!;
     }
 
     private int GetHashCodeValue(K key, int? newCapacity = null)
     {
         newCapacity ??= Capacity;
 
-        int value = -1;
-        if (typeof(K) == typeof(int))
+        Type typeofK = typeof(K);
+        if (typeofK == typeof(int))
         {
             return GetHashCodeValueForInt(int.Parse(key?.ToString() ?? string.Empty), newCapacity.Value);
         }
 
-        if (typeof(K) == typeof(string))
-        {
-            return GetHashCodeValueForString(key?.ToString() ?? string.Empty, newCapacity.Value);
-        }
-
-        return value;
+        return GetHashCodeValueForString(key?.ToString() ?? string.Empty, newCapacity.Value);
     }
 
     private static int GetHashCodeValueForString(string key, int capacity)
     {
         int length = key.Length;
-        int hashCode = 0;
+        long hashCode = 0;
         for (int i = 0; i < length; i++)
         {
             hashCode += key[i] * GetPowerForValue(31, length - i - 1);
         }
 
-        return hashCode % capacity;
+        return GetAbsoluteHashCodeValue((int)hashCode % capacity);
+    }
+
+    private static int GetAbsoluteHashCodeValue(int value)
+    {
+        int signBit = value >> 31;
+
+        return (value ^ signBit) - signBit;
     }
 
     private static int GetHashCodeValueForInt(int key, int capacity)
@@ -192,5 +196,16 @@ public class AHashMap<K, V>
         }
 
         return GetPowerForValue(baseValue, powerValue - 1, currentValue * baseValue);
+    }
+
+    public void Display()
+    {
+        Console.WriteLine("info. DISPLAYING VALUES OF HASHMAP/////////////////");
+        for (int i = 0; i < Capacity; i++)
+        {
+            Console.WriteLine("bucket index {0} values are below", i);
+            buckets.GetValue(i)!.Display();
+            Console.WriteLine();
+        }
     }
 }

@@ -2,13 +2,17 @@ using dataStructures.Core.Shared;
 
 namespace dataStructures.Core.Linear.Queue;
 
-public class ADeque<T>
+public class Deque<T>
 {
     private LinkNode<T>? front;
     private LinkNode<T>? rear;
     public int Size { get; set; }
 
-    public ADeque(T head)
+    public Deque()
+    {
+    }
+
+    public Deque(T head)
     {
         front = new(head);
         rear = front;
@@ -99,6 +103,24 @@ public class ADeque<T>
         }
 
         Console.WriteLine();
+    }
+
+    public T? SearchValue(int index)
+    {
+        LinkNode<T>? currentNode = front;
+        int i = 0;
+        while (currentNode != null && i <= index)
+        {
+            currentNode = currentNode.Next;
+            i++;
+        }
+
+        if (currentNode == null)
+        {
+            return default;
+        }
+
+        return currentNode.Value;
     }
 
     public T SeekRear()
