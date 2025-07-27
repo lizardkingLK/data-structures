@@ -1,6 +1,6 @@
 namespace dataStructures.Core.Linear.Queue;
 
-public class ACQueue<T>(int size)
+public class CircularQueue<T>(int size)
 {
     private int front = 0;
 
