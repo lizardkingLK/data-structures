@@ -44,7 +44,7 @@ class Program
 
     static void TestCQueue()
     {
-        ACQueue<int> queue = new(5);
+        CircularQueue<int> queue = new(5);
 
         queue.Insert(1);
         queue.Insert(2);

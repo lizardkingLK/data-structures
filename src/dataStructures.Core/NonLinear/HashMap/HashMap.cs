@@ -78,7 +78,33 @@ public class HashMap<K, V>
         return existingNode!;
     }
 
-    public bool TryGetValue(K key, out Linear.LinkedList.LinkedList<HashNode<K, V>>? bucketValues, out V? value)
+    public void Display()
+    {
+        Console.WriteLine("info. DISPLAYING VALUES OF HASHMAP/////////////////");
+        for (int i = 0; i < Capacity; i++)
+        {
+            Console.WriteLine("bucket index {0} values are below", i);
+            buckets.GetValue(i)!.Display();
+            Console.WriteLine();
+        }
+    }
+
+    public bool TryGetValue(K key, out V? value)
+    {
+        value = default;
+
+        Linear.LinkedList.LinkedList<HashNode<K, V>> bucketValues = GetBucketForKey(key);
+        HashNode<K, V>? existingNode = HashMap<K, V>.Search(bucketValues, key);
+        if (existingNode != null)
+        {
+            value = existingNode.Value;
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryGetValue(K key, out Linear.LinkedList.LinkedList<HashNode<K, V>>? bucketValues, out V? value)
     {
         value = default;
 
@@ -198,14 +224,4 @@ public class HashMap<K, V>
         return GetPowerForValue(baseValue, powerValue - 1, currentValue * baseValue);
     }
 
-    public void Display()
-    {
-        Console.WriteLine("info. DISPLAYING VALUES OF HASHMAP/////////////////");
-        for (int i = 0; i < Capacity; i++)
-        {
-            Console.WriteLine("bucket index {0} values are below", i);
-            buckets.GetValue(i)!.Display();
-            Console.WriteLine();
-        }
-    }
 }
