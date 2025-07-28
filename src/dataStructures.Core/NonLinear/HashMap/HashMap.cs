@@ -65,6 +65,11 @@ public class HashMap<K, V>
     public bool TryInsert(K key, V value)
     {
         ArgumentNullException.ThrowIfNull(key, nameof(key));
+        if (key.Equals(default))
+        {
+            return false;
+        }
+        
         if (Size / Capacity > LoadFactor)
         {
             ReHash();
