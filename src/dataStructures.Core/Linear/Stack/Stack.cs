@@ -50,13 +50,7 @@ public class Stack<T>
         _values[++_top] = value;
     }
 
-    private bool IsFull()
-    {
-        return _top == _size - 1;
-    }
+    private bool IsFull() => _top == _size - 1;
 
-    private bool IsEmpty()
-    {
-        return _top == -1;
-    }
+    private bool IsEmpty() => _top == -1;
 }
