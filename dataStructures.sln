@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dataStructures.Core", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dataStructures.Program", "src\dataStructures.Program\dataStructures.Program.csproj", "{62C60F0A-7F45-4176-AFF9-3047458AF270}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EEEE2979-BD07-429B-973E-C28F9045A34C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dataStructures.Core.Tests", "tests\dataStructures.Core.Tests\dataStructures.Core.Tests.csproj", "{6B83A07E-394C-4635-9F3F-4B2DEEA5BFD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +30,14 @@ Global
 		{62C60F0A-7F45-4176-AFF9-3047458AF270}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62C60F0A-7F45-4176-AFF9-3047458AF270}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62C60F0A-7F45-4176-AFF9-3047458AF270}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B83A07E-394C-4635-9F3F-4B2DEEA5BFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B83A07E-394C-4635-9F3F-4B2DEEA5BFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B83A07E-394C-4635-9F3F-4B2DEEA5BFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B83A07E-394C-4635-9F3F-4B2DEEA5BFD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BBB235A6-2932-4210-8A7E-F9741B0499C2} = {4AF576F1-674F-45FA-9FFB-13946B4BBB9C}
 		{62C60F0A-7F45-4176-AFF9-3047458AF270} = {4AF576F1-674F-45FA-9FFB-13946B4BBB9C}
+		{6B83A07E-394C-4635-9F3F-4B2DEEA5BFD4} = {EEEE2979-BD07-429B-973E-C28F9045A34C}
 	EndGlobalSection
 EndGlobal
