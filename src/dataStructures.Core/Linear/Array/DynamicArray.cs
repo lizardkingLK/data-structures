@@ -17,7 +17,7 @@ public class DynamicArray<T>
     {
         if (capacity <= 0)
         {
-            throw new Exception("error. invalid capacity argument provided");
+            throw new Exception("error. cannot create. invalid capacity");
         }
 
         Capacity = capacity;
