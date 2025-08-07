@@ -36,10 +36,33 @@ public class TestDynamicArray
 
         // Act
         dynamicArray.Add(value);
-        int addedValue = dynamicArray.GetValue(0);
+        int addedValue = dynamicArray.Get(0);
 
         // Assert
         Assert.Equal(value, addedValue);
         Assert.Equal(1, dynamicArray.Size);
+    }
+
+    [Fact]
+    public void Should_Test_Add_At_Index()
+    {
+        // Arrange
+        DynamicArray<int> dynamicArray = new();
+
+        // Act
+        dynamicArray.Add(0, 1);
+        dynamicArray.Add(0, 2);
+        dynamicArray.Add(0, 3);
+        dynamicArray.Add(0, 4);
+        dynamicArray.Add(0, 5);
+
+        // Assert
+        int i;
+        int[] values = [.. dynamicArray.GetEnumerator()];
+        int length = values.Length;
+        for (i = 0; i < length; i++)
+        {
+            Assert.Equal(length - i, values[i]);
+        }
     }
 }
