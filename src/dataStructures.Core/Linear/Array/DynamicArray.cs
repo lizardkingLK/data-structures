@@ -8,6 +8,8 @@ public class DynamicArray<T>
 
     private T[] _values;
 
+    public IEnumerable<T> Values => GetValues();
+
     public DynamicArray()
     {
         Capacity = 1;
@@ -139,7 +141,7 @@ public class DynamicArray<T>
         return true;
     }
 
-    public IEnumerable<T> GetEnumerator()
+    private IEnumerable<T> GetValues()
     {
         for (int i = 0; i < Size; i++)
         {
