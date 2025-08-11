@@ -1,8 +1,8 @@
 namespace dataStructures.Core.Shared;
 
-public class LinkNode<T>(T value, LinkNode<T>? next = null, LinkNode<T>? previous = null)
+public record LinkNode<T>(LinkNode<T>? Previous, T Value, LinkNode<T>? Next)
 {
-    public T Value { get; } = value;
-    public LinkNode<T>? Next { get; set; } = next;
-    public LinkNode<T>? Previous { get; set; } = previous;
+    public LinkNode<T>? Previous { get; set; } = Previous;
+    public T Value { get; set; } = Value;
+    public LinkNode<T>? Next { get; set; } = Next;
 }

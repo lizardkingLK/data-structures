@@ -21,7 +21,7 @@ public class LinkedList<T>
         LinkNode<T>? current = Head;
         if (current == null)
         {
-            Head = new(value);
+            Head = new(null, value, null);
             return;
         }
 
@@ -29,7 +29,7 @@ public class LinkedList<T>
         {
             if (current.Next == null)
             {
-                current.Next = new(value);
+                current.Next = new(null, value, null);
                 break;
             }
 
@@ -42,14 +42,11 @@ public class LinkedList<T>
         LinkNode<T>? current = Head;
         if (current == null)
         {
-            Head = new(value);
+            Head = new(null, value, null);
             return;
         }
 
-        Head = new(value)
-        {
-            Next = current
-        };
+        Head = new(null, value, current);
     }
 
     public LinkNode<T>? RemoveFromEnd()
