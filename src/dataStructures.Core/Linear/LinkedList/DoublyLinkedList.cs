@@ -58,6 +58,23 @@ public class DoublyLinkedList<T>
         return newNode;
     }
 
+    public LinkNode<T> AddToRear(T value)
+    {
+        LinkNode<T> newTail = new(null, value, null);
+        if (_tail == null)
+        {
+            _tail = newTail;
+            _head = _tail;
+            return newTail;
+        }
+
+        _tail.Next = newTail;
+        newTail.Previous = _tail;
+        _tail = newTail;
+
+        return newTail;
+    }
+
     public LinkNode<T> AddAfter(LinkNode<T> target, T value)
     {
         LinkNode<T>? current = _head
@@ -89,23 +106,6 @@ public class DoublyLinkedList<T>
         }
 
         return newNode;
-    }
-
-    public LinkNode<T> AddToRear(T value)
-    {
-        LinkNode<T> newTail = new(null, value, null);
-        if (_tail == null)
-        {
-            _tail = newTail;
-            _head = _tail;
-            return newTail;
-        }
-
-        _tail.Next = newTail;
-        newTail.Previous = _tail;
-        _tail = newTail;
-
-        return newTail;
     }
 
     public IEnumerable<T> ForwardTraversal()
@@ -204,5 +204,18 @@ public class DoublyLinkedList<T>
             previous.Next = null;
             _tail = previous;
         }
+    }
+
+    public T GetValue(Func<T, bool> SearchFunction)
+    {
+        return ForwardTraversal().FirstOrDefault(SearchFunction)
+            ?? throw new Exception("error. cannot get value. it does not exist");
+    }
+
+    public bool TryGetValue(Func<T, bool> SearchFunction, out T? output)
+    {
+        output = ForwardTraversal().FirstOrDefault(SearchFunction);
+
+        return output is not null;
     }
 }
