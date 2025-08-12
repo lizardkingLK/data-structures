@@ -5,7 +5,9 @@ namespace dataStructures.Core.Linear.Queue;
 public class Deque<T>
 {
     private LinkNode<T>? front;
+
     private LinkNode<T>? rear;
+
     public int Size { get; set; }
 
     public Deque()
@@ -14,7 +16,7 @@ public class Deque<T>
 
     public Deque(T head)
     {
-        front = new(head);
+        front = new(null, head, null);
         rear = front;
         Size++;
     }
@@ -24,13 +26,13 @@ public class Deque<T>
         LinkNode<T>? tailNode = rear;
         if (tailNode == null)
         {
-            front = new LinkNode<T>(item);
+            front = new LinkNode<T>(null, item, null);
             rear = front;
             Size++;
             return;
         }
 
-        tailNode = new LinkNode<T>(item);
+        tailNode = new LinkNode<T>(null, item, null);
         rear!.Next = tailNode;
         tailNode.Previous = rear;
         rear = tailNode;
@@ -42,13 +44,13 @@ public class Deque<T>
         LinkNode<T>? headNode = front;
         if (headNode == null)
         {
-            front = new LinkNode<T>(item);
+            front = new LinkNode<T>(null, item, null);
             rear = front;
             Size++;
             return;
         }
 
-        headNode = new LinkNode<T>(item);
+        headNode = new LinkNode<T>(null, item, null);
         front!.Previous = headNode;
         headNode.Next = front;
         front = headNode;

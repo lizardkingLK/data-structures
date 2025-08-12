@@ -2,33 +2,52 @@ namespace dataStructures.Core.Linear.Array;
 
 public class DynamicArray<T>
 {
-    public int Capacity { get; private set; } = 1;
+    public int Capacity { get; private set; }
 
-    public int Size { get; private set; } = 0;
+    public int Size { get; private set; }
 
-    public T?[] values;
+    public IEnumerable<T> Values => ToList();
+
+    private T[] _values;
 
     public DynamicArray()
     {
-        values = new T[Capacity];
+        Capacity = 1;
+        Size = 0;
+
+        _values = new T[Capacity];
     }
 
     public DynamicArray(int capacity)
     {
         if (capacity <= 0)
         {
-            throw new Exception("error. invalid capacity argument provided");
+            throw new Exception("error. cannot create. invalid capacity");
         }
 
         Capacity = capacity;
-        values = new T[capacity];
+        Size = 0;
+
+        _values = new T[capacity];
     }
 
-    public void Add(T value)
+    public T Add(T item)
     {
-        if (value == null)
+        if (Size == Capacity)
         {
-            throw new Exception("error. invalid value argument provided");
+            GrowArray();
+        }
+
+        _values[Size] = item;
+
+        return _values[Size++];
+    }
+
+    public T Add(int index, T item)
+    {
+        if (index < 0 || index >= Capacity)
+        {
+            throw new Exception("error. cannot insert. invalid index");
         }
 
         if (Size == Capacity)
@@ -36,120 +55,51 @@ public class DynamicArray<T>
             GrowArray();
         }
 
-        values[Size++] = value;
-    }
-
-    public void Insert(int index, T value)
-    {
-        if (index < 0 || index > Size)
-        {
-            throw new Exception("error. index is invalid");
-        }
-
-        if (value == null)
-        {
-            throw new Exception("error. value is invalid");
-        }
-
-        if (Size == Capacity)
-        {
-            GrowArray();
-        }
-
-        int length = Size - index;
-        T?[] tempArray = new T[length];
-        for (int i = 0; i < length; i++)
-        {
-            tempArray[i] = values[index + i];
-        }
-
-        values[index] = value;
-        for (int i = 0; i < length; i++)
-        {
-            values[index + 1 + i] = tempArray[i];
-        }
-
-        Size++;
-    }
-
-    public T? Delete()
-    {
-        if (Size == 0)
-        {
-            throw new Exception("error. cannot delete, array is empty");
-        }
-
-        T? removed = values[Size - 1];
-        values[Size - 1] = default;
-        Size--;
-        if (Size <= Capacity / 3)
-        {
-            ShrinkArray();
-        }
-
-        return removed;
-    }
-
-    public T? Remove(int index)
-    {
-        if (Size == 0)
-        {
-            throw new Exception("error. cannot remove, array is empty");
-        }
-
-        if (index < 0 || index > Size - 1)
-        {
-            throw new Exception("error. index is invalid");
-        }
-
-        T? removed = values[index];
-        values[index] = default;
-
-        int length = Size - index - 1;
-        T? value;
-        for (int i = 0; i < length; i++)
-        {
-            value = values[index + 1 + i];
-            values[index + 1 + i] = default;
-            values[index + i] = value;
-        }
-
-        Size--;
-        if (Size <= Capacity / 3)
-        {
-            ShrinkArray();
-        }
-
-        return removed;
-    }
-
-    public T? Remove(T? value)
-    {
-        if (Size == 0)
-        {
-            throw new Exception("error. cannot remove, array is empty");
-        }
-
-        T? removed = default;
         int i;
-        for (i = 0; i < Size; i++)
+        for (i = Size; i > index; i--)
         {
-            removed = values[i];
-            if (ReferenceEquals(value, removed))
-            {
-                break;
-            }
+            _values[i] = _values[i - 1];
         }
 
-        int index = i;
+        _values[index] = item;
+        Size++;
 
-        values[index] = default;
-        int length = Size - i - 1;
-        for (i = 0; i < length; i++)
+        return _values[index];
+    }
+
+    public T Remove()
+    {
+        if (Size == 0)
         {
-            value = values[index + 1 + i];
-            values[index + 1 + i] = default;
-            values[index + i] = value;
+            throw new Exception("error. cannot remove. no items");
+        }
+
+        T removed = _values[Size--];
+        if (Size <= Capacity / 3)
+        {
+            ShrinkArray();
+        }
+
+        return removed;
+    }
+
+    public T Remove(int index)
+    {
+        if (Size == 0)
+        {
+            throw new Exception("error. cannot remove. no items");
+        }
+
+        if (index < 0 || index >= Size)
+        {
+            throw new Exception("error. cannot remove. invalid index");
+        }
+
+        T removed = _values[index];
+        int i;
+        for (i = index; i < Size; i++)
+        {
+            _values[i] = _values[i + 1];
         }
 
         Size--;
@@ -161,86 +111,73 @@ public class DynamicArray<T>
         return removed;
     }
 
-    public T? Remove(Func<T, bool> searchFunction)
-    {
-        for (int i = 0; i < Size; i++)
-        {
-            if (searchFunction(values[i]!))
-            {
-                return Remove(i);
-            }
-        }
-
-        return default;
-    }
-
-    public T? GetValue(int index)
+    public T Get(int index)
     {
         if (Size == 0)
         {
-            throw new Exception("error. array is empty");
+            throw new Exception("error. cannot get. no items");
         }
 
-        if (index < 0 || index > Size - 1)
+        if (index < 0 || index >= Capacity)
         {
-            throw new Exception("error. index is invalid");
+            throw new Exception("error. cannot get. invalid index");
         }
 
-        return values[index];
+        return _values[index];
     }
 
-    public bool TryGetValue(int index, out T? value)
+    public bool TryGet(int index, out T? value)
     {
         value = default;
 
-        if (Size == 0 || index < 0 || index > Size - 1)
+        if (Size == 0)
         {
             return false;
         }
 
-        value = values[index];
-
-        return true;
-    }
-
-    public T?[] ToArray()
-    {
-        return values;
-    }
-
-    private void GrowArray()
-    {
-        T?[] tempArray = new T[Capacity * 2];
-        int i;
-        for (i = 0; i < Capacity; i++)
+        if (index < 0 || index >= Capacity)
         {
-            tempArray[i] = values[i];
+            return false;
         }
 
-        values = tempArray;
+        value = _values[index];
 
-        Capacity *= 2;
+        return value is not null;
+    }
+
+    private IEnumerable<T> ToList()
+    {
+        foreach (T value in _values)
+        {
+            yield return value;
+        }
     }
 
     private void ShrinkArray()
     {
-        Capacity = Size * 2;
-        T?[] tempArray = new T[Capacity];
-        for (int i = 0; i < Size; i++)
+        int i;
+        int newCapacity = Capacity / 3;
+        T[] tempValues = new T[newCapacity];
+        for (i = 0; i < newCapacity; i++)
         {
-            tempArray[i] = values[i];
+            tempValues[i] = _values[i];
         }
 
-        values = tempArray;
+        Capacity = newCapacity;
+        _values = tempValues;
     }
 
-    public void Display(bool? shouldIncludeCapacity = false)
+    private void GrowArray()
     {
-        Console.WriteLine("\ninfo. elements of dynamic array below");
-        int length = shouldIncludeCapacity == true ? Capacity : Size;
-        for (int i = 0; i < length; i++)
+        int i;
+        int newCapacity = Capacity * 2;
+        T[] tempValues = new T[newCapacity];
+        for (i = 0; i < Size; i++)
         {
-            Console.Write("{0} ", values[i]);
+            tempValues[i] = _values[i];
         }
+
+        Capacity = newCapacity;
+        _values = tempValues;
     }
 }

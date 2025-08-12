@@ -218,11 +218,6 @@ class Program
         dArray.Display(true);
     }
 
-    private static void TestStack()
-    {
-        throw new NotImplementedException();
-    }
-
     private static void TesthashMap()
     {
         HashMap<int, int> hashMap = new(2, .5f);
@@ -269,7 +264,6 @@ class Program
     {
         TesthashMap();
         // TestDArray();
-        // TestStack();
         // TestQueue();
         // TestCQueue();
         // TestLinkedList();

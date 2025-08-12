@@ -25,7 +25,7 @@ public class HashMap<K, V>
         buckets = new(Capacity);
         for (int i = 0; i < Capacity; i++)
         {
-            buckets.Insert(i, new());
+            buckets.Add(i, new());
         }
     }
 
@@ -41,7 +41,7 @@ public class HashMap<K, V>
         buckets = new(Capacity);
         for (int i = 0; i < Capacity; i++)
         {
-            buckets.Insert(i, new());
+            buckets.Add(i, new());
         }
     }
 
@@ -108,7 +108,7 @@ public class HashMap<K, V>
         for (int i = 0; i < Capacity; i++)
         {
             Console.WriteLine("bucket index {0} values are below", i);
-            buckets.GetValue(i)!.Display();
+            buckets.Get(i)!.Display();
             Console.WriteLine();
         }
     }
@@ -160,7 +160,7 @@ public class HashMap<K, V>
         int i;
         for (i = 0; i < newCapacity; i++)
         {
-            tempBuckets.Insert(i, new());
+            tempBuckets.Add(i, new());
         }
 
         Linear.LinkedList.LinkedList<HashNode<K, V>>? currentBucket;
@@ -170,7 +170,7 @@ public class HashMap<K, V>
         Linear.LinkedList.LinkedList<HashNode<K, V>> newBucket;
         for (i = 0; i < Capacity; i++)
         {
-            currentBucket = buckets.GetValue(i);
+            currentBucket = buckets.Get(i);
             if (currentBucket == null)
             {
                 throw new NullReferenceException(nameof(currentBucket));
@@ -181,7 +181,7 @@ public class HashMap<K, V>
             {
                 currentHashNode = currentBucketEnumerator.Current;
                 newHashCode = GetHashCodeValue(currentHashNode.Key, newCapacity);
-                newBucket = tempBuckets.GetValue(newHashCode)!;
+                newBucket = tempBuckets.Get(newHashCode)!;
                 newBucket.InsertToEnd(currentHashNode);
             }
         }
@@ -193,7 +193,7 @@ public class HashMap<K, V>
     private Linear.LinkedList.LinkedList<HashNode<K, V>> GetBucketForKey(K key)
     {
         int hashCode = GetHashCodeValue(key);
-        if (!buckets.TryGetValue(hashCode, out Linear.LinkedList.LinkedList<HashNode<K, V>>? bucketValues))
+        if (!buckets.TryGet(hashCode, out Linear.LinkedList.LinkedList<HashNode<K, V>>? bucketValues))
         {
             throw new NullReferenceException("error. bucket for key does not exist");
         }
