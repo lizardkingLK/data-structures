@@ -206,16 +206,32 @@ public class DoublyLinkedList<T>
         }
     }
 
-    public T GetValue(Func<T, bool> SearchFunction)
+    public T? GetValue(Func<T, bool> SearchFunction)
     {
-        return ForwardTraversal().FirstOrDefault(SearchFunction)
-            ?? throw new Exception("error. cannot get value. it does not exist");
+        foreach (T item in ForwardTraversal())
+        {
+            if (SearchFunction(item))
+            {
+                return item;
+            }
+        }
+
+        throw new Exception("error. cannot get value. does not exist");
     }
 
     public bool TryGetValue(Func<T, bool> SearchFunction, out T? output)
     {
-        output = ForwardTraversal().FirstOrDefault(SearchFunction);
+        output = default;
+        
+        foreach (T item in ForwardTraversal())
+        {
+            if (SearchFunction(item))
+            {
+                output = item;
+                return true;
+            }
+        }
 
-        return output is not null;
+        return false;
     }
 }
