@@ -45,7 +45,7 @@ public class DynamicArray<T>
 
     public T Add(int index, T item)
     {
-        if (index < 0 || index > Size)
+        if (index < 0 || index >= Capacity)
         {
             throw new Exception("error. cannot insert. invalid index");
         }
