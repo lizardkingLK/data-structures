@@ -5,7 +5,9 @@ namespace dataStructures.Core.Linear.Queue;
 public class Deque<T>
 {
     private LinkNode<T>? front;
+
     private LinkNode<T>? rear;
+
     public int Size { get; set; }
 
     public Deque()

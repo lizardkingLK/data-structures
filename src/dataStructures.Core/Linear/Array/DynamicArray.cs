@@ -31,17 +31,19 @@ public class DynamicArray<T>
         _values = new T[capacity];
     }
 
-    public void Add(T item)
+    public T Add(T item)
     {
         if (Size == Capacity)
         {
             GrowArray();
         }
 
-        _values[Size++] = item;
+        _values[Size] = item;
+
+        return _values[Size++];
     }
 
-    public void Add(int index, T item)
+    public T Add(int index, T item)
     {
         if (index < 0 || index > Size)
         {
@@ -61,6 +63,8 @@ public class DynamicArray<T>
 
         _values[index] = item;
         Size++;
+
+        return _values[index];
     }
 
     public T Remove()
