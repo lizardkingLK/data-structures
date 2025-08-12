@@ -1,4 +1,4 @@
-namespace dataStructures.Core.Linear.Array;
+namespace dataStructures.Core.Linear.Arrays;
 
 public class DynamicArray<T>
 {
@@ -45,7 +45,7 @@ public class DynamicArray<T>
 
     public T Add(int index, T item)
     {
-        if (index < 0 || index >= Capacity)
+        if (index < 0 || index > Capacity)
         {
             throw new Exception("error. cannot insert. invalid index");
         }
@@ -53,12 +53,6 @@ public class DynamicArray<T>
         if (Size == Capacity)
         {
             GrowArray();
-        }
-
-        int i;
-        for (i = Size; i > index; i--)
-        {
-            _values[i] = _values[i - 1];
         }
 
         _values[index] = item;
@@ -147,9 +141,9 @@ public class DynamicArray<T>
 
     private IEnumerable<T> ToList()
     {
-        for (int i = 0; i < Size; i++)
+        foreach (T value in _values)
         {
-            yield return _values[i];
+            yield return value;
         }
     }
 

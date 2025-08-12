@@ -1,4 +1,4 @@
-namespace dataStructures.Core.Shared;
+namespace dataStructures.Core.Linear.Lists.LinkedLists.State;
 
 public record LinkNode<T>(LinkNode<T>? Previous, T Value, LinkNode<T>? Next)
 {

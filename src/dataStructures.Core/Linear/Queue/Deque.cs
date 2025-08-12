@@ -1,4 +1,4 @@
-using dataStructures.Core.Shared;
+using dataStructures.Core.Linear.Lists.LinkedLists.State;
 
 namespace dataStructures.Core.Linear.Queue;
 
@@ -9,10 +9,6 @@ public class Deque<T>
     private LinkNode<T>? rear;
 
     public int Size { get; set; }
-
-    public Deque()
-    {
-    }
 
     public Deque(T head)
     {

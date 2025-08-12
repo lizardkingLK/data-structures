@@ -1,6 +1,6 @@
-using dataStructures.Core.Shared;
+using dataStructures.Core.Linear.Lists.LinkedLists.State;
 
-namespace dataStructures.Core.Linear.LinkedList;
+namespace dataStructures.Core.Linear.Lists.LinkedLists;
 
 public class LinkedList<T>
 {

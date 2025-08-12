@@ -1,6 +1,6 @@
-using dataStructures.Core.Shared;
+using dataStructures.Core.Linear.Lists.LinkedLists.State;
 
-namespace dataStructures.Core.Linear.LinkedList;
+namespace dataStructures.Core.Linear.Lists.LinkedLists;
 
 public class DoublyLinkedList<T>
 {
@@ -222,7 +222,7 @@ public class DoublyLinkedList<T>
     public bool TryGetValue(Func<T, bool> SearchFunction, out T? output)
     {
         output = default;
-        
+
         foreach (T item in ForwardTraversal())
         {
             if (SearchFunction(item))

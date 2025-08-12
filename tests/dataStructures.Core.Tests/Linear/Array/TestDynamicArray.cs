@@ -1,4 +1,4 @@
-using dataStructures.Core.Linear.Array;
+using dataStructures.Core.Linear.Arrays;
 
 namespace dataStructures.Core.Tests.Linear.Array;
 
@@ -50,16 +50,16 @@ public class TestDynamicArray
         DynamicArray<int> dynamicArray = new();
 
         // Act
-        dynamicArray.Add(0, 1);
-        dynamicArray.Add(0, 2);
-        dynamicArray.Add(0, 3);
-        dynamicArray.Add(0, 4);
         dynamicArray.Add(0, 5);
+        dynamicArray.Add(1, 4);
+        dynamicArray.Add(2, 3);
+        dynamicArray.Add(3, 2);
+        dynamicArray.Add(4, 1);
 
         // Assert
         int i;
         int[] values = [.. dynamicArray.Values];
-        int length = values.Length;
+        int length = 5;
         for (i = 0; i < length; i++)
         {
             Assert.Equal(length - i, values[i]);
