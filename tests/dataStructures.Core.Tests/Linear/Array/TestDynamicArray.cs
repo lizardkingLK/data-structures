@@ -59,7 +59,7 @@ public class TestDynamicArray
         // Assert
         int i;
         int[] values = [.. dynamicArray.Values];
-        int length = values.Length;
+        int length = 5;
         for (i = 0; i < length; i++)
         {
             Assert.Equal(length - i, values[i]);

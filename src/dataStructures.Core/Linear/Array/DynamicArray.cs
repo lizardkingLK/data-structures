@@ -147,9 +147,9 @@ public class DynamicArray<T>
 
     private IEnumerable<T> ToList()
     {
-        for (int i = 0; i < Size; i++)
+        foreach (T value in _values)
         {
-            yield return _values[i];
+            yield return value;
         }
     }
 
