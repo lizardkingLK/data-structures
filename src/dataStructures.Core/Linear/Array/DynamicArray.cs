@@ -6,9 +6,9 @@ public class DynamicArray<T>
 
     public int Size { get; private set; }
 
-    private T[] _values;
+    public IEnumerable<T> Values => ToList();
 
-    public IEnumerable<T> Values => GetValues();
+    private T[] _values;
 
     public DynamicArray()
     {
@@ -92,7 +92,7 @@ public class DynamicArray<T>
 
         if (index < 0 || index >= Size)
         {
-            throw new Exception("error. cannot insert. invalid index");
+            throw new Exception("error. cannot remove. invalid index");
         }
 
         T removed = _values[index];
@@ -118,7 +118,7 @@ public class DynamicArray<T>
             throw new Exception("error. cannot get. no items");
         }
 
-        if (index < 0 || index >= Size)
+        if (index < 0 || index >= Capacity)
         {
             throw new Exception("error. cannot get. invalid index");
         }
@@ -135,17 +135,17 @@ public class DynamicArray<T>
             return false;
         }
 
-        if (index < 0 || index >= Size)
+        if (index < 0 || index >= Capacity)
         {
             return false;
         }
 
         value = _values[index];
 
-        return true;
+        return value is not null;
     }
 
-    private IEnumerable<T> GetValues()
+    private IEnumerable<T> ToList()
     {
         for (int i = 0; i < Size; i++)
         {
