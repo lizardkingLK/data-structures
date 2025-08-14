@@ -67,7 +67,7 @@ public class Deque<T>
 
     public T RemoveFromRear()
     {
-        LinkNode<T>? tailNode = rear
+        LinkNode<T> tailNode = rear
             ?? throw new Exception("error. cannot remove from rear. deque is empty");
 
         tailNode.Previous!.Next = null;
@@ -80,7 +80,7 @@ public class Deque<T>
 
     public T RemoveFromFront()
     {
-        LinkNode<T>? headNode = front
+        LinkNode<T> headNode = front
             ?? throw new Exception("error. cannot remove from front. deque is empty");
 
         headNode.Next!.Previous = null;
@@ -123,7 +123,7 @@ public class Deque<T>
 
     public T SeekRear()
     {
-        LinkNode<T>? tailNode = rear
+        LinkNode<T> tailNode = rear
             ?? throw new Exception("error. cannot seek at rear. deque is empty");
 
         return tailNode.Value;
@@ -131,7 +131,7 @@ public class Deque<T>
 
     public T SeekFront()
     {
-        LinkNode<T>? headNode = front
+        LinkNode<T> headNode = front
             ?? throw new Exception("error. cannot seek at front. deque is empty");
 
         return headNode.Value;

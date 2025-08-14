@@ -14,10 +14,9 @@ public class CircularQueue<T>(int size)
     {
         if (IsFull())
         {
-            Console.WriteLine("error. cannot insert queue is full");
-            return;
+            throw new Exception("error. cannot insert queue is full");
         }
-
+        
         rear = (front + count) % size;
         values[rear] = value;
         count++;
@@ -27,8 +26,7 @@ public class CircularQueue<T>(int size)
     {
         if (IsEmpty())
         {
-            Console.WriteLine("error. cannot peek queue is empty");
-            return default;
+            throw new Exception("error. cannot peek queue is empty");
         }
 
         return values[front];
@@ -38,8 +36,7 @@ public class CircularQueue<T>(int size)
     {
         if (IsEmpty())
         {
-            Console.WriteLine("error. cannot remove queue is empty");
-            return default;
+            throw new Exception("error. cannot remove queue is empty");
         }
 
         T? removed = values[front];
@@ -49,13 +46,7 @@ public class CircularQueue<T>(int size)
         return removed;
     }
 
-    private bool IsEmpty()
-    {
-        return count == 0;
-    }
+    private bool IsEmpty() => count == 0;
 
-    private bool IsFull()
-    {
-        return count == size;
-    }
+    private bool IsFull() => count == size;
 }

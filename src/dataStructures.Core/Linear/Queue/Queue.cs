@@ -12,8 +12,7 @@ public class AQueue<T>(int size)
     {
         if (IsFull())
         {
-            Console.WriteLine("error. cannot insert queue is full");
-            return;
+            throw new Exception("error. cannot insert queue is full");
         }
 
         values[++rear] = value;
@@ -23,8 +22,7 @@ public class AQueue<T>(int size)
     {
         if (IsEmpty())
         {
-            Console.WriteLine("error. cannot peek queue is empty");
-            return default;
+            throw new Exception("error. cannot peek queue is empty");
         }
 
         return values[front];
@@ -34,20 +32,13 @@ public class AQueue<T>(int size)
     {
         if (IsEmpty())
         {
-            Console.WriteLine("error. cannot remove queue is empty");
-            return default;
+            throw new Exception("error. cannot remove queue is empty");
         }
 
         return values[front++];
     }
 
-    private bool IsEmpty()
-    {
-        return rear == -1 || front == size;
-    }
+    private bool IsEmpty() => rear == -1 || front == size;
 
-    private bool IsFull()
-    {
-        return rear == size - 1;
-    }
+    private bool IsFull() => rear == size - 1;
 }
