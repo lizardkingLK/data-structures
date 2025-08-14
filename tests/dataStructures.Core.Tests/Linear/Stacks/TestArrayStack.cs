@@ -1,7 +1,10 @@
-namespace dataStructures.Core.Tests.Linear.Stack;
+using dataStructures.Core.Linear.Stacks.Abstractions;
+using static dataStructures.Core.Linear.Stacks.Enums.StackTypeEnum;
 
-[Collection(nameof(TestStack))]
-public class TestStack
+namespace dataStructures.Core.Tests.Linear.Stacks;
+
+[Collection(nameof(TestArrayStack))]
+public class TestArrayStack
 {
     [Theory]
     [InlineData(-4)]
@@ -10,10 +13,10 @@ public class TestStack
     public void Should_Test_For_Stack_Initilization_Error(int size)
     {
         // Arrange
-        Core.Linear.Stack.Stack<int>? stack = null;
+        IStack<int>? stack = null;
 
         // Act
-        void TestInitializationAction() => stack = new(size);
+        void TestInitializationAction() => stack = new Core.Linear.Stacks.Stack<int>(ArrayTyped, size);
 
         // Assert
         Exception exception = Assert.Throws<Exception>(TestInitializationAction);
@@ -31,7 +34,7 @@ public class TestStack
     public void Should_Test_For_Stack_Peek(int size)
     {
         // Arrange
-        Core.Linear.Stack.Stack<int> stack = new(size);
+        Core.Linear.Stacks.Stack<int> stack = new(size);
 
         // Act
         int? peeked = null;
@@ -53,7 +56,7 @@ public class TestStack
     public void Should_Test_For_Stack_Pop(int size)
     {
         // Arrange
-        Core.Linear.Stack.Stack<int> stack = new(size);
+        Core.Linear.Stacks.Stack<int> stack = new(size);
 
         // Act
         int? popped = null;
@@ -73,7 +76,7 @@ public class TestStack
     public void Should_Test_For_Stack_Push(int size, params object[] values)
     {
         // Arrange
-        Core.Linear.Stack.Stack<object> stack = new(size);
+        Core.Linear.Stacks.Stack<object> stack = new(size);
 
         // Act
         object? peeked;
@@ -95,7 +98,7 @@ public class TestStack
     public void Should_Test_For_Stack_Push_When_Full(int size, params object[] values)
     {
         // Arrange
-        Core.Linear.Stack.Stack<object> stack = new(size);
+        Core.Linear.Stacks.Stack<object> stack = new(size);
 
         // Act
         object? peeked = null;
@@ -122,7 +125,7 @@ public class TestStack
     public void Should_Test_For_Stack_Pop_All(int size, params object[] values)
     {
         // Arrange
-        Core.Linear.Stack.Stack<object> stack = new(size);
+        Core.Linear.Stacks.Stack<object> stack = new(size);
 
         // Act
         int i;
@@ -145,12 +148,12 @@ public class TestStack
     public void Should_Test_For_Stack_Push_Pop()
     {
         // Arrange
-        Core.Linear.Stack.Stack<int> stack = new(4);
+        Core.Linear.Stacks.Stack<int> stack = new(4);
 
         // Act
         stack.Push(1);
         _ = stack.Pop();
-        
+
         stack.Push(452);
         int popped = stack.Pop();
 

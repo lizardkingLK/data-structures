@@ -1,6 +1,8 @@
-﻿namespace dataStructures.Core.Linear.Stack;
+﻿using dataStructures.Core.Linear.Stacks.Abstractions;
 
-public class Stack<T>
+namespace dataStructures.Core.Linear.Stacks;
+
+internal class ArrayStack<T> : IStack<T>
 {
     private int _top;
 
@@ -8,7 +10,7 @@ public class Stack<T>
 
     private readonly T[] _values;
 
-    public Stack(int size)
+    public ArrayStack(int size)
     {
         if (size <= 0)
         {
@@ -20,7 +22,7 @@ public class Stack<T>
         _values = new T[_size];
     }
 
-    public T? Peek()
+    public T Peek()
     {
         if (IsEmpty())
         {
@@ -30,7 +32,7 @@ public class Stack<T>
         return _values[_top];
     }
 
-    public T? Pop()
+    public T Pop()
     {
         if (IsEmpty())
         {
@@ -50,7 +52,7 @@ public class Stack<T>
         _values[++_top] = value;
     }
 
-    private bool IsFull() => _top == _size - 1;
+    public bool IsFull() => _top == _size - 1;
 
-    private bool IsEmpty() => _top == -1;
+    public bool IsEmpty() => _top == -1;
 }

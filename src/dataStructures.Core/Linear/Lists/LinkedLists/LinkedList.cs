@@ -6,15 +6,7 @@ public class LinkedList<T>
 {
     public LinkNode<T>? Head { get; set; }
 
-    public void Display()
-    {
-        LinkNode<T>? current = Head;
-        while (current != null)
-        {
-            Console.WriteLine(current.Value);
-            current = current.Next;
-        }
-    }
+    public IEnumerable<T> Values => ForwardTraversal();
 
     public void InsertToEnd(T value)
     {
@@ -133,7 +125,7 @@ public class LinkedList<T>
         return foundValue;
     }
 
-    public IEnumerator<T> GetEnumerator()
+    private IEnumerable<T> ForwardTraversal()
     {
         LinkNode<T>? current = Head;
         while (current != null)
