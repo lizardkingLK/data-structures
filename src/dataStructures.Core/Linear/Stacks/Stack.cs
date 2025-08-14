@@ -10,6 +10,7 @@ public class Stack<T>(StackTypeEnum stackType, int size) : IStack<T>
     {
         ArrayTyped => new ArrayStack<T>(size),
         LinkedListTyped => new LinkedListStack<T>(size),
+        MonotonicTyped => new MonotonicStack<T>(size),
         _ => throw new NotImplementedException("error. cannot create. stack type not found"),
     };
 

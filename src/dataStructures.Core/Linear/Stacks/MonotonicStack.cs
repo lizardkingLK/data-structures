@@ -2,7 +2,7 @@ using dataStructures.Core.Linear.Stacks.Abstractions;
 
 namespace dataStructures.Core.Linear.Stacks;
 
-internal class LinkedListStack<T> : IStack<T>
+public class MonotonicStack<T> : IStack<T>
 {
     private int _count;
 
@@ -10,7 +10,7 @@ internal class LinkedListStack<T> : IStack<T>
 
     private readonly Lists.LinkedLists.LinkedList<T> _linkedList;
 
-    public LinkedListStack(int size)
+    public MonotonicStack(int size)
     {
         if (size <= 0)
         {
@@ -50,12 +50,31 @@ internal class LinkedListStack<T> : IStack<T>
 
     public void Push(T item)
     {
-        if (IsFull())
+        while (TryPeek(out T? peeked) && peeked is IComparable peekedComparable)
         {
-            throw new Exception("error. cannot push. stack is full");
+            if (peekedComparable.CompareTo(item) == -1)
+            {
+                break;
+            }
+
+            _linkedList.RemoveFromFront();
         }
 
         _linkedList.InsertToFront(item);
         _count++;
+    }
+
+    private bool TryPeek(out T? peeked)
+    {
+        peeked = default;
+
+        if (IsEmpty())
+        {
+            return false;
+        }
+
+        peeked = _linkedList.Head!.Value;
+
+        return true;
     }
 }
