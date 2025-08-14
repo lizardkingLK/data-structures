@@ -1,6 +1,6 @@
 using dataStructures.Core.Linear.Arrays;
 
-namespace dataStructures.Core.Tests.Linear.Array;
+namespace dataStructures.Core.Tests.Linear.Arrays;
 
 [Collection(nameof(TestDynamicArray))]
 public class TestDynamicArray
