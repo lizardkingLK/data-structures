@@ -50,6 +50,11 @@ public class MonotonicStack<T> : IStack<T>
 
     public void Push(T item)
     {
+        if (IsFull())
+        {
+            throw new Exception("error. cannot push. stack is full");
+        }
+
         while (TryPeek(out T? peeked) && peeked is IComparable peekedComparable)
         {
             if (peekedComparable.CompareTo(item) == -1)

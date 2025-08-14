@@ -71,7 +71,7 @@ public class TestMonotonicStack
     [Theory]
     [InlineData(5, 65, 4, 53, 23, 45, 65)]
     [InlineData(6, 'e', 'a', 'b', 'f', 'c', 'd', 'e')]
-    [InlineData(2, true, true, false, true)]
+    [InlineData(3, true, true, false, true)]
     [InlineData(4, "kunda", "foobar", "nascar", "valdo", "kunda")]
     public void Should_Test_For_Stack_Push(int size, object? expectedPeeked, params object[] values)
     {
@@ -89,5 +89,77 @@ public class TestMonotonicStack
 
         // Assert
         Assert.Equal(expectedPeeked, actualPeeked);
+    }
+
+    [Theory]
+    [InlineData(4, 4, 23, 45, 53, 65)]
+    [InlineData(5, 'a', 'b', 'c', 'd', 'e', 'f')]
+    [InlineData(1, false, true)]
+    [InlineData(3, "foobar", "kunda", "nascar", "valdo")]
+    public void Should_Test_For_Stack_Push_When_Full(int size, params object[] values)
+    {
+        // Arrange
+        Core.Linear.Stacks.Stack<object> stack = new(MonotonicTyped, size);
+
+        // Act
+        object? peeked = null;
+        int i;
+        for (i = 0; i < size; i++)
+        {
+            stack.Push(values[i]);
+        }
+
+        peeked = stack.Peek();
+
+        void TestPushAction() => stack.Push(values[size]);
+
+        // Assert
+        Assert.Equal(values[i - 1], peeked);
+        Exception exception = Assert.Throws<Exception>(TestPushAction);
+        Assert.Equal("error. cannot push. stack is full", exception.Message);
+    }
+
+    [Theory]
+    [InlineData(5, 4, 23, 45, 53, 65)]
+    [InlineData(6, 'a', 'b', 'c', 'd', 'e', 'f')]
+    [InlineData(2, false, true)]
+    [InlineData(4, "foobar", "kunda", "nascar", "valdo")]
+    public void Should_Test_For_Stack_Pop_All(int size, params object[] values)
+    {
+        // Arrange
+        Core.Linear.Stacks.Stack<object> stack = new(MonotonicTyped, size);
+
+        // Act
+        int i;
+        for (i = 0; i < size; i++)
+        {
+            stack.Push(values[i]);
+        }
+
+        object? popped;
+        for (i = size - 1; i >= 0; i--)
+        {
+            popped = stack.Pop();
+
+            // Assert
+            Assert.Equal(values[i], popped);
+        }
+    }
+
+    [Fact]
+    public void Should_Test_For_Stack_Push_Pop()
+    {
+        // Arrange
+        Core.Linear.Stacks.Stack<int> stack = new(MonotonicTyped, 4);
+
+        // Act
+        stack.Push(1);
+        _ = stack.Pop();
+
+        stack.Push(452);
+        int popped = stack.Pop();
+
+        // Assert
+        Assert.Equal(452, popped);
     }
 }

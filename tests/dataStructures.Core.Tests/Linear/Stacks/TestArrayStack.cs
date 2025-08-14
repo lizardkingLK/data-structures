@@ -106,8 +106,9 @@ public class TestArrayStack
         for (i = 0; i < size; i++)
         {
             stack.Push(values[i]);
-            peeked = stack.Peek();
         }
+
+        peeked = stack.Peek();
 
         void TestPushAction() => stack.Push(values[size]);
 
