@@ -6,7 +6,7 @@ using static dataStructures.Core.NonLinear.HashMaps.Shared.Constants;
 
 namespace dataStructures.Core.NonLinear.HashMaps;
 
-internal class SeparateChainingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
+internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 {
     private DynamicArray<Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>> _buckets = new();
 

@@ -10,12 +10,15 @@ public class HashMap<K, V> : IHashMap<K, V>
 {
     private readonly IHashMap<K, V> _hashMap;
 
+    public int Capacity { get => _hashMap.Capacity; }
 
-    public HashMap() : this(SeparateChaining, LOAD_FACTOR)
+    public int Size { get => _hashMap.Size; }
+
+    public HashMap() : this(ClosedAddressingSeparateChaining, LOAD_FACTOR)
     {
     }
 
-    public HashMap(float loadFactor) : this(SeparateChaining, loadFactor)
+    public HashMap(float loadFactor) : this(ClosedAddressingSeparateChaining, loadFactor)
     {
     }
 
@@ -25,7 +28,7 @@ public class HashMap<K, V> : IHashMap<K, V>
         set => _hashMap[key] = value;
     }
 
-    public HashMap(HashTypeEnum hashType = SeparateChaining, float loadFactor = LOAD_FACTOR)
+    public HashMap(HashTypeEnum hashType = ClosedAddressingSeparateChaining, float loadFactor = LOAD_FACTOR)
     {
         if (loadFactor <= 0)
         {
@@ -34,7 +37,7 @@ public class HashMap<K, V> : IHashMap<K, V>
 
         _hashMap = hashType switch
         {
-            SeparateChaining => new SeparateChainingHashMap<K, V>(loadFactor),
+            ClosedAddressingSeparateChaining => new ClosedAddressingSeparateChainingHashMap<K, V>(loadFactor),
             OpenAddressingLinearProbing => throw new NotImplementedException(),
             OpenAddressingQuadraticHashing => throw new NotImplementedException(),
             OpenAddressingDoubleHashing => throw new NotImplementedException(),
