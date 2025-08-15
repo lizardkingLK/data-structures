@@ -5,6 +5,8 @@ namespace dataStructures.Core.NonLinear.HashMaps.Abstractions;
 public interface IHashMap<K, V>
 {
     V this[K key] { get; set; }
+    public int Capacity { get; }
+    public int Size { get; }
     void Add(K key, V value);
     bool TryAdd(K key, V value);
     V Get(K key);
