@@ -1,3 +1,5 @@
+using static dataStructures.Core.Linear.Arrays.Shared.Constants;
+
 namespace dataStructures.Core.Linear.Arrays;
 
 public class DynamicArray<T>
@@ -50,7 +52,7 @@ public class DynamicArray<T>
             throw new Exception("error. cannot insert. invalid index");
         }
 
-        if (Size == Capacity)
+        if (Size == Capacity || index == Capacity)
         {
             GrowArray();
         }
@@ -59,6 +61,28 @@ public class DynamicArray<T>
         Size++;
 
         return _values[index];
+    }
+
+    public bool TryAdd(int index, T item)
+    {
+        if (index < 0 || index > Capacity)
+        {
+            return false;
+        }
+
+        if (Size == Capacity || index == Capacity)
+        {
+            GrowArray();
+        }
+
+        if (_values[index] is null)
+        {
+            _values[index] = item;
+            Size++;
+            return true;
+        }
+
+        return false; ;
     }
 
     public T Remove()
@@ -84,7 +108,7 @@ public class DynamicArray<T>
             throw new Exception("error. cannot remove. no items");
         }
 
-        if (index < 0 || index >= Size)
+        if (index < 0 || index > Capacity)
         {
             throw new Exception("error. cannot remove. invalid index");
         }
@@ -151,6 +175,11 @@ public class DynamicArray<T>
     {
         int i;
         int newCapacity = Capacity / 3;
+        if (newCapacity == 0)
+        {
+            newCapacity = INITIAL_CAPACITY;
+        }
+
         T[] tempValues = new T[newCapacity];
         for (i = 0; i < newCapacity; i++)
         {
