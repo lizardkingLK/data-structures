@@ -165,17 +165,17 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
 
         int index = _hashing.GetBucketIndex(key, Capacity);
         bool doesBucketContain = _buckets.TryGet(index, out bucket);
-        bool ContainsKey = false;
+        bool containsKey = false;
         if (doesBucketContain)
         {
-            ContainsKey = bucket!.TryGetValue(value => value.Key!.Equals(key), out value);
+            containsKey = bucket!.TryGetValue(value => value.Key!.Equals(key), out value);
         }
         else
         {
             bucket = _buckets.Add(index, new());
         }
 
-        return ContainsKey;
+        return containsKey;
     }
 
     private void ReHash()
