@@ -195,6 +195,44 @@ public class TestClosedAddressingSeparateChainingHashMap
     }
 
     [Fact]
+    public void Should_Test_HashMap_Add_Method_When_Items_To_Same_Bucket()
+    {
+        // Arrange
+        HashMap<int, string> hashMap = new();
+
+        // Act
+        hashMap.Add(10, "ten");
+        string item1 = hashMap.Get(10);
+
+        hashMap.Add(20, "twenty");
+        string item2 = hashMap.Get(20);
+
+        // Assert
+        Assert.Equal("ten", item1);
+        Assert.Equal("twenty", item2);
+    }
+
+    [Fact]
+    public void Should_Test_HashMap_TryAdd_Method_When_Items_To_Same_Bucket()
+    {
+        // Arrange
+        HashMap<int, string> hashMap = new();
+
+        // Act
+        bool couldAdd1 = hashMap.TryAdd(10, "ten");
+        string item1 = hashMap.Get(10);
+
+        bool couldAdd2 = hashMap.TryAdd(20, "twenty");
+        string item2 = hashMap.Get(20);
+
+        // Assert
+        Assert.True(couldAdd1);
+        Assert.Equal("ten", item1);
+        Assert.True(couldAdd2);
+        Assert.Equal("twenty", item2);
+    }
+
+    [Fact]
     public void Should_Test_HashMap_Update_Method_When_Empty()
     {
         // Arrange
@@ -321,9 +359,9 @@ public class TestClosedAddressingSeparateChainingHashMap
 
         // Act
         void RemoveItem() => removed = hashMap.Remove(5);
-        Exception exception = Assert.Throws<Exception>(RemoveItem);
 
         // Assert
+        Exception exception = Assert.Throws<Exception>(RemoveItem);
         Assert.Equal("error. cannot remove value. key does not contain", exception.Message);
         Assert.Null(removed);
     }
@@ -432,6 +470,43 @@ public class TestClosedAddressingSeparateChainingHashMap
         // Assert
         Assert.False(couldRemove);
         Assert.Null(removed);
+    }
+
+    [Fact]
+    public void Should_Test_HashMap_Add_Method_When_Remove_Then_ReAdd()
+    {
+        // Arrange
+        HashMap<int, string> hashMap = new();
+
+        hashMap.Add(10, "ten");
+
+        string? removed = hashMap.Remove(10);
+
+        // Act
+        bool? couldReAdd = hashMap.TryAdd(10, "ten");
+
+        // Assert
+        Assert.Equal("ten", removed);
+        Assert.True(couldReAdd);
+    }
+
+    [Fact]
+    public void Should_Test_HashMap_Add_Method_When_TryRemove_Then_ReAdd()
+    {
+        // Arrange
+        HashMap<int, string> hashMap = new();
+
+        hashMap.Add(10, "ten");
+
+        bool? couldRemove = hashMap.TryRemove(10, out string? removed);
+
+        // Act
+        bool? couldReAdd = hashMap.TryAdd(10, "ten");
+
+        // Assert
+        Assert.True(couldRemove);
+        Assert.Equal("ten", removed);
+        Assert.True(couldReAdd);
     }
 
     [Fact]
