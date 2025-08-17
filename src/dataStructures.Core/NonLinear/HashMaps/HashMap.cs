@@ -38,8 +38,8 @@ public class HashMap<K, V> : IHashMap<K, V>
         _hashMap = hashType switch
         {
             ClosedAddressingSeparateChaining => new ClosedAddressingSeparateChainingHashMap<K, V>(loadFactor),
-            OpenAddressingLinearProbing => new OpenAddressingLinearProbingHashMap<K, V>(loadFactor),
-            OpenAddressingQuadraticHashing => throw new NotImplementedException(),
+            OpenAddressingLinearProbing => new LinearProbingHashMap<K, V>(loadFactor),
+            OpenAddressingQuadraticProbing => new QuadraticProbingHashMap<K, V>(loadFactor),
             OpenAddressingDoubleHashing => throw new NotImplementedException(),
             OpenAddressingRobinHoodHashing => throw new NotImplementedException(),
             _ => throw new NotImplementedException("error. cannot create hashmap. invalid hash type"),

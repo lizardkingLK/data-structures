@@ -6,23 +6,23 @@ using static dataStructures.Core.NonLinear.HashMaps.Shared.Constants;
 
 namespace dataStructures.Core.NonLinear.HashMaps;
 
-public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
+public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 {
-    private readonly HashingHelper<K> _hashing = new();
-
     private readonly float _loadFactor = loadFactor;
 
+    private readonly HashingHelper<K> _hashing = new();
+
     private DynamicArray<HashNode<K, V>?> _buckets = new();
-
-    public int Capacity { get; private set; } = INITIAL_CAPACITY;
-
-    public int Size { get; private set; }
 
     public V this[K key]
     {
         get => Get(key);
         set => Update(key, value);
     }
+
+    public int Capacity { get; private set; } = INITIAL_CAPACITY;
+
+    public int Size { get; private set; }
 
     public void Add(K key, V value)
     {
@@ -34,7 +34,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
         _buckets.Add(index, new(key, value));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if (Size / _loadFactor >= Capacity)
         {
             ReHash();
         }
@@ -91,7 +91,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
         _buckets.Add(index, new(key, value));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if (Size / _loadFactor >= Capacity)
         {
             ReHash();
         }
@@ -151,12 +151,17 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
         hashNode!.Value = value;
     }
 
-    private bool TryGetKey(K key, out int validIndex, out HashNode<K, V>? value, int? index = null)
+    private bool TryGetKey(
+        K key,
+        out int validIndex,
+        out HashNode<K, V>? value,
+        Func<int>? GetNextIndex = null)
     {
-        index ??= _hashing.GetBucketIndex(key, Capacity);
+        GetNextIndex ??= _hashing.GetQuadraticProbing(key, Capacity);
 
-        bool doesBucketContain = _buckets.TryGet(index.Value, out value);
-        validIndex = index.Value;
+        int index = GetNextIndex();
+        bool doesBucketContain = _buckets.TryGet(index, out value);
+        validIndex = index;
         if (doesBucketContain && value!.Key!.Equals(key))
         {
             return true;
@@ -166,7 +171,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
             return false;
         }
 
-        return TryGetKey(key, out validIndex, out value, index + 1);
+        return TryGetKey(key, out validIndex, out value, GetNextIndex);
     }
 
     private void ReHash()

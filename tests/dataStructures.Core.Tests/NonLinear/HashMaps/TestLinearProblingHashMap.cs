@@ -4,8 +4,8 @@ using static dataStructures.Core.NonLinear.HashMaps.Enums.HashTypeEnum;
 
 namespace dataStructures.Core.Tests.NonLinear.HashMaps;
 
-[Collection(nameof(TestOpenAddressingHashMap))]
-public class TestOpenAddressingHashMap
+[Collection(nameof(TestLinearProbingHashMap))]
+public class TestLinearProbingHashMap
 {
     [Theory]
     [InlineData(-1)]

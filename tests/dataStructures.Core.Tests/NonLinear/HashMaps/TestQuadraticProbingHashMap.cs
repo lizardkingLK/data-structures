@@ -4,8 +4,8 @@ using static dataStructures.Core.NonLinear.HashMaps.Enums.HashTypeEnum;
 
 namespace dataStructures.Core.Tests.NonLinear.HashMaps;
 
-[Collection(nameof(TestSeparateChainingHashMap))]
-public class TestSeparateChainingHashMap
+[Collection(nameof(TestQuadraticProbingHashMap))]
+public class TestQuadraticProbingHashMap
 {
     [Theory]
     [InlineData(-1)]
@@ -16,7 +16,7 @@ public class TestSeparateChainingHashMap
         // Arrange
         HashMap<int, string>? hashMap = null;
 
-        void ConstructHashMap() => hashMap = new(ClosedAddressingSeparateChaining, loadFactor);
+        void ConstructHashMap() => hashMap = new(OpenAddressingQuadraticProbing, loadFactor);
 
         // Act
         Exception exception = Assert.Throws<Exception>(ConstructHashMap);
@@ -30,7 +30,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Get_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         void GetItem() => hashMap.Get(5);
 
@@ -45,7 +45,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryGet_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         bool? couldGet = hashMap.TryGet(5, out string? value);
@@ -64,7 +64,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Get_Method_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         hashMap.Add(key, item);
@@ -83,7 +83,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Get_Method_When_Contains_But_Incorrect_Key(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
         void GetItem() => hashMap.Get(key + 1);
@@ -104,7 +104,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryGet_Method_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         hashMap.Add(key, item);
@@ -124,7 +124,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryGet_Method_When_Contains_But_Incorrect_Key(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         hashMap.Add(key, item);
@@ -144,7 +144,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryAdd_Method(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         bool? couldAdd = hashMap.TryAdd(key, item);
@@ -162,7 +162,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Add_Method_When_Same_Inserted(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
         void AddItem() => hashMap.Add(key, item);
@@ -183,7 +183,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryAdd_Method_When_Same_Inserted(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -198,7 +198,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Add_Method_When_Items_To_Same_Bucket()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         hashMap.Add(10, "ten");
@@ -216,7 +216,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryAdd_Method_When_Items_To_Same_Bucket()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         bool couldAdd1 = hashMap.TryAdd(10, "ten");
@@ -236,7 +236,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Update_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         void UpdateItem() => hashMap.Update(5, "five");
 
@@ -251,7 +251,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryUpdate_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         bool? couldUpdate = hashMap.TryUpdate(5, "five");
@@ -269,7 +269,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Update_Method_When_Contains(int key, string before, string after)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, before);
         string? gotBefore = hashMap.Get(key);
@@ -292,7 +292,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryUpdate_Method_When_Contains(int key, string before, string after)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, before);
         string? gotBefore = hashMap.Get(key);
@@ -316,7 +316,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Update_Method_When_Contains_But_Invalid_Key(int key, string before, string after)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, before);
 
@@ -338,7 +338,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryUpdate_Method_When_Contains_But_Invalid_Key(int key, string before, string after)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, before);
 
@@ -353,7 +353,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Remove_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         string? removed = null;
 
@@ -370,7 +370,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryRemove_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         bool? couldRemove = hashMap.TryRemove(5, out string? removed);
@@ -389,7 +389,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Remove_Method_When_Contain(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -412,7 +412,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryRemove_Method_When_Contain(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -436,7 +436,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Remove_Method_When_Contain_But_Invalid_Key(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -460,7 +460,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryRemove_Method_When_Contain_But_Invalid_Key(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -476,7 +476,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Add_Method_When_Remove_Then_ReAdd()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(10, "ten");
 
@@ -494,7 +494,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Add_Method_When_TryRemove_Then_ReAdd()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(10, "ten");
 
@@ -513,7 +513,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetHashNodes_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         IEnumerable<HashNode<int, string>> hashNodes = hashMap.GetHashNodes();
@@ -526,7 +526,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetKeyValues_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         IEnumerable<KeyValuePair<int, string>> keyValues = hashMap.GetKeyValues();
@@ -544,7 +544,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetHashNodes_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -564,7 +564,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetKeyValues_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -584,7 +584,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetHashNodes_When_Contains_And_Removed(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -608,7 +608,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetKeyValues_When_Contains_And_Removed(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -619,7 +619,7 @@ public class TestSeparateChainingHashMap
         List<KeyValuePair<int, string>> keyValuesAfter = [.. hashMap.GetKeyValues()];
 
         // Assert
-        Assert.Contains(new KeyValuePair<int, string>(key, item), keyValuesBefore);
+        Assert.Contains(new(key, item), keyValuesBefore);
         Assert.Empty(keyValuesAfter);
     }
 
@@ -627,7 +627,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Capacity_Property_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         int capacity = hashMap.Capacity;
@@ -640,7 +640,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Size_Property_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         // Act
         int size = hashMap.Size;
@@ -658,7 +658,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Capacity_Property_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -678,7 +678,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Size_Property_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -692,7 +692,7 @@ public class TestSeparateChainingHashMap
     [Fact]
     public void Should_Test_HashMap_Capacity_Property_When_Doubled()
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(-1, "minus_one");
         hashMap.Add(1, "one");
@@ -707,7 +707,7 @@ public class TestSeparateChainingHashMap
     [Fact]
     public void Should_Test_HashMap_Size_Property_When_Doubled()
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(-1, "minus_one");
         hashMap.Add(1, "one");
@@ -727,7 +727,7 @@ public class TestSeparateChainingHashMap
     [InlineData(1, "one")]
     public void Should_Test_Int_Indexer_Accessor(int key, string item)
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, item);
 
@@ -746,7 +746,7 @@ public class TestSeparateChainingHashMap
     [InlineData(1, "one", "One")]
     public void Should_Test_Int_Indexer_Mutator(int key, string before, string after)
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingQuadraticProbing);
 
         hashMap.Add(key, before);
         string gotBefore = hashMap.Get(key);
