@@ -4,8 +4,8 @@ using static dataStructures.Core.NonLinear.HashMaps.Enums.HashTypeEnum;
 
 namespace dataStructures.Core.Tests.NonLinear.HashMaps;
 
-[Collection(nameof(TestSeparateChainingHashMap))]
-public class TestSeparateChainingHashMap
+[Collection(nameof(TestLinearProbingHashMap))]
+public class TestLinearProbingHashMap
 {
     [Theory]
     [InlineData(-1)]
@@ -16,7 +16,7 @@ public class TestSeparateChainingHashMap
         // Arrange
         HashMap<int, string>? hashMap = null;
 
-        void ConstructHashMap() => hashMap = new(ClosedAddressingSeparateChaining, loadFactor);
+        void ConstructHashMap() => hashMap = new(OpenAddressingLinearProbing, loadFactor);
 
         // Act
         Exception exception = Assert.Throws<Exception>(ConstructHashMap);
@@ -30,7 +30,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Get_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         void GetItem() => hashMap.Get(5);
 
@@ -45,7 +45,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryGet_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         bool? couldGet = hashMap.TryGet(5, out string? value);
@@ -64,7 +64,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Get_Method_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         hashMap.Add(key, item);
@@ -83,7 +83,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Get_Method_When_Contains_But_Incorrect_Key(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
         void GetItem() => hashMap.Get(key + 1);
@@ -104,7 +104,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryGet_Method_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         hashMap.Add(key, item);
@@ -124,7 +124,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryGet_Method_When_Contains_But_Incorrect_Key(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         hashMap.Add(key, item);
@@ -144,7 +144,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryAdd_Method(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         bool? couldAdd = hashMap.TryAdd(key, item);
@@ -162,7 +162,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Add_Method_When_Same_Inserted(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
         void AddItem() => hashMap.Add(key, item);
@@ -183,7 +183,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryAdd_Method_When_Same_Inserted(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -198,7 +198,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Add_Method_When_Items_To_Same_Bucket()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         hashMap.Add(10, "ten");
@@ -216,7 +216,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryAdd_Method_When_Items_To_Same_Bucket()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         bool couldAdd1 = hashMap.TryAdd(10, "ten");
@@ -236,7 +236,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Update_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         void UpdateItem() => hashMap.Update(5, "five");
 
@@ -251,7 +251,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryUpdate_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         bool? couldUpdate = hashMap.TryUpdate(5, "five");
@@ -269,7 +269,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Update_Method_When_Contains(int key, string before, string after)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, before);
         string? gotBefore = hashMap.Get(key);
@@ -292,7 +292,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryUpdate_Method_When_Contains(int key, string before, string after)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, before);
         string? gotBefore = hashMap.Get(key);
@@ -316,7 +316,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Update_Method_When_Contains_But_Invalid_Key(int key, string before, string after)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, before);
 
@@ -338,7 +338,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryUpdate_Method_When_Contains_But_Invalid_Key(int key, string before, string after)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, before);
 
@@ -353,7 +353,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Remove_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         string? removed = null;
 
@@ -370,7 +370,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryRemove_Method_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         bool? couldRemove = hashMap.TryRemove(5, out string? removed);
@@ -389,7 +389,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Remove_Method_When_Contain(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -412,7 +412,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryRemove_Method_When_Contain(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -436,7 +436,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Remove_Method_When_Contain_But_Invalid_Key(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -460,7 +460,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_TryRemove_Method_When_Contain_But_Invalid_Key(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -476,7 +476,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Add_Method_When_Remove_Then_ReAdd()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(10, "ten");
 
@@ -494,7 +494,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Add_Method_When_TryRemove_Then_ReAdd()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(10, "ten");
 
@@ -513,7 +513,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetHashNodes_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         IEnumerable<HashNode<int, string>> hashNodes = hashMap.GetHashNodes();
@@ -526,7 +526,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetKeyValues_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         IEnumerable<KeyValuePair<int, string>> keyValues = hashMap.GetKeyValues();
@@ -544,7 +544,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetHashNodes_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -558,7 +558,7 @@ public class TestSeparateChainingHashMap
     [Fact]
     public void Should_Test_HashMap_GetHashNodes_When_Contains_Many()
     {
-        HashMap<int, string> hashMap = new(ClosedAddressingSeparateChaining);
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(27, "27");
         hashMap.Add(43, "43");
@@ -578,7 +578,7 @@ public class TestSeparateChainingHashMap
     [Fact]
     public void Should_Test_HashMap_GetHashNodes_When_Contains_Many_Quadratic()
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(4, "4");
         hashMap.Add(8, "8");
@@ -606,7 +606,7 @@ public class TestSeparateChainingHashMap
     [Fact]
     public void Should_Test_HashMap_GetHashNodes_When_Contains_Many_Mixed_Keys()
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(4, "4");
         hashMap.Add(27, "27");
@@ -643,7 +643,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetHashNodes_When_Contains_Many_Random_Keys()
     {
         // Arrange
-        HashMap<int, int> hashMap = new();
+        HashMap<int, int> hashMap = new(OpenAddressingLinearProbing);
 
         List<HashNode<int, int>> itemsList = [.. Enumerable
         .Range(0, 20)
@@ -660,9 +660,9 @@ public class TestSeparateChainingHashMap
         IEnumerable<HashNode<int, int>> hashNodes = hashMap.GetHashNodes();
 
         // Assert
-        foreach ((int key, int value) in hashNodes)
+        foreach (HashNode<int, int> item in hashNodes)
         {
-            Assert.Contains(new(key, value), itemsList);
+            Assert.Contains(item, itemsList);
         }
     }
 
@@ -675,7 +675,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetKeyValues_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -695,7 +695,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetHashNodes_When_Contains_And_Removed(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -719,7 +719,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_GetKeyValues_When_Contains_And_Removed(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -730,7 +730,7 @@ public class TestSeparateChainingHashMap
         List<KeyValuePair<int, string>> keyValuesAfter = [.. hashMap.GetKeyValues()];
 
         // Assert
-        Assert.Contains(new KeyValuePair<int, string>(key, item), keyValuesBefore);
+        Assert.Contains(new(key, item), keyValuesBefore);
         Assert.Empty(keyValuesAfter);
     }
 
@@ -738,7 +738,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Capacity_Property_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         int capacity = hashMap.Capacity;
@@ -751,7 +751,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Size_Property_When_Empty()
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         // Act
         int size = hashMap.Size;
@@ -769,7 +769,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Capacity_Property_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -789,7 +789,7 @@ public class TestSeparateChainingHashMap
     public void Should_Test_HashMap_Size_Property_When_Contains(int key, string item)
     {
         // Arrange
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -803,7 +803,7 @@ public class TestSeparateChainingHashMap
     [Fact]
     public void Should_Test_HashMap_Capacity_Property_When_Doubled()
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(-1, "minus_one");
         hashMap.Add(1, "one");
@@ -818,7 +818,7 @@ public class TestSeparateChainingHashMap
     [Fact]
     public void Should_Test_HashMap_Size_Property_When_Doubled()
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(-1, "minus_one");
         hashMap.Add(1, "one");
@@ -833,7 +833,7 @@ public class TestSeparateChainingHashMap
     [Fact]
     public void Should_Test_HashMap_Capacity_Property_When_Added_Many()
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(27, "27");
         hashMap.Add(43, "43");
@@ -855,7 +855,7 @@ public class TestSeparateChainingHashMap
     [InlineData(1, "one")]
     public void Should_Test_Int_Indexer_Accessor(int key, string item)
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, item);
 
@@ -874,7 +874,7 @@ public class TestSeparateChainingHashMap
     [InlineData(1, "one", "One")]
     public void Should_Test_Int_Indexer_Mutator(int key, string before, string after)
     {
-        HashMap<int, string> hashMap = new();
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
 
         hashMap.Add(key, before);
         string gotBefore = hashMap.Get(key);

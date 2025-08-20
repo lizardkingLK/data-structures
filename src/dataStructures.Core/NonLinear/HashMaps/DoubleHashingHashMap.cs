@@ -6,17 +6,13 @@ using static dataStructures.Core.NonLinear.HashMaps.Shared.Constants;
 
 namespace dataStructures.Core.NonLinear.HashMaps;
 
-public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
+public class DoubleHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 {
-    private readonly HashingHelper<K> _hashing = new();
-
     private readonly float _loadFactor = loadFactor;
 
+    private readonly HashingHelper<K> _hashing = new();
+
     private DynamicArray<HashNode<K, V>?> _buckets = new();
-
-    public int Capacity { get; private set; } = INITIAL_CAPACITY;
-
-    public int Size { get; private set; }
 
     public V this[K key]
     {
@@ -24,9 +20,13 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
         set => Update(key, value);
     }
 
+    public int Capacity { get; private set; } = INITIAL_CAPACITY;
+
+    public int Size { get; private set; }
+
     public void Add(K key, V value)
     {
-        if (TryGetKey(key, out int index, out _))
+        if (ContainsKey(key, out int index, out _))
         {
             throw new Exception("error. cannot add value. key already contain");
         }
@@ -34,7 +34,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
         _buckets.Add(index, new(key, value));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if (Size / _loadFactor >= Capacity)
         {
             ReHash();
         }
@@ -42,7 +42,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
 
     public V Get(K key)
     {
-        if (!TryGetKey(key, out _, out HashNode<K, V>? value))
+        if (!ContainsKey(key, out _, out HashNode<K, V>? value))
         {
             throw new Exception("error. cannot get value. key does not contain");
         }
@@ -71,7 +71,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
 
     public V Remove(K key)
     {
-        if (!TryGetKey(key, out int index, out HashNode<K, V>? value))
+        if (!ContainsKey(key, out int index, out HashNode<K, V>? value))
         {
             throw new Exception("error. cannot remove value. key does not contain");
         }
@@ -83,7 +83,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
 
     public bool TryAdd(K key, V value)
     {
-        if (TryGetKey(key, out int index, out _))
+        if (ContainsKey(key, out int index, out _))
         {
             return false;
         }
@@ -91,7 +91,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
         _buckets.Add(index, new(key, value));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if (Size / _loadFactor >= Capacity)
         {
             ReHash();
         }
@@ -103,7 +103,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
     {
         value = default;
 
-        if (!TryGetKey(key, out _, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out _, out HashNode<K, V>? hashNode))
         {
             return false;
         }
@@ -117,7 +117,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
     {
         value = default;
 
-        if (!TryGetKey(key, out int index, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out int index, out HashNode<K, V>? hashNode))
         {
             return false;
         }
@@ -131,7 +131,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
 
     public bool TryUpdate(K key, V value)
     {
-        if (!TryGetKey(key, out _, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out _, out HashNode<K, V>? hashNode))
         {
             return false;
         }
@@ -143,7 +143,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
 
     public void Update(K key, V value)
     {
-        if (!TryGetKey(key, out _, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out _, out HashNode<K, V>? hashNode))
         {
             throw new Exception("error. cannot update value. key does not contain");
         }
@@ -151,12 +151,16 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
         hashNode!.Value = value;
     }
 
-    private bool TryGetKey(K key, out int validIndex, out HashNode<K, V>? value, int? index = null)
+    private bool ContainsKey(
+        K key,
+        out int validIndex,
+        out HashNode<K, V>? value,
+        Func<int>? GetNextIndex = null)
     {
-        index ??= _hashing.GetBucketIndex(key, Capacity);
+        GetNextIndex ??= _hashing.GetDoubleHashing(key, Capacity);
 
-        bool doesBucketContain = _buckets.TryGet(index.Value, out value);
-        validIndex = index.Value;
+        validIndex = GetNextIndex();
+        bool doesBucketContain = _buckets.TryGet(validIndex, out value);
         if (doesBucketContain && value!.Key!.Equals(key))
         {
             return true;
@@ -166,7 +170,7 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
             return false;
         }
 
-        return TryGetKey(key, out validIndex, out value, index + 1);
+        return ContainsKey(key, out validIndex, out value, GetNextIndex);
     }
 
     private void ReHash()
@@ -177,6 +181,11 @@ public class OpenAddressingLinearProbingHashMap<K, V>(float loadFactor) : IHashM
         foreach (HashNode<K, V> bucket in GetHashNodes())
         {
             index = _hashing.GetBucketIndex(bucket.Key, Capacity);
+            while (tempBuckets.TryGet(index, out HashNode<K, V>? value))
+            {
+                index = (index + 1) % Capacity;
+            }
+
             tempBuckets.Add(index, bucket);
         }
 

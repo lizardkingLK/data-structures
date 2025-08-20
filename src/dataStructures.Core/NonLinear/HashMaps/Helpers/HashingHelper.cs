@@ -13,4 +13,21 @@ public class HashingHelper<K>
 
         return GetAbsoluteValue(key.GetHashCode()) % capacity;
     }
+
+    public Func<int> GetQuadraticProbing(K key, int capacity)
+    {
+        int index = GetBucketIndex(key, capacity);
+        int iteration = 0;
+
+        return () => (index + (iteration + iteration * iteration++) / 2) % capacity;
+    }
+
+    public Func<int> GetDoubleHashing(K key, int capacity)
+    {
+        int index = GetBucketIndex(key, capacity);
+        int prime = GetPrimeNumber(capacity);
+        int iteration = 0;
+
+        return () => (index + iteration++ * (prime - index % prime)) % capacity;
+    }
 }

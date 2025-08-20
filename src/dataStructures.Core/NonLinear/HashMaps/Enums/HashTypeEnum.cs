@@ -4,7 +4,7 @@ public enum HashTypeEnum
 {
     ClosedAddressingSeparateChaining,
     OpenAddressingLinearProbing,
-    OpenAddressingQuadraticHashing,
+    OpenAddressingQuadraticProbing,
     OpenAddressingDoubleHashing,
     OpenAddressingRobinHoodHashing,
 }
