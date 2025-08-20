@@ -98,7 +98,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
 
     public IEnumerable<KeyValuePair<K, V>> GetKeyValues()
     {
-        foreach ((K key, V value) in GetHashNodes())
+        foreach ((K key, V value, _) in GetHashNodes())
         {
             yield return new(key, value);
         }
@@ -183,7 +183,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
         Capacity *= 2;
         DynamicArray<Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>> tempBuckets = new(Capacity);
         int index;
-        foreach ((K key, V value) in GetHashNodes())
+        foreach ((K key, V value, _) in GetHashNodes())
         {
             index = _hashing.GetBucketIndex(key, Capacity);
             if (!tempBuckets.TryGet(index, out Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>? bucket))

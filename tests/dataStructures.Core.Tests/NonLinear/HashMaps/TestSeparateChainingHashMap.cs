@@ -651,7 +651,7 @@ public class TestSeparateChainingHashMap
         .Distinct()
         .Select(item => new HashNode<int, int>(item, item))];
 
-        foreach ((int key, int value) in itemsList)
+        foreach ((int key, int value, _) in itemsList)
         {
             hashMap.Add(key, value);
         }
@@ -660,7 +660,7 @@ public class TestSeparateChainingHashMap
         IEnumerable<HashNode<int, int>> hashNodes = hashMap.GetHashNodes();
 
         // Assert
-        foreach ((int key, int value) in hashNodes)
+        foreach ((int key, int value, _) in hashNodes)
         {
             Assert.Contains(new(key, value), itemsList);
         }

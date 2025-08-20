@@ -651,7 +651,7 @@ public class TestQuadraticProbingHashMap
         .Distinct()
         .Select(item => new HashNode<int, int>(item, item))];
 
-        foreach ((int key, int value) in itemsList)
+        foreach ((int key, int value, _) in itemsList)
         {
             hashMap.Add(key, value);
         }
