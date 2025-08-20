@@ -28,6 +28,6 @@ public class HashingHelper<K>
         int prime = GetPrimeNumber(capacity);
         int iteration = 0;
 
-        return () => (index + iteration++ * (prime - index % prime)) % capacity;
+        return () => (index + iteration++ * (prime - index % prime) / 2) % capacity;
     }
 }
