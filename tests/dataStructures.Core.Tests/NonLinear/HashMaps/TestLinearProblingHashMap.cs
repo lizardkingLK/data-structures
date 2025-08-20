@@ -555,6 +555,117 @@ public class TestLinearProbingHashMap
         Assert.Contains(new(key, item), hashNodes);
     }
 
+    [Fact]
+    public void Should_Test_HashMap_GetHashNodes_When_Contains_Many()
+    {
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
+
+        hashMap.Add(27, "27");
+        hashMap.Add(43, "43");
+        hashMap.Add(692, "692");
+        hashMap.Add(72, "72");
+
+        // Act
+        IEnumerable<HashNode<int, string>> hashNodes = hashMap.GetHashNodes();
+
+        // Assert
+        Assert.Contains(new(27, "27"), hashNodes);
+        Assert.Contains(new(43, "43"), hashNodes);
+        Assert.Contains(new(692, "692"), hashNodes);
+        Assert.Contains(new(72, "72"), hashNodes);
+    }
+
+    [Fact]
+    public void Should_Test_HashMap_GetHashNodes_When_Contains_Many_Quadratic()
+    {
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
+
+        hashMap.Add(4, "4");
+        hashMap.Add(8, "8");
+        hashMap.Add(12, "12");
+        hashMap.Add(16, "16");
+        hashMap.Add(20, "20");
+        hashMap.Add(24, "24");
+        hashMap.Add(28, "28");
+        hashMap.Add(32, "32");
+
+        // Act
+        IEnumerable<HashNode<int, string>> hashNodes = hashMap.GetHashNodes();
+
+        // Assert
+        Assert.Contains(new(4, "4"), hashNodes);
+        Assert.Contains(new(8, "8"), hashNodes);
+        Assert.Contains(new(12, "12"), hashNodes);
+        Assert.Contains(new(16, "16"), hashNodes);
+        Assert.Contains(new(20, "20"), hashNodes);
+        Assert.Contains(new(24, "24"), hashNodes);
+        Assert.Contains(new(28, "28"), hashNodes);
+        Assert.Contains(new(32, "32"), hashNodes);
+    }
+
+    [Fact]
+    public void Should_Test_HashMap_GetHashNodes_When_Contains_Many_Mixed_Keys()
+    {
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
+
+        hashMap.Add(4, "4");
+        hashMap.Add(27, "27");
+        hashMap.Add(8, "8");
+        hashMap.Add(43, "43");
+        hashMap.Add(12, "12");
+        hashMap.Add(692, "692");
+        hashMap.Add(16, "16");
+        hashMap.Add(72, "72");
+        hashMap.Add(20, "20");
+        hashMap.Add(24, "24");
+        hashMap.Add(28, "28");
+        hashMap.Add(32, "32");
+
+        // Act
+        IEnumerable<HashNode<int, string>> hashNodes = hashMap.GetHashNodes();
+
+        // Assert
+        Assert.Contains(new(4, "4"), hashNodes);
+        Assert.Contains(new(27, "27"), hashNodes);
+        Assert.Contains(new(8, "8"), hashNodes);
+        Assert.Contains(new(43, "43"), hashNodes);
+        Assert.Contains(new(12, "12"), hashNodes);
+        Assert.Contains(new(692, "692"), hashNodes);
+        Assert.Contains(new(16, "16"), hashNodes);
+        Assert.Contains(new(72, "72"), hashNodes);
+        Assert.Contains(new(20, "20"), hashNodes);
+        Assert.Contains(new(24, "24"), hashNodes);
+        Assert.Contains(new(28, "28"), hashNodes);
+        Assert.Contains(new(32, "32"), hashNodes);
+    }
+
+    [Fact]
+    public void Should_Test_HashMap_GetHashNodes_When_Contains_Many_Random_Keys()
+    {
+        // Arrange
+        HashMap<int, int> hashMap = new(OpenAddressingLinearProbing);
+
+        List<HashNode<int, int>> itemsList = [.. Enumerable
+        .Range(0, 20)
+        .Select((_, index) => Random.Shared.Next(-20, 20))
+        .Distinct()
+        .Select(item => new HashNode<int, int>(item, item))];
+
+        foreach ((int key, int value) in itemsList)
+        {
+            hashMap.Add(key, value);
+        }
+
+        // Act
+        IEnumerable<HashNode<int, int>> hashNodes = hashMap.GetHashNodes();
+
+        // Assert
+        foreach (HashNode<int, int> item in hashNodes)
+        {
+            Assert.Contains(item, itemsList);
+        }
+    }
+
     [Theory]
     [InlineData(-1, "minus_one")]
     [InlineData(5, "five")]
@@ -717,6 +828,23 @@ public class TestLinearProbingHashMap
 
         // Assert
         Assert.Equal(2, size);
+    }
+
+    [Fact]
+    public void Should_Test_HashMap_Capacity_Property_When_Added_Many()
+    {
+        HashMap<int, string> hashMap = new(OpenAddressingLinearProbing);
+
+        hashMap.Add(27, "27");
+        hashMap.Add(43, "43");
+        hashMap.Add(692, "692");
+        hashMap.Add(72, "72");
+
+        // Act
+        int capacity = hashMap.Capacity;
+
+        // Assert
+        Assert.Equal(8, capacity);
     }
 
     [Theory]

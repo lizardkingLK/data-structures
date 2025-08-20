@@ -47,7 +47,7 @@ public class TestDynamicArray
     public void Should_Test_Add_At_Index()
     {
         // Arrange
-        DynamicArray<int> dynamicArray = new();
+        DynamicArray<int> dynamicArray = new(5);
 
         // Act
         dynamicArray.Add(0, 5);

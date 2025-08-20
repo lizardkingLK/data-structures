@@ -6,7 +6,7 @@ using static dataStructures.Core.NonLinear.HashMaps.Shared.Constants;
 
 namespace dataStructures.Core.NonLinear.HashMaps;
 
-public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
+public class DoubleHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 {
     private readonly float _loadFactor = loadFactor;
 
@@ -34,7 +34,7 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Add(index, new(key, value));
         Size++;
 
-        if (Size >= Capacity)
+        if (Size / _loadFactor >= Capacity)
         {
             ReHash();
         }
@@ -157,12 +157,10 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         out HashNode<K, V>? value,
         Func<int>? GetNextIndex = null)
     {
-        GetNextIndex ??= _hashing.GetQuadraticProbing(key, Capacity);
+        GetNextIndex ??= _hashing.GetDoubleHashing(key, Capacity);
 
         validIndex = GetNextIndex();
-
         bool doesBucketContain = _buckets.TryGet(validIndex, out value);
-
         if (doesBucketContain && value!.Key!.Equals(key))
         {
             return true;

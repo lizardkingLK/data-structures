@@ -26,7 +26,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public void Add(K key, V value)
     {
-        if (TryGetKey(key, out int index, out _))
+        if (ContainsKey(key, out int index, out _))
         {
             throw new Exception("error. cannot add value. key already contain");
         }
@@ -38,11 +38,13 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         {
             ReHash();
         }
+        
+        bool xd = TryGet(key, out V? val);
     }
 
     public V Get(K key)
     {
-        if (!TryGetKey(key, out _, out HashNode<K, V>? value))
+        if (!ContainsKey(key, out _, out HashNode<K, V>? value))
         {
             throw new Exception("error. cannot get value. key does not contain");
         }
@@ -71,7 +73,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public V Remove(K key)
     {
-        if (!TryGetKey(key, out int index, out HashNode<K, V>? value))
+        if (!ContainsKey(key, out int index, out HashNode<K, V>? value))
         {
             throw new Exception("error. cannot remove value. key does not contain");
         }
@@ -83,7 +85,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public bool TryAdd(K key, V value)
     {
-        if (TryGetKey(key, out int index, out _))
+        if (ContainsKey(key, out int index, out _))
         {
             return false;
         }
@@ -103,7 +105,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
     {
         value = default;
 
-        if (!TryGetKey(key, out _, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out _, out HashNode<K, V>? hashNode))
         {
             return false;
         }
@@ -117,7 +119,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
     {
         value = default;
 
-        if (!TryGetKey(key, out int index, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out int index, out HashNode<K, V>? hashNode))
         {
             return false;
         }
@@ -131,7 +133,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public bool TryUpdate(K key, V value)
     {
-        if (!TryGetKey(key, out _, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out _, out HashNode<K, V>? hashNode))
         {
             return false;
         }
@@ -143,7 +145,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public void Update(K key, V value)
     {
-        if (!TryGetKey(key, out _, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out _, out HashNode<K, V>? hashNode))
         {
             throw new Exception("error. cannot update value. key does not contain");
         }
@@ -151,12 +153,16 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         hashNode!.Value = value;
     }
 
-    private bool TryGetKey(K key, out int validIndex, out HashNode<K, V>? value, int? index = null)
+    private bool ContainsKey(
+        K key,
+        out int validIndex,
+        out HashNode<K, V>? value,
+        int? index = null)
     {
         index ??= _hashing.GetBucketIndex(key, Capacity);
 
-        bool doesBucketContain = _buckets.TryGet(index.Value, out value);
-        validIndex = index.Value;
+        validIndex = index.Value % Capacity;
+        bool doesBucketContain = _buckets.TryGet(validIndex, out value);
         if (doesBucketContain && value!.Key!.Equals(key))
         {
             return true;
@@ -166,7 +172,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             return false;
         }
 
-        return TryGetKey(key, out validIndex, out value, index + 1);
+        return ContainsKey(key, out validIndex, out value, validIndex + 1);
     }
 
     private void ReHash()
@@ -177,6 +183,11 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         foreach (HashNode<K, V> bucket in GetHashNodes())
         {
             index = _hashing.GetBucketIndex(bucket.Key, Capacity);
+            while (tempBuckets.TryGet(index, out HashNode<K, V>? value))
+            {
+                index = (index + 1) % Capacity;
+            }
+
             tempBuckets.Add(index, bucket);
         }
 

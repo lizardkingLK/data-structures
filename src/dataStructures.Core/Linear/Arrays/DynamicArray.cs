@@ -47,12 +47,12 @@ public class DynamicArray<T>
 
     public T Add(int index, T item)
     {
-        if (index < 0 || index > Capacity)
+        if (index < 0 || index >= Capacity)
         {
             throw new Exception("error. cannot insert. invalid index");
         }
 
-        if (Size == Capacity || index == Capacity)
+        if (Size == Capacity)
         {
             GrowArray();
         }
@@ -65,12 +65,12 @@ public class DynamicArray<T>
 
     public bool TryAdd(int index, T item)
     {
-        if (index < 0 || index > Capacity)
+        if (index < 0 || index >= Capacity)
         {
             return false;
         }
 
-        if (Size == Capacity || index == Capacity)
+        if (Size == Capacity)
         {
             GrowArray();
         }
@@ -108,7 +108,7 @@ public class DynamicArray<T>
             throw new Exception("error. cannot remove. no items");
         }
 
-        if (index < 0 || index > Capacity)
+        if (index < 0 || index >= Capacity)
         {
             throw new Exception("error. cannot remove. invalid index");
         }

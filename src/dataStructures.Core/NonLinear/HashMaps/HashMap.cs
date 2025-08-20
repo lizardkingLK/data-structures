@@ -40,8 +40,8 @@ public class HashMap<K, V> : IHashMap<K, V>
             ClosedAddressingSeparateChaining => new ClosedAddressingSeparateChainingHashMap<K, V>(loadFactor),
             OpenAddressingLinearProbing => new LinearProbingHashMap<K, V>(loadFactor),
             OpenAddressingQuadraticProbing => new QuadraticProbingHashMap<K, V>(loadFactor),
-            OpenAddressingDoubleHashing => throw new NotImplementedException(),
-            OpenAddressingRobinHoodHashing => throw new NotImplementedException(),
+            OpenAddressingDoubleHashing => new DoubleHashingHashMap<K, V>(loadFactor),
+            OpenAddressingRobinHoodHashing => new RobinHoodHashingHashMap<K, V>(loadFactor),
             _ => throw new NotImplementedException("error. cannot create hashmap. invalid hash type"),
         };
     }
