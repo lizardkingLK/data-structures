@@ -901,10 +901,10 @@ public class TestSeparateChainingHashMap
         // Act
         hashMap.Remove(22);
 
-        bool doesContain = hashMap.TryGet(33, out string? value);
+        bool doesContain = hashMap.TryGet(11, out string? value);
 
         // Assert
         Assert.True(doesContain);
-        Assert.Equal("thirty-three", value);
+        Assert.Equal("eleven", value);
     }
 }
