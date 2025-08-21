@@ -63,7 +63,7 @@ public class DoubleHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public IEnumerable<KeyValuePair<K, V>> GetKeyValues()
     {
-        foreach ((K key, V value) in GetHashNodes())
+        foreach ((K key, V value, _) in GetHashNodes())
         {
             yield return new(key, value);
         }
