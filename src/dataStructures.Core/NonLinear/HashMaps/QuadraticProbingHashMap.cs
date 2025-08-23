@@ -54,7 +54,7 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
     {
         foreach (HashNode<K, V>? bucket in _buckets.Values)
         {
-            if (bucket is not null)
+            if (bucket is { IsActive: true })
             {
                 yield return bucket;
             }
@@ -63,7 +63,7 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public IEnumerable<KeyValuePair<K, V>> GetKeyValues()
     {
-        foreach ((K key, V value, _) in GetHashNodes())
+        foreach ((K key, V value, _, _) in GetHashNodes())
         {
             yield return new(key, value);
         }
@@ -76,7 +76,9 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             throw new Exception("error. cannot remove value. key does not contain");
         }
 
-        _buckets.Remove(index);
+        value!.IsActive = false;
+
+        _buckets.Update(index, value);
 
         return value!.Value;
     }
@@ -122,7 +124,9 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             return false;
         }
 
-        _buckets.Remove(index);
+        hashNode!.IsActive = false;
+
+        _buckets.Update(index, hashNode);
 
         value = hashNode!.Value;
 
@@ -162,8 +166,7 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         validIndex = GetNextIndex();
 
         bool doesBucketContain = _buckets.TryGet(validIndex, out value);
-
-        if (doesBucketContain && value!.Key!.Equals(key))
+        if (doesBucketContain && value!.Key!.Equals(key) && value.IsActive)
         {
             return true;
         }

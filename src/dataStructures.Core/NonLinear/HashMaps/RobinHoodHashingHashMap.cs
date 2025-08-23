@@ -8,21 +8,21 @@ namespace dataStructures.Core.NonLinear.HashMaps;
 
 public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 {
-    private readonly float _loadFactor = loadFactor;
-
     private readonly HashingHelper<K> _hashing = new();
 
+    private readonly float _loadFactor = loadFactor;
+
     private DynamicArray<HashNode<K, V>?> _buckets = new();
+
+    public int Capacity { get; private set; } = INITIAL_CAPACITY;
+
+    public int Size { get; private set; }
 
     public V this[K key]
     {
         get => Get(key);
         set => Update(key, value);
     }
-
-    public int Capacity { get; private set; } = INITIAL_CAPACITY;
-
-    public int Size { get; private set; }
 
     public void Add(K key, V value)
     {
@@ -34,7 +34,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Add(index, new(key, value));
         Size++;
 
-        if (Size >= Capacity)
+        if (Size / Capacity >= _loadFactor)
         {
             ReHash();
         }
@@ -54,7 +54,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
     {
         foreach (HashNode<K, V>? bucket in _buckets.Values)
         {
-            if (bucket is not null)
+            if (bucket is { IsActive: true })
             {
                 yield return bucket;
             }
@@ -63,7 +63,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public IEnumerable<KeyValuePair<K, V>> GetKeyValues()
     {
-        foreach ((K key, V value, _) in GetHashNodes())
+        foreach ((K key, V value, _, _) in GetHashNodes())
         {
             yield return new(key, value);
         }
@@ -76,7 +76,9 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             throw new Exception("error. cannot remove value. key does not contain");
         }
 
-        _buckets.Remove(index);
+        value!.IsActive = false;
+
+        _buckets.Update(index, value);
 
         return value!.Value;
     }
@@ -91,7 +93,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Add(index, new(key, value));
         Size++;
 
-        if (Size / _loadFactor >= Capacity)
+        if (Size / Capacity >= _loadFactor)
         {
             ReHash();
         }
@@ -122,7 +124,9 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             return false;
         }
 
-        _buckets.Remove(index);
+        hashNode!.IsActive = false;
+
+        _buckets.Update(index, hashNode);
 
         value = hashNode!.Value;
 
@@ -155,16 +159,14 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         K key,
         out int validIndex,
         out HashNode<K, V>? value,
-        (Func<int>, Func<int>)? GetIndexFunctions = null)
+        (Func<int>, Func<int>)? robinHoodHashing = null)
     {
-        GetIndexFunctions ??= _hashing.GetRobinHoodHashing(key, Capacity);
-        (Func<int> GetNextIndex, Func<int> GetPSL) = GetIndexFunctions.Value;
+        robinHoodHashing ??= _hashing.GetRobinHoodHashing(key, Capacity);
+        (Func<int> GetNextIndex, Func<int> GetPSL) = robinHoodHashing.Value;
 
         validIndex = GetNextIndex();
-
         bool doesBucketContain = _buckets.TryGet(validIndex, out value);
-
-        if (doesBucketContain && value!.Key!.Equals(key))
+        if (doesBucketContain && value!.Key!.Equals(key) && value.IsActive)
         {
             return true;
         }
@@ -173,7 +175,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             return false;
         }
 
-        return ContainsKey(key, out validIndex, out value, GetIndexFunctions);
+        return ContainsKey(key, out validIndex, out value, robinHoodHashing);
     }
 
     private void ReHash()
