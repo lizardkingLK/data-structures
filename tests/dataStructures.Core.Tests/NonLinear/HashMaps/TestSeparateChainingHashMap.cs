@@ -651,7 +651,7 @@ public class TestSeparateChainingHashMap
         .Distinct()
         .Select(item => new HashNode<int, int>(item, item))];
 
-        foreach ((int key, int value, _) in itemsList)
+        foreach ((int key, int value, _, _) in itemsList)
         {
             hashMap.Add(key, value);
         }
@@ -660,7 +660,7 @@ public class TestSeparateChainingHashMap
         IEnumerable<HashNode<int, int>> hashNodes = hashMap.GetHashNodes();
 
         // Assert
-        foreach ((int key, int value, _) in hashNodes)
+        foreach ((int key, int value, _, _) in hashNodes)
         {
             Assert.Contains(new(key, value), itemsList);
         }
@@ -699,7 +699,9 @@ public class TestSeparateChainingHashMap
 
         hashMap.Add(key, item);
 
-        List<HashNode<int, string>> hashNodesBefore = [.. hashMap.GetHashNodes()];
+        List<HashNode<int, string>> hashNodesBefore = [.. hashMap
+        .GetHashNodes()
+        .Select(hashNode => new HashNode<int, string>(key, hashNode.Value))];
 
         // Act
         hashMap.Remove(key);
@@ -889,7 +891,7 @@ public class TestSeparateChainingHashMap
     }
 
     [Fact]
-    public void Should_Test_Remove_For_Tombstones()
+    public void Should_Test_HashMap_Remove_Method_When_Tombstones()
     {
         // Arrange
         HashMap<int, string> hashMap = new();
@@ -904,6 +906,28 @@ public class TestSeparateChainingHashMap
         bool doesContain = hashMap.TryGet(11, out string? value);
 
         // Assert
+        Assert.True(doesContain);
+        Assert.Equal("eleven", value);
+    }
+
+    [Fact]
+    public void Should_Test_HashMap_TryRemove_Method_When_Tombstones()
+    {
+        // Arrange
+        HashMap<int, string> hashMap = new();
+
+        hashMap.Add(11, "eleven");
+        hashMap.Add(22, "twenty-two");
+        hashMap.Add(33, "thirty-three");
+
+        // Act
+        bool couldRemove = hashMap.TryRemove(22, out string? removed);
+
+        bool doesContain = hashMap.TryGet(11, out string? value);
+
+        // Assert
+        Assert.True(couldRemove);
+        Assert.Equal("twenty-two", removed);
         Assert.True(doesContain);
         Assert.Equal("eleven", value);
     }

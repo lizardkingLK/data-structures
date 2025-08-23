@@ -672,7 +672,9 @@ public class TestRobinHoodHashingHashMap
 
     //     hashMap.Add(key, item);
 
-    //     List<HashNode<int, string>> hashNodesBefore = [.. hashMap.GetHashNodes()];
+    //     List<HashNode<int, string>> hashNodesBefore = [.. hashMap
+    // .GetHashNodes()
+    // .Select(hashNode => new HashNode<int, string>(key, hashNode.Value))];
 
     //     // Act
     //     hashMap.Remove(key);

@@ -130,6 +130,38 @@ public class DynamicArray<T>
         return removed;
     }
 
+    public void Update(int index, T value)
+    {
+        if (Size == 0)
+        {
+            throw new Exception("error. cannot update. no items");
+        }
+
+        if (index < 0 || index >= Capacity)
+        {
+            throw new Exception("error. cannot update. invalid index");
+        }
+
+        _values[index] = value;
+    }
+
+    public bool TryUpdate(int index, T value)
+    {
+        if (Size == 0)
+        {
+            return false;
+        }
+
+        if (index < 0 || index >= Capacity)
+        {
+            return false;
+        }
+
+        _values[index] = value;
+
+        return true;
+    }
+
     public T? Get(int index)
     {
         if (Size == 0)
