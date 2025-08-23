@@ -30,4 +30,12 @@ public class HashingHelper<K>
 
         return () => (index + iteration++ * (prime - index % prime) / 2) % capacity;
     }
+
+    public (Func<int>, Func<int>) GetRobinHoodHashing(K key, int capacity)
+    {
+        int index = GetBucketIndex(key, capacity);
+        int psl = 0;
+
+        return (() => (index + psl++) % capacity, () => psl);
+    }
 }

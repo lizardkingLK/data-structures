@@ -38,7 +38,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         {
             ReHash();
         }
-        
+
         bool xd = TryGet(key, out V? val);
     }
 
@@ -65,7 +65,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public IEnumerable<KeyValuePair<K, V>> GetKeyValues()
     {
-        foreach ((K key, V value) in GetHashNodes())
+        foreach ((K key, V value, _) in GetHashNodes())
         {
             yield return new(key, value);
         }
