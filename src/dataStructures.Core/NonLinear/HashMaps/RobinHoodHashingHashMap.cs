@@ -159,12 +159,12 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         K key,
         out int validIndex,
         out HashNode<K, V>? value,
-        Func<int>? GetNextIndex = null)
+        (Func<int>, Func<int>)? robinHoodHashing = null)
     {
-        GetNextIndex ??= _hashing.GetRobinHoodHashing(key, Capacity);
+        robinHoodHashing ??= _hashing.GetRobinHoodHashing(key, Capacity);
+        (Func<int> GetNextIndex, Func<int> GetPSL) = robinHoodHashing.Value;
 
         validIndex = GetNextIndex();
-
         bool doesBucketContain = _buckets.TryGet(validIndex, out value);
         if (doesBucketContain && value!.Key!.Equals(key) && value.IsActive)
         {
@@ -175,7 +175,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             return false;
         }
 
-        return ContainsKey(key, out validIndex, out value, GetNextIndex);
+        return ContainsKey(key, out validIndex, out value, robinHoodHashing);
     }
 
     private void ReHash()
@@ -196,5 +196,4 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
         _buckets = tempBuckets;
     }
-
 }

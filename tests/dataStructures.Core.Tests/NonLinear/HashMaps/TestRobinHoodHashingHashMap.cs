@@ -26,34 +26,34 @@ public class TestRobinHoodHashingHashMap
         Assert.Null(hashMap);
     }
 
-    // [Fact]
-    // public void Should_Test_HashMap_Get_Method_When_Empty()
-    // {
-    //     // Arrange
-    //     HashMap<int, string> hashMap = new(OpenAddressingRobinHoodHashing);
+    [Fact]
+    public void Should_Test_HashMap_Get_Method_When_Empty()
+    {
+        // Arrange
+        HashMap<int, string> hashMap = new(OpenAddressingRobinHoodHashing);
 
-    //     void GetItem() => hashMap.Get(5);
+        void GetItem() => hashMap.Get(5);
 
-    //     // Act
-    //     Exception exception = Assert.Throws<Exception>(GetItem);
+        // Act
+        Exception exception = Assert.Throws<Exception>(GetItem);
 
-    //     // Assert
-    //     Assert.Equal("error. cannot get value. key does not contain", exception.Message);
-    // }
+        // Assert
+        Assert.Equal("error. cannot get value. key does not contain", exception.Message);
+    }
 
-    // [Fact]
-    // public void Should_Test_HashMap_TryGet_Method_When_Empty()
-    // {
-    //     // Arrange
-    //     HashMap<int, string> hashMap = new(OpenAddressingRobinHoodHashing);
+    [Fact]
+    public void Should_Test_HashMap_TryGet_Method_When_Empty()
+    {
+        // Arrange
+        HashMap<int, string> hashMap = new(OpenAddressingRobinHoodHashing);
 
-    //     // Act
-    //     bool? couldGet = hashMap.TryGet(5, out string? value);
+        // Act
+        bool? couldGet = hashMap.TryGet(5, out string? value);
 
-    //     // Assert
-    //     Assert.False(couldGet);
-    //     Assert.Null(value);
-    // }
+        // Assert
+        Assert.False(couldGet);
+        Assert.Null(value);
+    }
 
     // [Theory]
     // [InlineData(-1, "minus_one")]
