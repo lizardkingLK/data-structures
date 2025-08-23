@@ -860,4 +860,24 @@ public class TestRobinHoodHashingHashMap
     //     Assert.Equal(before, gotBefore);
     //     Assert.Equal(after, gotAfter);
     // }
+
+    // [Fact]
+    // public void Should_Test_Remove_For_Tombstones()
+    // {
+    //     // Arrange
+    //     HashMap<int, string> hashMap = new(OpenAddressingRobinHoodHashing);
+
+    //     hashMap.Add(11, "eleven");
+    //     hashMap.Add(22, "twenty-two");
+    //     hashMap.Add(33, "thirty-three");
+
+    //     // Act
+    //     hashMap.Remove(22);
+
+    //     bool doesContain = hashMap.TryGet(11, out string? value);
+
+    //     // Assert
+    //     Assert.True(doesContain);
+    //     Assert.Equal("eleven", value);
+    // }
 }

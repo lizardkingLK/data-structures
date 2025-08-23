@@ -646,7 +646,7 @@ public class TestSeparateChainingHashMap
         HashMap<int, int> hashMap = new();
 
         List<HashNode<int, int>> itemsList = [.. Enumerable
-        .Range(0, 20)
+        .Range(0, 200)
         .Select((_, index) => Random.Shared.Next(-20, 20))
         .Distinct()
         .Select(item => new HashNode<int, int>(item, item))];
@@ -886,5 +886,25 @@ public class TestSeparateChainingHashMap
         // Assert
         Assert.Equal(before, gotBefore);
         Assert.Equal(after, gotAfter);
+    }
+
+    [Fact]
+    public void Should_Test_Remove_For_Tombstones()
+    {
+        // Arrange
+        HashMap<int, string> hashMap = new();
+
+        hashMap.Add(11, "eleven");
+        hashMap.Add(22, "twenty-two");
+        hashMap.Add(33, "thirty-three");
+
+        // Act
+        hashMap.Remove(22);
+
+        bool doesContain = hashMap.TryGet(11, out string? value);
+
+        // Assert
+        Assert.True(doesContain);
+        Assert.Equal("eleven", value);
     }
 }

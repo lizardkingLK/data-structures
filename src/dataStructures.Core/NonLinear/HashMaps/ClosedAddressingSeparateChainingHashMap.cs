@@ -82,7 +82,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
 
     public IEnumerable<HashNode<K, V>> GetHashNodes()
     {
-        foreach (Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>> bucket in _buckets.Values)
+        foreach (Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>? bucket in _buckets.Values)
         {
             if (bucket is null)
             {

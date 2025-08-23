@@ -8,9 +8,9 @@ public class DynamicArray<T>
 
     public int Size { get; private set; }
 
-    public IEnumerable<T> Values => ToList();
+    public IEnumerable<T?> Values => ToList();
 
-    private T[] _values;
+    private T?[] _values;
 
     public DynamicArray()
     {
@@ -33,7 +33,7 @@ public class DynamicArray<T>
         _values = new T[capacity];
     }
 
-    public T Add(T item)
+    public T? Add(T item)
     {
         if (Size == Capacity)
         {
@@ -45,7 +45,7 @@ public class DynamicArray<T>
         return _values[Size++];
     }
 
-    public T Add(int index, T item)
+    public T? Add(int index, T item)
     {
         if (index < 0 || index >= Capacity)
         {
@@ -85,14 +85,14 @@ public class DynamicArray<T>
         return false; ;
     }
 
-    public T Remove()
+    public T? Remove()
     {
         if (Size == 0)
         {
             throw new Exception("error. cannot remove. no items");
         }
 
-        T removed = _values[Size--];
+        T? removed = _values[Size--];
         if (Size <= Capacity / 3)
         {
             ShrinkArray();
@@ -101,7 +101,7 @@ public class DynamicArray<T>
         return removed;
     }
 
-    public T Remove(int index)
+    public T? Remove(int index)
     {
         if (Size == 0)
         {
@@ -113,11 +113,12 @@ public class DynamicArray<T>
             throw new Exception("error. cannot remove. invalid index");
         }
 
-        T removed = _values[index];
+        T? removed = _values[index];
         int i;
         for (i = index; i < Size; i++)
         {
             _values[i] = _values[i + 1];
+            _values[i + 1] = default;
         }
 
         Size--;
@@ -129,7 +130,7 @@ public class DynamicArray<T>
         return removed;
     }
 
-    public T Get(int index)
+    public T? Get(int index)
     {
         if (Size == 0)
         {
@@ -163,9 +164,9 @@ public class DynamicArray<T>
         return value is not null;
     }
 
-    private IEnumerable<T> ToList()
+    private IEnumerable<T?> ToList()
     {
-        foreach (T value in _values)
+        foreach (T? value in _values)
         {
             yield return value;
         }
@@ -180,7 +181,7 @@ public class DynamicArray<T>
             newCapacity = INITIAL_CAPACITY;
         }
 
-        T[] tempValues = new T[newCapacity];
+        T?[] tempValues = new T[newCapacity];
         for (i = 0; i < newCapacity; i++)
         {
             tempValues[i] = _values[i];
@@ -194,7 +195,7 @@ public class DynamicArray<T>
     {
         int i;
         int newCapacity = Capacity * 2;
-        T[] tempValues = new T[newCapacity];
+        T?[] tempValues = new T[newCapacity];
         for (i = 0; i < Size; i++)
         {
             tempValues[i] = _values[i];
