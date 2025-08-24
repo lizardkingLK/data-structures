@@ -36,6 +36,6 @@ public class HashingHelper<K>
         int index = GetBucketIndex(key, capacity);
         int psl = 0;
 
-        return (() => (index + psl++) % capacity, () => psl);
+        return (() => (index + psl++) % capacity, () => psl - 1);
     }
 }

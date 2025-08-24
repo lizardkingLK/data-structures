@@ -186,7 +186,7 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         foreach (HashNode<K, V> bucket in GetHashNodes())
         {
             index = _hashing.GetBucketIndex(bucket.Key, Capacity);
-            while (tempBuckets.TryGet(index, out HashNode<K, V>? value))
+            while (tempBuckets.TryGet(index, out _))
             {
                 index = (index + 1) % Capacity;
             }
