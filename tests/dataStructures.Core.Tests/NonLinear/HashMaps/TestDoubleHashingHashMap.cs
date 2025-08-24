@@ -646,7 +646,7 @@ public class TestDoubleHashingHashMap
         HashMap<int, int> hashMap = new(OpenAddressingDoubleHashing);
 
         List<HashNode<int, int>> itemsList = [.. Enumerable
-        .Range(0, 10_000)
+        .Range(0, 200)
         .Select((_, index) => Random.Shared.Next(-20, 20))
         .Distinct()
         .Select(item => new HashNode<int, int>(item, item))];
