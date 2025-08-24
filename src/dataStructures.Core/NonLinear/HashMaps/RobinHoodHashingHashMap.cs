@@ -26,12 +26,12 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public void Add(K key, V value)
     {
-        if (ContainsKey(key, out int index, out _))
+        if (ContainsKey(key, out (int, int) indexAndPsl, out _))
         {
             throw new Exception("error. cannot add value. key already contain");
         }
 
-        _buckets.Add(index, new(key, value));
+        _buckets.Add(indexAndPsl.Item1, new(key, value, true, indexAndPsl.Item2));
         Size++;
 
         if (Size / Capacity >= _loadFactor)
@@ -56,7 +56,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         {
             if (bucket is { IsActive: true })
             {
-                yield return bucket;
+                yield return new(bucket.Key, bucket.Value);
             }
         }
     }
@@ -71,26 +71,26 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     public V Remove(K key)
     {
-        if (!ContainsKey(key, out int index, out HashNode<K, V>? value))
+        if (!ContainsKey(key, out (int, int) validIndexAndPsl, out HashNode<K, V>? value))
         {
             throw new Exception("error. cannot remove value. key does not contain");
         }
 
         value!.IsActive = false;
 
-        _buckets.Update(index, value);
+        _buckets.Update(validIndexAndPsl.Item1, value);
 
         return value!.Value;
     }
 
     public bool TryAdd(K key, V value)
     {
-        if (ContainsKey(key, out int index, out _))
+        if (ContainsKey(key, out (int, int) validIndexAndPsl, out _))
         {
             return false;
         }
 
-        _buckets.Add(index, new(key, value));
+        _buckets.Add(validIndexAndPsl.Item1, new(key, value, true, validIndexAndPsl.Item2));
         Size++;
 
         if (Size / Capacity >= _loadFactor)
@@ -119,14 +119,14 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
     {
         value = default;
 
-        if (!ContainsKey(key, out int index, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out (int, int) validIndexAndPsl, out HashNode<K, V>? hashNode))
         {
             return false;
         }
 
         hashNode!.IsActive = false;
 
-        _buckets.Update(index, hashNode);
+        _buckets.Update(validIndexAndPsl.Item1, hashNode);
 
         value = hashNode!.Value;
 
@@ -157,25 +157,51 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     private bool ContainsKey(
         K key,
-        out int validIndex,
+        out (int, int) validIndexAndPsl,
         out HashNode<K, V>? value,
-        Func<int>? GetNextIndex = null)
+        (Func<int>, Func<int>)? robinHoodHashing = null)
     {
-        GetNextIndex ??= _hashing.GetRobinHoodHashing(key, Capacity);
+        robinHoodHashing ??= _hashing.GetRobinHoodHashing(key, Capacity);
+        (Func<int> GetNextIndex, Func<int> GetProbeSequenceLength) = robinHoodHashing.Value;
 
-        validIndex = GetNextIndex();
-
+        int validIndex = GetNextIndex();
+        int psl = GetProbeSequenceLength();
         bool doesBucketContain = _buckets.TryGet(validIndex, out value);
+        validIndexAndPsl = (validIndex, psl);
         if (doesBucketContain && value!.Key!.Equals(key) && value.IsActive)
         {
             return true;
+        }
+        else if (value?.PSL < psl)
+        {
+            ShiftBuckets(validIndex);
+            return false;
         }
         else if (value is null)
         {
             return false;
         }
 
-        return ContainsKey(key, out validIndex, out value, GetNextIndex);
+        return ContainsKey(key, out validIndexAndPsl, out value, robinHoodHashing);
+    }
+
+    private void ShiftBuckets(int index)
+    {
+        HashNode<K, V>? nextBucket = null;
+        bool isEmpty;
+        while (true)
+        {
+            isEmpty = !_buckets.TryGet(index, out HashNode<K, V>? value);
+            _buckets.Update(index, nextBucket);
+            if (isEmpty)
+            {
+                break;
+            }
+
+            value!.PSL++;
+            nextBucket = value;
+            index = (index + 1) % Capacity;
+        }
     }
 
     private void ReHash()
@@ -186,7 +212,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         foreach (HashNode<K, V> bucket in GetHashNodes())
         {
             index = _hashing.GetBucketIndex(bucket.Key, Capacity);
-            while (tempBuckets.TryGet(index, out HashNode<K, V>? value))
+            while (tempBuckets.TryGet(index, out _))
             {
                 index = (index + 1) % Capacity;
             }
@@ -196,5 +222,4 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
         _buckets = tempBuckets;
     }
-
 }

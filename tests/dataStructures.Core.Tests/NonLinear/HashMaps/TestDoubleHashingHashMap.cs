@@ -639,32 +639,32 @@ public class TestDoubleHashingHashMap
         Assert.Contains(new(32, "32"), hashNodes);
     }
 
-    // [Fact]
-    // public void Should_Test_HashMap_GetHashNodes_When_Contains_Many_Random_Keys()
-    // {
-    //     // Arrange
-    //     HashMap<int, int> hashMap = new(OpenAddressingDoubleHashing);
+    [Fact]
+    public void Should_Test_HashMap_GetHashNodes_When_Contains_Many_Random_Keys()
+    {
+        // Arrange
+        HashMap<int, int> hashMap = new(OpenAddressingDoubleHashing);
 
-    //     List<HashNode<int, int>> itemsList = [.. Enumerable
-    //     .Range(0, 20)
-    //     .Select((_, index) => Random.Shared.Next(-20, 20))
-    //     .Distinct()
-    //     .Select(item => new HashNode<int, int>(item, item))];
+        List<HashNode<int, int>> itemsList = [.. Enumerable
+        .Range(0, 10_000)
+        .Select((_, index) => Random.Shared.Next(-20, 20))
+        .Distinct()
+        .Select(item => new HashNode<int, int>(item, item))];
 
-    //     foreach ((int key, int value, _) in itemsList)
-    //     {
-    //         hashMap.Add(key, value);
-    //     }
+        foreach ((int key, int value, _, _) in itemsList)
+        {
+            hashMap.Add(key, value);
+        }
 
-    //     // Act
-    //     IEnumerable<HashNode<int, int>> hashNodes = hashMap.GetHashNodes();
+        // Act
+        IEnumerable<HashNode<int, int>> hashNodes = hashMap.GetHashNodes();
 
-    //     // Assert
-    //     foreach (HashNode<int, int> item in hashNodes)
-    //     {
-    //         Assert.Contains(item, itemsList);
-    //     }
-    // }
+        // Assert
+        foreach (HashNode<int, int> item in hashNodes)
+        {
+            Assert.Contains(item, itemsList);
+        }
+    }
 
     [Theory]
     [InlineData(-1, "minus_one")]

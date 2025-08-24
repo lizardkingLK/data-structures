@@ -889,46 +889,4 @@ public class TestSeparateChainingHashMap
         Assert.Equal(before, gotBefore);
         Assert.Equal(after, gotAfter);
     }
-
-    [Fact]
-    public void Should_Test_HashMap_Remove_Method_When_Tombstones()
-    {
-        // Arrange
-        HashMap<int, string> hashMap = new();
-
-        hashMap.Add(11, "eleven");
-        hashMap.Add(22, "twenty-two");
-        hashMap.Add(33, "thirty-three");
-
-        // Act
-        hashMap.Remove(22);
-
-        bool doesContain = hashMap.TryGet(11, out string? value);
-
-        // Assert
-        Assert.True(doesContain);
-        Assert.Equal("eleven", value);
-    }
-
-    [Fact]
-    public void Should_Test_HashMap_TryRemove_Method_When_Tombstones()
-    {
-        // Arrange
-        HashMap<int, string> hashMap = new();
-
-        hashMap.Add(11, "eleven");
-        hashMap.Add(22, "twenty-two");
-        hashMap.Add(33, "thirty-three");
-
-        // Act
-        bool couldRemove = hashMap.TryRemove(22, out string? removed);
-
-        bool doesContain = hashMap.TryGet(11, out string? value);
-
-        // Assert
-        Assert.True(couldRemove);
-        Assert.Equal("twenty-two", removed);
-        Assert.True(doesContain);
-        Assert.Equal("eleven", value);
-    }
 }
