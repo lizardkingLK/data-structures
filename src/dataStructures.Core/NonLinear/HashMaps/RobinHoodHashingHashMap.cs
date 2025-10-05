@@ -31,7 +31,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             throw new Exception("error. cannot add value. key already contain");
         }
 
-        _buckets.Add(indexAndPsl.Item1, new(key, value, true, indexAndPsl.Item2));
+        _buckets.Insert(indexAndPsl.Item1, new(key, value, true, indexAndPsl.Item2));
         Size++;
 
         if (Size / Capacity >= _loadFactor)
@@ -90,7 +90,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             return false;
         }
 
-        _buckets.Add(validIndexAndPsl.Item1, new(key, value, true, validIndexAndPsl.Item2));
+        _buckets.Insert(validIndexAndPsl.Item1, new(key, value, true, validIndexAndPsl.Item2));
         Size++;
 
         if (Size / Capacity >= _loadFactor)
@@ -166,7 +166,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
         int validIndex = GetNextIndex();
         int psl = GetProbeSequenceLength();
-        bool doesBucketContain = _buckets.TryGet(validIndex, out value);
+        bool doesBucketContain = _buckets.TryGetValue(validIndex, out value);
         validIndexAndPsl = (validIndex, psl);
         if (doesBucketContain && value!.Key!.Equals(key) && value.IsActive)
         {
@@ -191,7 +191,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         bool isEmpty;
         while (true)
         {
-            isEmpty = !_buckets.TryGet(index, out HashNode<K, V>? value);
+            isEmpty = !_buckets.TryGetValue(index, out HashNode<K, V>? value);
             _buckets.Update(index, nextBucket);
             if (isEmpty)
             {
@@ -212,12 +212,12 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         foreach (HashNode<K, V> bucket in GetHashNodes())
         {
             index = _hashing.GetBucketIndex(bucket.Key, Capacity);
-            while (tempBuckets.TryGet(index, out _))
+            while (tempBuckets.TryGetValue(index, out _))
             {
                 index = (index + 1) % Capacity;
             }
 
-            tempBuckets.Add(index, bucket);
+            tempBuckets.Insert(index, bucket);
         }
 
         _buckets = tempBuckets;

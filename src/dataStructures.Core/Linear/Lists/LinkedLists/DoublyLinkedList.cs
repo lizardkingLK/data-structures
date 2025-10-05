@@ -1,116 +1,224 @@
 using dataStructures.Core.Linear.Lists.LinkedLists.State;
+using static dataStructures.Core.Linear.Lists.LinkedLists.Shared.Exceptions;
 
 namespace dataStructures.Core.Linear.Lists.LinkedLists;
 
 public class DoublyLinkedList<T>
 {
-    private LinkNode<T>? _head;
+    public LinkNode<T>? Head;
+    public LinkNode<T>? Tail;
+    public IEnumerable<T> ValuesHeadToTail => TraverseForward();
+    public IEnumerable<T> ValuesTailToHead => TraverseBackward();
 
-    private LinkNode<T>? _tail;
-
-    public LinkNode<T> AddToFront(T value)
+    public LinkNode<T> AddToHead(T value)
     {
-        LinkNode<T> newHead = new(null, value, null);
-        if (_head == null)
+        LinkNode<T> newNode = new(value);
+        if (Head == null)
         {
-            _head = newHead;
-            _tail = _head;
-            return newHead;
-        }
-
-        _head.Previous = newHead;
-        newHead.Next = _head;
-        _head = newHead;
-
-        return newHead;
-    }
-
-    public LinkNode<T> AddBefore(LinkNode<T> target, T value)
-    {
-        LinkNode<T>? current = _head
-            ?? throw new Exception("error. cannot find node. list is empty");
-        LinkNode<T> newNode = new(null, value, null);
-        LinkNode<T>? previous;
-        while (current != null)
-        {
-            if (!ReferenceEquals(current, target))
+            Head = newNode;
+            if (Tail == null)
             {
-                current = current.Next;
-                continue;
-            }
-
-            previous = current.Previous;
-            if (previous == null)
-            {
-                return AddToFront(value);
-            }
-            else
-            {
-                current.Previous = newNode;
-                previous.Next = newNode;
-                newNode.Previous = previous;
-                newNode.Next = current;
+                Tail = newNode;
             }
 
             return newNode;
         }
 
+        newNode.Next = Head;
+        Head.Previous = newNode;
+        Head = newNode;
+
         return newNode;
     }
 
-    public LinkNode<T> AddToRear(T value)
+    public LinkNode<T> AddToTail(T value)
     {
-        LinkNode<T> newTail = new(null, value, null);
-        if (_tail == null)
+        LinkNode<T> newNode = new(value);
+        if (Tail == null)
         {
-            _tail = newTail;
-            _head = _tail;
-            return newTail;
-        }
-
-        _tail.Next = newTail;
-        newTail.Previous = _tail;
-        _tail = newTail;
-
-        return newTail;
-    }
-
-    public LinkNode<T> AddAfter(LinkNode<T> target, T value)
-    {
-        LinkNode<T>? current = _head
-            ?? throw new Exception("error. cannot find node. list is empty");
-        LinkNode<T> newNode = new(null, value, null);
-        LinkNode<T>? next;
-        while (current != null)
-        {
-            if (!ReferenceEquals(current, target))
+            Tail = newNode;
+            if (Head == null)
             {
-                current = current.Next;
-                continue;
-            }
-
-            next = current.Next;
-            if (next == null)
-            {
-                return AddToRear(value);
-            }
-            else
-            {
-                current.Next = newNode;
-                next.Previous = newNode;
-                newNode.Next = next;
-                newNode.Previous = current;
+                Head = newNode;
             }
 
             return newNode;
         }
 
+        newNode.Previous = Tail;
+        Tail.Next = newNode;
+        Tail = newNode;
+
         return newNode;
     }
 
-    public IEnumerable<T> ForwardTraversal()
+    public LinkNode<T> InsertBefore(LinkNode<T> target, T value)
     {
-        LinkNode<T>? current = _head;
+        if (!TryGetLinkNode(target, out LinkNode<T>? current))
+        {
+            throw TargetNotFoundException;
+        }
+
+        LinkNode<T> newNode = new(value);
+        LinkNode<T>? previous = current!.Previous;
+        if (current == Head)
+        {
+            Head = newNode;
+        }
+
+        current.Previous = newNode;
+        newNode.Next = current;
+        newNode.Previous = previous;
+        if (previous != null)
+        {
+            previous.Next = newNode;
+        }
+
+        return newNode;
+    }
+
+    public LinkNode<T> InsertAfter(LinkNode<T> target, T value)
+    {
+        if (!TryGetLinkNode(target, out LinkNode<T>? current))
+        {
+            throw TargetNotFoundException;
+        }
+
+        LinkNode<T> newNode = new(value);
+        LinkNode<T>? next = current!.Next;
+        if (current == Tail)
+        {
+            Tail = newNode;
+        }
+
+        current.Next = newNode;
+        newNode.Previous = current;
+        newNode.Next = next;
+        if (next != null)
+        {
+            next.Previous = newNode;
+        }
+
+        return newNode;
+    }
+
+    public LinkNode<T> Remove(T targetValue)
+    {
+        if (!TryGetLinkNode(targetValue, out LinkNode<T>? current))
+        {
+            throw TargetNotFoundException;
+        }
+
+        LinkNode<T> removed = current!;
+        LinkNode<T>? previous = removed.Previous;
+        LinkNode<T>? next = removed.Next;
+
+        removed.Next = null;
+        removed.Previous = null;
+
+        if (previous == null)
+        {
+            Head = next;
+        }
+        else
+        {
+            previous.Next = next;
+        }
+
+        if (next == null)
+        {
+            Tail = previous;   
+        }
+        else
+        {
+            next.Previous = previous;
+        }
+
+        return removed;
+    }
+
+    public LinkNode<T> RemoveBefore(LinkNode<T> target)
+    {
+        if (!TryGetLinkNode(target, out LinkNode<T>? current))
+        {
+            throw TargetNotFoundException;
+        }
+
+        if (current?.Previous == null)
+        {
+            throw CannotRemoveException;
+        }
+
+        LinkNode<T>? removed = current.Previous;
+        if (removed == Head)
+        {
+            Head = current;
+        }
+
+        LinkNode<T>? previous = removed.Previous;
+        removed.Next = null;
+        removed.Previous = null;
+        if (previous != null)
+        {
+            previous.Next = current;
+        }
+
+        current.Previous = previous;
+
+        return removed;
+    }
+
+    public LinkNode<T> RemoveAfter(LinkNode<T> target)
+    {
+        if (!TryGetLinkNode(target, out LinkNode<T>? current))
+        {
+            throw TargetNotFoundException;
+        }
+
+        if (current?.Next == null)
+        {
+            throw CannotRemoveException;
+        }
+
+        LinkNode<T>? removed = current.Next;
+        if (removed == Tail)
+        {
+            Tail = current;
+        }
+
+        LinkNode<T>? next = removed.Next;
+        removed.Next = null;
+        removed.Previous = null;
+        if (next != null)
+        {
+            next.Previous = current;
+        }
+
+        current.Next = next;
+
+        return removed;
+    }
+
+    public bool TryGetValue(Predicate<T> filterFunction, out T? value)
+    {
+        value = default;
+
+        foreach (T item in ValuesHeadToTail)
+        {
+            if (filterFunction.Invoke(item))
+            {
+                value = item;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private IEnumerable<T> TraverseForward()
+    {
+        LinkNode<T>? current = Head;
         while (current != null)
         {
             yield return current.Value;
@@ -119,9 +227,9 @@ public class DoublyLinkedList<T>
         }
     }
 
-    public IEnumerable<T> BackwardTraversal()
+    private IEnumerable<T> TraverseBackward()
     {
-        LinkNode<T>? current = _tail;
+        LinkNode<T>? current = Tail;
         while (current != null)
         {
             yield return current.Value;
@@ -130,106 +238,35 @@ public class DoublyLinkedList<T>
         }
     }
 
-    public void Remove(T value)
+    private bool TryGetLinkNode(LinkNode<T> target, out LinkNode<T>? current)
     {
-        LinkNode<T>? current = _head
-            ?? throw new Exception("error. cannot remove. list is empty");
-        LinkNode<T>? previous;
-        LinkNode<T>? next;
+        current = Head;
+
         while (current != null)
         {
-            previous = current.Previous;
-            next = current.Next;
-            if (!current.Value!.Equals(value))
+            if (current == target)
             {
-                current = next;
-                continue;
-            }
-
-            if (previous == null)
-            {
-                _head = next;
-            }
-            else
-            {
-                previous.Next = next;
-                current.Previous = null;
-            }
-
-            if (next == null)
-            {
-                _tail = previous;
-            }
-            else
-            {
-                next.Previous = previous;
-                current.Next = null;
-            }
-
-            current = next;
-        }
-    }
-
-    public void RemoveHead()
-    {
-        LinkNode<T>? head = _head
-            ?? throw new Exception("error. cannot remove head. list is empty");
-        LinkNode<T>? next = head.Next;
-        if (next == null)
-        {
-            _head = null;
-            _tail = null;
-        }
-        else
-        {
-            head.Next = null;
-            next.Previous = null;
-            _head = next;
-        }
-    }
-
-    public void RemoveTail()
-    {
-        LinkNode<T>? tail = _tail
-            ?? throw new Exception("error. cannot remove tail. list is empty");
-        LinkNode<T>? previous = tail.Previous;
-        if (previous == null)
-        {
-            _tail = null;
-            _head = null;
-        }
-        else
-        {
-            tail.Previous = null;
-            previous.Next = null;
-            _tail = previous;
-        }
-    }
-
-    public T? GetValue(Func<T, bool> SearchFunction)
-    {
-        foreach (T item in ForwardTraversal())
-        {
-            if (SearchFunction(item))
-            {
-                return item;
-            }
-        }
-
-        throw new Exception("error. cannot get value. does not exist");
-    }
-
-    public bool TryGetValue(Func<T, bool> SearchFunction, out T? output)
-    {
-        output = default;
-
-        foreach (T item in ForwardTraversal())
-        {
-            if (SearchFunction(item))
-            {
-                output = item;
                 return true;
             }
+
+            current = current?.Next;
+        }
+
+        return false;
+    }
+
+    private bool TryGetLinkNode(T? targetValue, out LinkNode<T>? current)
+    {
+        current = Head;
+
+        while (current != null)
+        {
+            if (current.Value != null && current.Value.Equals(targetValue))
+            {
+                return true;
+            }
+
+            current = current?.Next;
         }
 
         return false;

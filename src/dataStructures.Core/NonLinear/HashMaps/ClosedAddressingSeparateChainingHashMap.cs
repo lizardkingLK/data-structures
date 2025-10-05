@@ -1,4 +1,5 @@
 using dataStructures.Core.Linear.Arrays;
+using dataStructures.Core.Linear.Lists.LinkedLists;
 using dataStructures.Core.NonLinear.HashMaps.Abstractions;
 using dataStructures.Core.NonLinear.HashMaps.Helpers;
 using dataStructures.Core.NonLinear.HashMaps.State;
@@ -8,7 +9,7 @@ namespace dataStructures.Core.NonLinear.HashMaps;
 
 internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 {
-    private DynamicArray<Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>> _buckets = new();
+    private DynamicArray<DoublyLinkedList<HashNode<K, V>>> _buckets = new();
 
     private readonly HashingHelper<K> _hashing = new();
 
@@ -26,12 +27,12 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
 
     public void Add(K key, V value)
     {
-        if (ContainsKey(key, out Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>? bucket, out _))
+        if (ContainsKey(key, out DoublyLinkedList<HashNode<K, V>>? bucket, out _))
         {
             throw new Exception("error. cannot add value. key already contain");
         }
 
-        bucket!.AddToRear(new(key, value));
+        bucket!.AddToTail(new(key, value));
         Size++;
 
         if (Size / Capacity >= _loadFactor)
@@ -42,12 +43,12 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
 
     public bool TryAdd(K key, V value)
     {
-        if (ContainsKey(key, out Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>? bucket, out _))
+        if (ContainsKey(key, out DoublyLinkedList<HashNode<K, V>>? bucket, out _))
         {
             return false;
         }
 
-        bucket!.AddToRear(new(key, value));
+        bucket!.AddToTail(new(key, value));
         Size++;
 
         if (Size / Capacity >= _loadFactor)
@@ -82,14 +83,14 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
 
     public IEnumerable<HashNode<K, V>> GetHashNodes()
     {
-        foreach (Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>? bucket in _buckets.Values)
+        foreach (DoublyLinkedList<HashNode<K, V>>? bucket in _buckets.Values)
         {
             if (bucket is null)
             {
                 continue;
             }
 
-            foreach (HashNode<K, V> hashNode in bucket.ForwardTraversal())
+            foreach (HashNode<K, V> hashNode in bucket.ValuesHeadToTail)
             {
                 yield return hashNode;
             }
@@ -130,7 +131,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
 
     public V Remove(K key)
     {
-        if (!ContainsKey(key, out Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>? bucket, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out DoublyLinkedList<HashNode<K, V>>? bucket, out HashNode<K, V>? hashNode))
         {
             throw new Exception("error. cannot remove value. key does not contain");
         }
@@ -144,7 +145,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
     {
         value = default;
 
-        if (!ContainsKey(key, out Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>? bucket, out HashNode<K, V>? hashNode))
+        if (!ContainsKey(key, out DoublyLinkedList<HashNode<K, V>>? bucket, out HashNode<K, V>? hashNode))
         {
             return false;
         }
@@ -158,13 +159,13 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
 
     private bool ContainsKey(
         K key,
-        out Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>? bucket,
+        out DoublyLinkedList<HashNode<K, V>>? bucket,
         out HashNode<K, V>? value)
     {
         value = default;
 
         int index = _hashing.GetBucketIndex(key, Capacity);
-        bool doesBucketContain = _buckets.TryGet(index, out bucket);
+        bool doesBucketContain = _buckets.TryGetValue(index, out bucket);
         bool containsKey = false;
         if (doesBucketContain)
         {
@@ -172,7 +173,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
         }
         else
         {
-            bucket = _buckets.Add(index, new());
+            bucket = _buckets.Insert(index, new());
         }
 
         return containsKey;
@@ -181,17 +182,17 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
     private void ReHash()
     {
         Capacity *= 2;
-        DynamicArray<Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>> tempBuckets = new(Capacity);
+        DynamicArray<DoublyLinkedList<HashNode<K, V>>> tempBuckets = new(Capacity);
         int index;
         foreach ((K key, V value, _, _) in GetHashNodes())
         {
             index = _hashing.GetBucketIndex(key, Capacity);
-            if (!tempBuckets.TryGet(index, out Linear.Lists.LinkedLists.DoublyLinkedList<HashNode<K, V>>? bucket))
+            if (!tempBuckets.TryGetValue(index, out DoublyLinkedList<HashNode<K, V>>? bucket))
             {
-                bucket = tempBuckets.Add(index, new());
+                bucket = tempBuckets.Insert(index, new());
             }
 
-            bucket!.AddToRear(new(key, value));
+            bucket!.AddToTail(new(key, value));
         }
 
         _buckets = tempBuckets;

@@ -1,4 +1,5 @@
 using dataStructures.Core.Linear.Arrays;
+using static dataStructures.Core.Linear.Arrays.Shared.Constants;
 
 namespace dataStructures.Core.Tests.Linear.Arrays;
 
@@ -19,8 +20,8 @@ public class TestDynamicArray
         }
 
         // Assert
-        Exception exception = Assert.Throws<Exception>(InstantiateDynamicArray);
-        Assert.Equal("error. cannot create. invalid capacity", exception.Message);
+        Exception exception = Assert.Throws<ApplicationException>(InstantiateDynamicArray);
+        Assert.Equal(ErrorInvalidCapacity, exception.Message);
         Assert.Null(dynamicArray);
     }
 
@@ -36,7 +37,7 @@ public class TestDynamicArray
 
         // Act
         dynamicArray.Add(value);
-        int addedValue = dynamicArray.Get(0);
+        int addedValue = dynamicArray.GetValue(0);
 
         // Assert
         Assert.Equal(value, addedValue);
@@ -50,11 +51,11 @@ public class TestDynamicArray
         DynamicArray<int> dynamicArray = new(5);
 
         // Act
-        dynamicArray.Add(0, 5);
-        dynamicArray.Add(1, 4);
-        dynamicArray.Add(2, 3);
-        dynamicArray.Add(3, 2);
-        dynamicArray.Add(4, 1);
+        dynamicArray.Insert(0, 5);
+        dynamicArray.Insert(1, 4);
+        dynamicArray.Insert(2, 3);
+        dynamicArray.Insert(3, 2);
+        dynamicArray.Insert(4, 1);
 
         // Assert
         int i;
