@@ -31,7 +31,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             throw new Exception("error. cannot add value. key already contain");
         }
 
-        _buckets.Add(index, new(key, value));
+        _buckets.Insert(index, new(key, value));
         Size++;
 
         if (Size / Capacity >= _loadFactor)
@@ -90,7 +90,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
             return false;
         }
 
-        _buckets.Add(index, new(key, value));
+        _buckets.Insert(index, new(key, value));
         Size++;
 
         if (Size / Capacity >= _loadFactor)
@@ -164,7 +164,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         index ??= _hashing.GetBucketIndex(key, Capacity);
 
         validIndex = index.Value % Capacity;
-        bool doesBucketContain = _buckets.TryGet(validIndex, out value);
+        bool doesBucketContain = _buckets.TryGetValue(validIndex, out value);
         if (doesBucketContain && value!.Key!.Equals(key) && value.IsActive)
         {
             return true;
@@ -185,12 +185,12 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         foreach (HashNode<K, V> bucket in GetHashNodes())
         {
             index = _hashing.GetBucketIndex(bucket.Key, Capacity);
-            while (tempBuckets.TryGet(index, out _))
+            while (tempBuckets.TryGetValue(index, out _))
             {
                 index = (index + 1) % Capacity;
             }
 
-            tempBuckets.Add(index, bucket);
+            tempBuckets.Insert(index, bucket);
         }
 
         _buckets = tempBuckets;
