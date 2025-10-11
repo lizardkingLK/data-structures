@@ -1,4 +1,4 @@
-namespace dataStructures.Core.Linear.Queue;
+namespace dataStructures.Core.Linear.Queues;
 
 public class CircularQueue<T>(int size)
 {
@@ -16,7 +16,7 @@ public class CircularQueue<T>(int size)
         {
             throw new Exception("error. cannot insert queue is full");
         }
-        
+
         rear = (front + count) % size;
         values[rear] = value;
         count++;

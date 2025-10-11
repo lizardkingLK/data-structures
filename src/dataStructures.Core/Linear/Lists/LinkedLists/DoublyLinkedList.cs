@@ -127,7 +127,7 @@ public class DoublyLinkedList<T>
 
         if (next == null)
         {
-            Tail = previous;   
+            Tail = previous;
         }
         else
         {

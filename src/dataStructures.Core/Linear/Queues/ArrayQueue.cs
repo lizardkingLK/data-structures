@@ -1,6 +1,8 @@
-namespace dataStructures.Core.Linear.Queue;
+using dataStructures.Core.Linear.Queues.Abstractions;
 
-public class AQueue<T>(int size)
+namespace dataStructures.Core.Linear.Queues;
+
+public class ArrayQueue<T>(int size) : IQueue<T>
 {
     private int front = 0;
 
@@ -38,7 +40,7 @@ public class AQueue<T>(int size)
         return values[front++];
     }
 
-    private bool IsEmpty() => rear == -1 || front == size;
+    public bool IsEmpty() => rear == -1 || front == size;
 
-    private bool IsFull() => rear == size - 1;
+    public bool IsFull() => rear == size - 1;
 }
