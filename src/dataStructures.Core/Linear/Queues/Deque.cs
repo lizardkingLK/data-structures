@@ -1,6 +1,6 @@
 using dataStructures.Core.Linear.Lists.LinkedLists.State;
 
-namespace dataStructures.Core.Linear.Queue;
+namespace dataStructures.Core.Linear.Queues;
 
 public class Deque<T>
 {
