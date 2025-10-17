@@ -5,8 +5,8 @@ namespace dataStructures.Core.Linear.Arrays;
 
 public class DynamicArray<T>
 {
-    private const float SHRINK_FACTOR = .3f;
     private const float GROWTH_FACTOR = .7f;
+    private const float SHRINK_FACTOR = .3f;
     private int _capacity;
 
     private T?[] _values;

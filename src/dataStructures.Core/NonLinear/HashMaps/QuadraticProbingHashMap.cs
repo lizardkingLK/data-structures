@@ -34,7 +34,7 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Insert(index, new(key, value));
         Size++;
 
-        if (Size >= Capacity)
+        if ((float)Size / Capacity >= _loadFactor)
         {
             ReHash();
         }
