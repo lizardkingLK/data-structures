@@ -23,4 +23,9 @@ public class Heap<T> : ITree<T> where T : IComparable<T>
     {
         throw new NotImplementedException();
     }
+
+    public void Update(T oldValue, T newValue)
+    {
+        throw new NotImplementedException();
+    }
 }

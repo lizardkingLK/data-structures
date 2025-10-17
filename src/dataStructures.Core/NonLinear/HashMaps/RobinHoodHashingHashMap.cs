@@ -34,7 +34,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Insert(indexAndPsl.Item1, new(key, value, true, indexAndPsl.Item2));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if ((float)(float)Size / Capacity >= _loadFactor)
         {
             ReHash();
         }
@@ -93,7 +93,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Insert(validIndexAndPsl.Item1, new(key, value, true, validIndexAndPsl.Item2));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if ((float)(float)Size / Capacity >= _loadFactor)
         {
             ReHash();
         }

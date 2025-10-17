@@ -1,11 +1,8 @@
-using static dataStructures.Core.Linear.Arrays.Shared.Constants;
-
 namespace dataStructures.Core.Linear.Arrays.Shared;
 
 public static class Exceptions
 {
-    public static readonly Exception InvalidListSizeException = new ApplicationException(ErrorInvalidCapacity);
-    public static readonly Exception ListEmptyException = new ApplicationException(ErrorListEmpty);
-    public static readonly Exception InvalidIndexException = new ApplicationException(ErrorInvalidIndex);
-    public static readonly Exception ItemDoesNotExistException = new ApplicationException(ErrorItemDoesNotExist);
+    public static readonly ApplicationException InvalidIndexException = new("error. invalid index was given");
+    public static readonly ApplicationException InvalidCapacityException = new("error. invalid capacity was given");
+    public static readonly ApplicationException ValueNotFoundException = new("error. value not found");
 }

@@ -112,6 +112,30 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
         return null;
     }
 
+    public void Update(T oldValue, T newValue)
+    {
+        TreeNode<T>? current = Root;
+        int comparedResult;
+        while (current != null)
+        {
+            comparedResult = oldValue.CompareTo(current.Value);
+            if (comparedResult == 0)
+            {
+                current.Value = newValue;
+                return;
+            }
+
+            if (comparedResult < 0)
+            {
+                current = current.Left;
+            }
+            else if (comparedResult > 0)
+            {
+                current = current.Right;
+            }
+        }
+    }
+
     public TreeNode<T>? Delete(T value)
     {
         TreeNode<T>? nodeToDelete = Search(value, out TreeNode<T>? parentNode)
@@ -137,7 +161,34 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
 
     public void Invert()
     {
-        
+        if (Root == null)
+        {
+            return;
+        }
+
+        Linear.Stacks.Stack<TreeNode<T>> items = new(StackTypeEnum.LinkedListTyped, Size);
+        items.Push(Root);
+        TreeNode<T>? current;
+        TreeNode<T>? left;
+        TreeNode<T>? right;
+        while (!items.IsEmpty())
+        {
+            current = items.Pop();
+            right = current.Right;
+            left = current.Left;
+            if (right != null)
+            {
+                items.Push(right);
+            }
+
+            if (left != null)
+            {
+                items.Push(left);
+            }
+
+            current.Left = right;
+            current.Right = left;
+        }
     }
 
     private bool TryDeleteIfMultipleNodes(TreeNode<T> nodeToDelete, TreeNode<T>? parentNode)

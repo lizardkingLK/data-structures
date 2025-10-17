@@ -35,7 +35,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
         bucket!.AddToTail(new(key, value));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if ((float)(float)Size / Capacity >= _loadFactor)
         {
             ReHash();
         }
@@ -51,7 +51,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
         bucket!.AddToTail(new(key, value));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if ((float)(float)Size / Capacity >= _loadFactor)
         {
             ReHash();
         }
