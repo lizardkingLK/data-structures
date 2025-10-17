@@ -21,21 +21,21 @@ public class ObservableList<T> : IObservableList<T> where T : notnull
 
     public T Add(T value)
     {
-        T item = _list.Add(value)!;
+        _list.Add(value);
 
-        return item;
+        return value;
     }
 
     public T Insert(int index, T value)
     {
-        T item = _list.Insert(index, value)!;
+        _list.Insert(index, value);
 
-        return item;
+        return value;
     }
 
     public T? Remove()
     {
-        T item = _list.Remove()!;
+        T item = _list.Delete()!;
 
         return item;
     }
@@ -49,9 +49,11 @@ public class ObservableList<T> : IObservableList<T> where T : notnull
 
     public bool TryRemove(T target, out T? removed)
     {
-        bool couldRemove = _list.TryRemove(target, out removed);
-        if (!couldRemove)
+        removed = target;
+
+        if (!_list.TryRemove(target))
         {
+            removed = default;
             return false;
         }
 
@@ -78,16 +80,19 @@ public class ObservableList<T> : IObservableList<T> where T : notnull
 
     public T Update(int index, T? value)
     {
-        T item = _list.Update(index, value)!;
+        _list.Update(index, value);
 
-        return item;
+        return value!;
     }
 
     public bool TryUpdate(int index, T? value, out T? updated)
     {
-        bool couldUpdate = _list.TryUpdate(index, value, out updated);
+        updated = value;
+
+        bool couldUpdate = _list.TryUpdate(index, value!);
         if (!couldUpdate)
         {
+            updated = default;
             return false;
         }
 

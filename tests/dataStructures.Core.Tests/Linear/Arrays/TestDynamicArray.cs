@@ -1,5 +1,5 @@
 using dataStructures.Core.Linear.Arrays;
-using static dataStructures.Core.Linear.Arrays.Shared.Constants;
+using static dataStructures.Core.Linear.Arrays.Shared.Exceptions;
 
 namespace dataStructures.Core.Tests.Linear.Arrays;
 
@@ -21,7 +21,7 @@ public class TestDynamicArray
 
         // Assert
         Exception exception = Assert.Throws<ApplicationException>(InstantiateDynamicArray);
-        Assert.Equal(ErrorInvalidCapacity, exception.Message);
+        Assert.Equal(InvalidCapacityException.Message, exception.Message);
         Assert.Null(dynamicArray);
     }
 

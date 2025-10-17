@@ -9,12 +9,13 @@ public class DynamicArray<T>
     private T?[] _values;
     public int Capacity;
 
+    public int Size => _size;
     public IEnumerable<T?> Values => GetValues();
 
     public T? this[int index]
     {
-        get => _values[index];
-        set => Insert(index, value);
+        get => GetValue(index);
+        set => Update(index, value);
     }
 
     public DynamicArray(int capacity = INITIAL_CAPACITY)
@@ -93,7 +94,7 @@ public class DynamicArray<T>
         _values = newValues;
     }
 
-    public void Insert(int index, T? value)
+    public T Insert(int index, T? value)
     {
         if (index < 0 || index >= _size)
         {
@@ -109,6 +110,8 @@ public class DynamicArray<T>
 
         _values[index] = value;
         _size++;
+
+        return value!;
     }
 
     public void InsertRange(int index, params T[] values)
@@ -169,7 +172,7 @@ public class DynamicArray<T>
         _values = newValues;
     }
 
-    public void Update(int index, T newValue)
+    public void Update(int index, T? newValue)
     {
         if (index < 0 || index >= _size)
         {
@@ -248,6 +251,58 @@ public class DynamicArray<T>
 
         _size--;
         ShrinkArrayIfSatisfies();
+
+        return true;
+    }
+
+    public T? Remove(T value)
+    {
+        for (int i = 0; i < _size; i++)
+        {
+            if (value!.Equals(_values[i]))
+            {
+                Remove(i);
+                return value;
+            }
+        }
+
+        throw ValueNotFoundException;
+    }
+
+    public bool TryRemove(T value)
+    {
+        for (int i = 0; i < _size; i++)
+        {
+            if (value!.Equals(_values[i]))
+            {
+                TryRemove(i, out _);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public T? GetValue(int index)
+    {
+        if (index < 0 || index >= _size)
+        {
+            throw InvalidIndexException;
+        }
+
+        return _values[index];
+    }
+
+    public bool TryGetValue(int index, out T? value)
+    {
+        value = default;
+
+        if (index < 0 || index >= _size)
+        {
+            return false;
+        }
+
+        value = _values[index];
 
         return true;
     }
