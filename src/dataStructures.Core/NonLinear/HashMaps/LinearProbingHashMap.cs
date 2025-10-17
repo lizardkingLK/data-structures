@@ -34,7 +34,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Insert(index, new(key, value));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if ((float)Size / Capacity >= _loadFactor)
         {
             ReHash();
         }
@@ -93,7 +93,7 @@ public class LinearProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Insert(index, new(key, value));
         Size++;
 
-        if (Size / Capacity >= _loadFactor)
+        if ((float)Size / Capacity >= _loadFactor)
         {
             ReHash();
         }

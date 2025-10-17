@@ -5,6 +5,8 @@ namespace dataStructures.Core.Linear.Arrays;
 
 public class DynamicArray<T>
 {
+    private const float SHRINK_FACTOR = .3f;
+    private const float GROWTH_FACTOR = .7f;
     private int _capacity;
 
     private T?[] _values;
@@ -45,7 +47,7 @@ public class DynamicArray<T>
 
     public T Add(T value)
     {
-        if (Size == _capacity)
+        if ((float)Size / _capacity >= GROWTH_FACTOR)
         {
             GrowArray();
         }
@@ -81,7 +83,7 @@ public class DynamicArray<T>
             throw InvalidIndexException;
         }
 
-        if (Size == _capacity)
+        if ((float)Size / _capacity >= GROWTH_FACTOR)
         {
             GrowArray();
         }
@@ -189,7 +191,7 @@ public class DynamicArray<T>
         T? removed = _values[Size - 1];
         _values[--Size] = default;
 
-        if (Size <= _capacity / 3)
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
         {
             ShrinkArray();
         }
@@ -211,7 +213,7 @@ public class DynamicArray<T>
 
         Size--;
 
-        if (Size <= _capacity / 3)
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
         {
             ShrinkArray();
         }
@@ -235,7 +237,7 @@ public class DynamicArray<T>
 
         Size--;
 
-        if (Size <= _capacity / 3)
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
         {
             ShrinkArray();
         }
@@ -265,7 +267,7 @@ public class DynamicArray<T>
 
         Size--;
 
-        if (Size <= _capacity / 3)
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
         {
             ShrinkArray();
         }
@@ -298,7 +300,7 @@ public class DynamicArray<T>
 
         Size--;
 
-        if (Size <= _capacity / 3)
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
         {
             ShrinkArray();
         }

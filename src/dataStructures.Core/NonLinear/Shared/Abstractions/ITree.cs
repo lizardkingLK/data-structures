@@ -6,7 +6,6 @@ public interface ITree<T> where T : IComparable<T>
 {
     TreeNode<T> Insert(T value);
     TreeNode<T>? Search(T value, out TreeNode<T>? parent);
-    void Update(T oldValue, T newValue);
     TreeNode<T>? Delete(T value);
     void Invert();
 }
