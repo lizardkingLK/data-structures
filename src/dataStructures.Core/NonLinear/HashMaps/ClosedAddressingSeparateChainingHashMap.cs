@@ -1,4 +1,4 @@
-using dataStructures.Core.Linear.Arrays;
+using dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray;
 using dataStructures.Core.Linear.Lists.LinkedLists;
 using dataStructures.Core.NonLinear.HashMaps.Abstractions;
 using dataStructures.Core.NonLinear.HashMaps.Helpers;
@@ -9,7 +9,7 @@ namespace dataStructures.Core.NonLinear.HashMaps;
 
 internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 {
-    private DynamicArray<DoublyLinkedList<HashNode<K, V>>> _buckets = new();
+    private DynamicallyAllocatedArray<DoublyLinkedList<HashNode<K, V>>> _buckets = new();
 
     private readonly HashingHelper<K> _hashing = new();
 
@@ -182,7 +182,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
     private void ReHash()
     {
         Capacity *= 2;
-        DynamicArray<DoublyLinkedList<HashNode<K, V>>> tempBuckets = new(Capacity);
+        DynamicallyAllocatedArray<DoublyLinkedList<HashNode<K, V>>> tempBuckets = new(Capacity);
         int index;
         foreach ((K key, V value, _, _) in GetHashNodes())
         {

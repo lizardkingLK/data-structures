@@ -1,4 +1,4 @@
-using dataStructures.Core.Linear.Arrays;
+using dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray;
 using dataStructures.Core.Linear.Lists.ObservableList.Abstractions;
 using dataStructures.Core.Linear.Lists.ObservableList.Observer;
 
@@ -6,7 +6,7 @@ namespace dataStructures.Core.Linear.Lists.ObservableList;
 
 public class ObservableList<T> : IObservableList<T> where T : notnull
 {
-    private readonly DynamicArray<T> _list;
+    private readonly DynamicallyAllocatedArray<T> _list;
 
     private readonly Publisher<T> _publisher;
 
@@ -35,7 +35,7 @@ public class ObservableList<T> : IObservableList<T> where T : notnull
 
     public T? Remove()
     {
-        T item = _list.Delete()!;
+        T item = _list.Remove()!;
 
         return item;
     }
@@ -51,7 +51,7 @@ public class ObservableList<T> : IObservableList<T> where T : notnull
     {
         removed = target;
 
-        if (!_list.TryRemove(target))
+        if (!_list.TryRemove(target, out _))
         {
             removed = default;
             return false;
@@ -89,7 +89,7 @@ public class ObservableList<T> : IObservableList<T> where T : notnull
     {
         updated = value;
 
-        bool couldUpdate = _list.TryUpdate(index, value!);
+        bool couldUpdate = _list.TryUpdate(index, value!, out _);
         if (!couldUpdate)
         {
             updated = default;
