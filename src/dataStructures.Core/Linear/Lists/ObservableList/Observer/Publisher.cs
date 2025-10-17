@@ -1,11 +1,11 @@
-using dataStructures.Core.Linear.Arrays;
+using dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray;
 using dataStructures.Core.Linear.Lists.ObservableList.Abstractions;
 
 namespace dataStructures.Core.Linear.Lists.ObservableList.Observer;
 
 public class Publisher<T> : IPublisher<T> where T : notnull
 {
-    private DynamicArray<ISubscriber<T>> Subscribers { get; init; } = new();
+    private DynamicallyAllocatedArray<ISubscriber<T>> Subscribers { get; init; } = new();
 
     public void Publish(INotification<T> notification)
     {

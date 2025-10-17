@@ -1,4 +1,4 @@
-using dataStructures.Core.Linear.Arrays;
+using dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray;
 using dataStructures.Core.NonLinear.HashMaps.Abstractions;
 using dataStructures.Core.NonLinear.HashMaps.Helpers;
 using dataStructures.Core.NonLinear.HashMaps.State;
@@ -12,7 +12,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     private readonly float _loadFactor = loadFactor;
 
-    private DynamicArray<HashNode<K, V>?> _buckets = new();
+    private DynamicallyAllocatedArray<HashNode<K, V>?> _buckets = new();
 
     public int Capacity { get; private set; } = INITIAL_CAPACITY;
 
@@ -207,7 +207,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
     private void ReHash()
     {
         Capacity *= 2;
-        DynamicArray<HashNode<K, V>?> tempBuckets = new(Capacity);
+        DynamicallyAllocatedArray<HashNode<K, V>?> tempBuckets = new(Capacity);
         int index;
         foreach (HashNode<K, V> bucket in GetHashNodes())
         {

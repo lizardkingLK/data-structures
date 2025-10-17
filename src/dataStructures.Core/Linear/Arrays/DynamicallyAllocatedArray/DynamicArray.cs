@@ -1,9 +1,9 @@
-using static dataStructures.Core.Linear.Arrays.Shared.Constants;
-using static dataStructures.Core.Linear.Arrays.Shared.Exceptions;
+using static dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray.Shared.Constants;
+using static dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray.Shared.Exceptions;
 
-namespace dataStructures.Core.Linear.Arrays;
+namespace dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray;
 
-public class DynamicArray<T>
+public class DynamicallyAllocatedArray<T>
 {
     private const float GROWTH_FACTOR = .7f;
     private const float SHRINK_FACTOR = .3f;
@@ -21,7 +21,7 @@ public class DynamicArray<T>
 
     public int Size = 0;
 
-    public DynamicArray(int capacity = INITIAL_CAPACITY)
+    public DynamicallyAllocatedArray(int capacity = INITIAL_CAPACITY)
     {
         if (capacity < INITIAL_CAPACITY)
         {
@@ -32,14 +32,14 @@ public class DynamicArray<T>
         _values = new T[capacity];
     }
 
-    public DynamicArray(params T[] values) : this()
+    public DynamicallyAllocatedArray(params T[] values) : this()
     {
         AddRange(values);
     }
 
-    public DynamicArray(params DynamicArray<T>[] arrayList) : this()
+    public DynamicallyAllocatedArray(params DynamicallyAllocatedArray<T>[] arrayList) : this()
     {
-        foreach (DynamicArray<T> array in arrayList)
+        foreach (DynamicallyAllocatedArray<T> array in arrayList)
         {
             AddRange(array);
         }
@@ -65,7 +65,7 @@ public class DynamicArray<T>
         }
     }
 
-    private void AddRange(DynamicArray<T> array)
+    private void AddRange(DynamicallyAllocatedArray<T> array)
     {
         foreach (T? value in array.Values)
         {

@@ -1,4 +1,4 @@
-using dataStructures.Core.Linear.Arrays;
+using dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray;
 using dataStructures.Core.NonLinear.HashMaps.Abstractions;
 using dataStructures.Core.NonLinear.HashMaps.Helpers;
 using dataStructures.Core.NonLinear.HashMaps.State;
@@ -12,7 +12,7 @@ public class DoubleHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
 
     private readonly HashingHelper<K> _hashing = new();
 
-    private DynamicArray<HashNode<K, V>?> _buckets = new();
+    private DynamicallyAllocatedArray<HashNode<K, V>?> _buckets = new();
 
     public V this[K key]
     {
@@ -180,7 +180,7 @@ public class DoubleHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
     private void ReHash()
     {
         Capacity *= 2;
-        DynamicArray<HashNode<K, V>?> tempBuckets = new(Capacity);
+        DynamicallyAllocatedArray<HashNode<K, V>?> tempBuckets = new(Capacity);
         int index;
         foreach (HashNode<K, V> bucket in GetHashNodes())
         {

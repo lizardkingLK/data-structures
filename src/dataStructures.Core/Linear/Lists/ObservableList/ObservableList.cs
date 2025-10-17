@@ -1,4 +1,4 @@
-using dataStructures.Core.Linear.Arrays;
+using dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray;
 using dataStructures.Core.Linear.Lists.ObservableList.Abstractions;
 using dataStructures.Core.Linear.Lists.ObservableList.Observer;
 
@@ -6,7 +6,7 @@ namespace dataStructures.Core.Linear.Lists.ObservableList;
 
 public class ObservableList<T> : IObservableList<T> where T : notnull
 {
-    private readonly DynamicArray<T> _list;
+    private readonly DynamicallyAllocatedArray<T> _list;
 
     private readonly Publisher<T> _publisher;
 

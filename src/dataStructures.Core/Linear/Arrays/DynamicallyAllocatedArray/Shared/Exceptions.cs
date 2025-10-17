@@ -1,6 +1,6 @@
-using static dataStructures.Core.Linear.Arrays.Shared.Constants;
+using static dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray.Shared.Constants;
 
-namespace dataStructures.Core.Linear.Arrays.Shared;
+namespace dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray.Shared;
 
 public static class Exceptions
 {

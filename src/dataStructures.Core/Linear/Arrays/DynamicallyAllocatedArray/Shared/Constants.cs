@@ -1,4 +1,4 @@
-namespace dataStructures.Core.Linear.Arrays.Shared;
+namespace dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray.Shared;
 
 public static class Constants
 {
