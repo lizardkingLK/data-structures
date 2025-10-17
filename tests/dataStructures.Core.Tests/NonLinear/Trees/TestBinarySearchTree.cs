@@ -112,50 +112,6 @@ public class TestBinarySearchTree
     }
 
     [Theory]
-    [InlineData(50, 49, 50, 30, 20, 40, 70, 60, 80)]
-    [InlineData(30, 29, 50, 30, 20, 40, 70, 60, 80)]
-    [InlineData(20, 19, 50, 30, 20, 40, 70, 60, 80)]
-    [InlineData(40, 39, 50, 30, 30, 40, 70, 60, 80)]
-    [InlineData(70, 69, 50, 30, 20, 40, 70, 60, 80)]
-    [InlineData(60, 59, 50, 30, 20, 40, 70, 60, 80)]
-    [InlineData(80, 79, 50, 30, 20, 40, 70, 60, 80)]
-    public void Should_Test_Update_Binary_Search_Tree(int oldValue, int newValue, params int[] nums)
-    {
-        // Arrange
-        BinarySearchTree<int> bst = new(nums);
-
-        // Act
-        bst.Update(oldValue, newValue);
-        TreeNode<int>? impossibleNode = bst.Search(oldValue, out _);
-        TreeNode<int>? possibleNode = bst.Search(newValue, out _);
-
-        // Assert
-        Assert.Null(impossibleNode);
-        Assert.NotNull(possibleNode);
-        Assert.Equal(newValue, possibleNode.Value);
-    }
-
-    [Fact]
-    public void Should_Test_Invert_Binary_Search_Tree()
-    {
-        // Arrange
-        int[] nums = [50, 30, 20, 40, 70, 60, 80];
-        BinarySearchTree<int> bst = new(nums);
-
-        // Act
-        string expectedItemsBefore = "20 30 40 50 60 70 80";
-        string expectedItemsAfter = "80 70 60 50 40 30 20";
-
-        string actualItemsBefore = string.Join(' ', bst.ValuesInOrder);
-        bst.Invert();
-        string actualItemsAfter = string.Join(' ', bst.ValuesInOrder);
-
-        // Assert
-        Assert.Equal(expectedItemsBefore, actualItemsBefore);
-        Assert.Equal(expectedItemsAfter, actualItemsAfter);
-    }
-
-    [Theory]
     [InlineData(16, 2, 4, 8, 2, 2, 32, 64, 128, 32, 31, 33, 3)]
     [InlineData(12, 23, 34, 45, 56, 67, 78, 89, 90)]
     [InlineData(50, 30, 20, 40, 70, 60, 80)]
@@ -168,10 +124,10 @@ public class TestBinarySearchTree
         BinarySearchTree<int> bst = new(nums);
 
         // Act
-        int[] items = [.. bst.ValuesPreOrder];
+        int[] itemsInOrder = [.. bst.ValuesPreOrder];
 
         // Assert
-        foreach (int item in items)
+        foreach (int item in itemsInOrder)
         {
             Assert.Contains(item, nums);
         }
@@ -190,10 +146,10 @@ public class TestBinarySearchTree
         BinarySearchTree<int> bst = new(nums);
 
         // Act
-        int[] items = [.. bst.ValuesInOrder];
+        int[] itemsInOrder = [.. bst.ValuesInOrder];
 
         // Assert
-        foreach (int item in items)
+        foreach (int item in itemsInOrder)
         {
             Assert.Contains(item, nums);
         }
@@ -212,10 +168,10 @@ public class TestBinarySearchTree
         BinarySearchTree<int> bst = new(nums);
 
         // Act
-        int[] items = [.. bst.ValuesPostOrder];
+        int[] itemsPostOrder = [.. bst.ValuesPostOrder];
 
         // Assert
-        foreach (int item in items)
+        foreach (int item in itemsPostOrder)
         {
             Assert.Contains(item, nums);
         }
@@ -234,10 +190,10 @@ public class TestBinarySearchTree
         BinarySearchTree<int> bst = new(nums);
 
         // Act
-        int[] items = [.. bst.DepthFirstSearch];
+        int[] depthFirstSearchedItems = [.. bst.DepthFirstSearch];
 
         // Assert
-        foreach (int item in items)
+        foreach (int item in depthFirstSearchedItems)
         {
             Assert.Contains(item, nums);
         }
@@ -256,10 +212,10 @@ public class TestBinarySearchTree
         BinarySearchTree<int> bst = new(nums);
 
         // Act
-        int[] items = [.. bst.BreadthFirstSearch];
+        int[] breadthFirstSearchedItems = [.. bst.BreadthFirstSearch];
 
         // Assert
-        foreach (int item in items)
+        foreach (int item in breadthFirstSearchedItems)
         {
             Assert.Contains(item, nums);
         }

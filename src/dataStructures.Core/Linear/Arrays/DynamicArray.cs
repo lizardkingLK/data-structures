@@ -5,7 +5,10 @@ namespace dataStructures.Core.Linear.Arrays;
 
 public class DynamicArray<T>
 {
-    private int _size;
+    private const float SHRINK_FACTOR = .3f;
+    private const float GROWTH_FACTOR = .7f;
+    private int _capacity;
+
     private T?[] _values;
     public int Capacity;
 
@@ -49,7 +52,7 @@ public class DynamicArray<T>
 
     public bool TryAdd(int index, T value)
     {
-        if (index < 0 || index >= _size)
+        if ((float)Size / _capacity >= GROWTH_FACTOR)
         {
             return false;
         }
@@ -83,7 +86,7 @@ public class DynamicArray<T>
             i++;
         }
 
-        while (i < newSize)
+        if ((float)Size / _capacity >= GROWTH_FACTOR)
         {
             newValues[i] = values[i];
             i++;
@@ -191,7 +194,12 @@ public class DynamicArray<T>
 
         _values[index] = newValue;
 
-        return true;
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
+        {
+            ShrinkArray();
+        }
+
+        return removed;
     }
 
     public T? Delete() => Remove(_size - 1);
@@ -212,7 +220,9 @@ public class DynamicArray<T>
             return removed;
         }
 
-        for (int i = index + 1; i < _size; i++)
+        Size--;
+
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
         {
             _values[i - 1] = _values[i];
             _values[i] = default;
@@ -243,7 +253,7 @@ public class DynamicArray<T>
             return true;
         }
 
-        for (int i = index + 1; i < _size; i++)
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
         {
             _values[i - 1] = _values[i];
             _values[i] = default;
@@ -283,9 +293,7 @@ public class DynamicArray<T>
         return false;
     }
 
-    public T? GetValue(int index)
-    {
-        if (index < 0 || index >= _size)
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
         {
             throw InvalidIndexException;
         }
@@ -302,7 +310,21 @@ public class DynamicArray<T>
             return false;
         }
 
-        value = _values[index];
+        removed = _values[index];
+        _values[index] = default;
+
+        for (int i = index; i < Size - 1; i++)
+        {
+            _values[i] = _values[i + 1];
+            _values[i + 1] = default;
+        }
+
+        Size--;
+
+        if ((float)Size / _capacity <= SHRINK_FACTOR)
+        {
+            ShrinkArray();
+        }
 
         return true;
     }
