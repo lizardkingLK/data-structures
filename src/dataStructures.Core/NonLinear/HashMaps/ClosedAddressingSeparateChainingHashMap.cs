@@ -35,10 +35,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
         bucket!.AddToTail(new(key, value));
         Size++;
 
-        if ((float)Size / Capacity >= _loadFactor)
-        {
-            ReHash();
-        }
+        ReHashIfSatisfies();
     }
 
     public bool TryAdd(K key, V value)
@@ -51,10 +48,7 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
         bucket!.AddToTail(new(key, value));
         Size++;
 
-        if ((float)Size / Capacity >= _loadFactor)
-        {
-            ReHash();
-        }
+        ReHashIfSatisfies();
 
         return true;
     }
@@ -179,8 +173,13 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
         return containsKey;
     }
 
-    private void ReHash()
+    private void ReHashIfSatisfies()
     {
+        if ((float)Size / Capacity < _loadFactor)
+        {
+            return;
+        }
+
         Capacity *= 2;
         DynamicallyAllocatedArray<DoublyLinkedList<HashNode<K, V>>> tempBuckets = new(Capacity);
         int index;

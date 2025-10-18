@@ -346,7 +346,7 @@ public class DynamicArray<T>
             newValues[i] = _values[i];
         }
 
-        Capacity = _size;
+        Capacity = _size == 0 ? INITIAL_CAPACITY : _size;
         _values = newValues;
     }
 }

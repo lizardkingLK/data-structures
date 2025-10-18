@@ -34,10 +34,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Insert(indexAndPsl.Item1, new(key, value, true, indexAndPsl.Item2));
         Size++;
 
-        if ((float)Size / Capacity >= _loadFactor)
-        {
-            ReHash();
-        }
+        ReHashIfSatisfies();
     }
 
     public V Get(K key)
@@ -93,10 +90,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Insert(validIndexAndPsl.Item1, new(key, value, true, validIndexAndPsl.Item2));
         Size++;
 
-        if ((float)Size / Capacity >= _loadFactor)
-        {
-            ReHash();
-        }
+        ReHashIfSatisfies();
 
         return true;
     }
@@ -204,8 +198,13 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         }
     }
 
-    private void ReHash()
+    private void ReHashIfSatisfies()
     {
+        if ((float)Size / Capacity < _loadFactor)
+        {
+            return;
+        }
+        
         Capacity *= 2;
         DynamicallyAllocatedArray<HashNode<K, V>?> tempBuckets = new(Capacity);
         int index;

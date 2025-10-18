@@ -30,7 +30,7 @@ public class HashMap<K, V> : IHashMap<K, V>
 
     public HashMap(HashTypeEnum hashType = ClosedAddressingSeparateChaining, float loadFactor = LOAD_FACTOR)
     {
-        if (loadFactor <= 0)
+        if (loadFactor <= 0 || loadFactor >= 1)
         {
             throw new Exception("error. cannot create hashmap. invalid load factor argument");
         }
