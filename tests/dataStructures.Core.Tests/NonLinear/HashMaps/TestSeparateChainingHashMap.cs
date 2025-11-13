@@ -11,6 +11,8 @@ public class TestSeparateChainingHashMap
     [InlineData(-1)]
     [InlineData(0)]
     [InlineData(-4)]
+    [InlineData(1)]
+    [InlineData(2)]
     public void Should_Test_HashMap_Construction(float loadFactor)
     {
         // Arrange

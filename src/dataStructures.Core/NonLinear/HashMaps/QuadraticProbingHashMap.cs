@@ -34,10 +34,7 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Insert(index, new(key, value));
         Size++;
 
-        if ((float)Size / Capacity >= _loadFactor)
-        {
-            ReHash();
-        }
+        ReHashIfSatisfies();
     }
 
     public V Get(K key)
@@ -93,10 +90,7 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         _buckets.Insert(index, new(key, value));
         Size++;
 
-        if ((float)Size / Capacity >= _loadFactor)
-        {
-            ReHash();
-        }
+        ReHashIfSatisfies();
 
         return true;
     }
@@ -178,8 +172,13 @@ public class QuadraticProbingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         return ContainsKey(key, out validIndex, out value, GetNextIndex);
     }
 
-    private void ReHash()
+    private void ReHashIfSatisfies()
     {
+        if ((float)Size / Capacity < _loadFactor)
+        {
+            return;
+        }
+        
         Capacity *= 2;
         DynamicallyAllocatedArray<HashNode<K, V>?> tempBuckets = new(Capacity);
         int index;
