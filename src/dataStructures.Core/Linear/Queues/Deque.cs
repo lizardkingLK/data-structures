@@ -5,10 +5,12 @@ namespace dataStructures.Core.Linear.Queues;
 public class Deque<T>
 {
     private LinkNode<T>? front;
-
     private LinkNode<T>? rear;
-
     public int Size { get; set; }
+
+    public Deque()
+    {
+    }
 
     public Deque(T head)
     {
@@ -22,9 +24,24 @@ public class Deque<T>
         LinkNode<T>? tailNode = rear;
         if (tailNode == null)
         {
-            front = new LinkNode<T>(null, item, null);
-            rear = front;
+            rear = new LinkNode<T>(null, item, null);
             Size++;
+            if (front == null)
+            {
+                return;
+            }
+
+            LinkNode<T>? current = front;
+            LinkNode<T>? previous = null;
+            while (current != null)
+            {
+                previous = current;
+                current = current.Next;
+            }
+
+            previous!.Next = rear;
+            rear.Previous = previous;
+
             return;
         }
 
@@ -41,8 +58,24 @@ public class Deque<T>
         if (headNode == null)
         {
             front = new LinkNode<T>(null, item, null);
-            rear = front;
             Size++;
+
+            if (rear == null)
+            {
+                return;
+            }
+
+            LinkNode<T>? current = rear;
+            LinkNode<T>? next = null;
+            while (current != null)
+            {
+                next = current;
+                current = current.Next;
+            }
+
+            next!.Previous = front;
+            front.Next = next;
+
             return;
         }
 
@@ -69,8 +102,11 @@ public class Deque<T>
     {
         LinkNode<T> tailNode = rear
             ?? throw new Exception("error. cannot remove from rear. deque is empty");
+        if (tailNode.Previous != null)
+        {
+            tailNode.Previous.Next = null;
+        }
 
-        tailNode.Previous!.Next = null;
         rear = tailNode.Previous;
         tailNode.Previous = null;
         Size--;
@@ -82,8 +118,11 @@ public class Deque<T>
     {
         LinkNode<T> headNode = front
             ?? throw new Exception("error. cannot remove from front. deque is empty");
+        if (headNode.Next != null)
+        {
+            headNode.Next.Previous = null;
+        }
 
-        headNode.Next!.Previous = null;
         front = headNode.Next;
         headNode.Next = null;
         Size--;
