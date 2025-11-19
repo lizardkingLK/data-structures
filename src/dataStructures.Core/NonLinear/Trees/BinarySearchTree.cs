@@ -171,10 +171,9 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
     {
         T? nextInOrderValue = GetValuesInOrder(nodeToDelete.Right).First();
         TreeNode<T> nextInOrder = Search(nextInOrderValue, out TreeNode<T>? parentOfNextInOrder)!;
-        if (!TryDeleteIfLeafNode(nextInOrder, parentOfNextInOrder))
-        {
-            return false;
-        }
+                
+        _ = TryDeleteIfLeafNode(nextInOrder, parentOfNextInOrder);
+        _ = TryDeleteIfSingleNode(nextInOrder, parentOfNextInOrder!);
 
         if (parentNode == null)
         {
