@@ -1,15 +1,16 @@
 using dataStructures.Core.NonLinear.Shared.Abstractions;
+using dataStructures.Core.NonLinear.Shared.State;
 
 namespace dataStructures.Core.NonLinear.Heaps;
 
 public class Heap<T> : ITree<T> where T : IComparable<T>
 {
-    public Shared.State.TreeNode<T>? Delete(T value)
+    public TreeNode<T>? Delete(T value)
     {
         throw new NotImplementedException();
     }
 
-    public Shared.State.TreeNode<T> Insert(T value)
+    public TreeNode<T> Insert(T value)
     {
         throw new NotImplementedException();
     }
@@ -19,7 +20,7 @@ public class Heap<T> : ITree<T> where T : IComparable<T>
         throw new NotImplementedException();
     }
 
-    public Shared.State.TreeNode<T>? Search(T value, out Shared.State.TreeNode<T>? parent)
+    public TreeNode<T>? Search(T value, out TreeNode<T>? parent)
     {
         throw new NotImplementedException();
     }

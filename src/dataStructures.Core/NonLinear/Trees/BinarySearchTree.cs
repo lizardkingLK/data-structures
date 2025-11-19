@@ -137,7 +137,34 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
 
     public void Invert()
     {
-        
+        if (Root == null)
+        {
+            return;
+        }
+
+        Linear.Stacks.Stack<TreeNode<T>> items = new(StackTypeEnum.LinkedListTyped, Size);
+        items.Push(Root);
+        TreeNode<T>? current;
+        TreeNode<T>? left;
+        TreeNode<T>? right;
+        while (!items.IsEmpty())
+        {
+            current = items.Pop();
+            left = current.Left;
+            right = current.Right;
+            if (left != null)
+            {
+                items.Push(left);
+            }
+
+            if (right != null)
+            {
+                items.Push(right);
+            }
+
+            current.Left = right;
+            current.Right = left;
+        }
     }
 
     private bool TryDeleteIfMultipleNodes(TreeNode<T> nodeToDelete, TreeNode<T>? parentNode)
