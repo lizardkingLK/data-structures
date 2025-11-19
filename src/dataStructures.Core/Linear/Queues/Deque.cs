@@ -4,175 +4,139 @@ namespace dataStructures.Core.Linear.Queues;
 
 public class Deque<T>
 {
-    private LinkNode<T>? front;
-    private LinkNode<T>? rear;
+    public LinkNode<T>? Head;
+    public LinkNode<T>? Tail;
     public int Size { get; set; }
 
-    public Deque()
+    public LinkNode<T> AddToHead(T value)
     {
-    }
-
-    public Deque(T head)
-    {
-        front = new(null, head, null);
-        rear = front;
+        LinkNode<T> newNode = new(value);
         Size++;
-    }
-
-    public void InsertToRear(T item)
-    {
-        LinkNode<T>? tailNode = rear;
-        if (tailNode == null)
+        if (Head == null)
         {
-            rear = new LinkNode<T>(null, item, null);
-            Size++;
-            if (front == null)
+            Head = newNode;
+            if (Tail == null)
             {
-                return;
+                Tail = newNode;
             }
 
-            LinkNode<T>? current = front;
-            LinkNode<T>? previous = null;
-            while (current != null)
-            {
-                previous = current;
-                current = current.Next;
-            }
-
-            previous!.Next = rear;
-            rear.Previous = previous;
-
-            return;
+            return newNode;
         }
 
-        tailNode = new LinkNode<T>(null, item, null);
-        rear!.Next = tailNode;
-        tailNode.Previous = rear;
-        rear = tailNode;
+        newNode.Next = Head;
+        Head.Previous = newNode;
+        Head = newNode;
+
+        return newNode;
+    }
+
+    public LinkNode<T> AddtoTail(T value)
+    {
+        LinkNode<T> newNode = new(value);
         Size++;
-    }
-
-    public void InsertToFront(T item)
-    {
-        LinkNode<T>? headNode = front;
-        if (headNode == null)
+        if (Tail == null)
         {
-            front = new LinkNode<T>(null, item, null);
-            Size++;
-
-            if (rear == null)
+            Tail = newNode;
+            if (Head == null)
             {
-                return;
+                Head = newNode;
             }
 
-            LinkNode<T>? current = rear;
-            LinkNode<T>? next = null;
-            while (current != null)
-            {
-                next = current;
-                current = current.Next;
-            }
-
-            next!.Previous = front;
-            front.Next = next;
-
-            return;
+            return newNode;
         }
 
-        headNode = new LinkNode<T>(null, item, null);
-        front!.Previous = headNode;
-        headNode.Next = front;
-        front = headNode;
-        Size++;
+        newNode.Previous = Tail;
+        Tail.Next = newNode;
+        Tail = newNode;
+
+        return newNode;
     }
 
-    public void DisplayFrontToRear()
+    public IEnumerable<T> GetValuesHeadToTail()
     {
-        LinkNode<T>? headNode = front;
-        while (headNode != null)
+        LinkNode<T>? current = Head;
+        while (current != null)
         {
-            Console.Write($"{headNode.Value} ");
-            headNode = headNode.Next;
-        }
+            yield return current.Value;
 
-        Console.WriteLine();
+            current = current.Next;
+        }
     }
 
-    public T RemoveFromRear()
+    public IEnumerable<T> GetValuesTailToHead()
     {
-        LinkNode<T> tailNode = rear
-            ?? throw new Exception("error. cannot remove from rear. deque is empty");
-        if (tailNode.Previous != null)
+        LinkNode<T>? current = Tail;
+        while (current != null)
         {
-            tailNode.Previous.Next = null;
+            yield return current.Value;
+
+            current = current.Previous;
         }
-
-        rear = tailNode.Previous;
-        tailNode.Previous = null;
-        Size--;
-
-        return tailNode.Value;
     }
 
     public T RemoveFromFront()
     {
-        LinkNode<T> headNode = front
+        LinkNode<T> headNode = Head
             ?? throw new Exception("error. cannot remove from front. deque is empty");
         if (headNode.Next != null)
         {
             headNode.Next.Previous = null;
         }
 
-        front = headNode.Next;
+        Head = headNode.Next;
         headNode.Next = null;
         Size--;
 
         return headNode.Value;
     }
 
-    public void DisplayRearToFront()
+    public T RemoveFromRear()
     {
-        LinkNode<T>? tailNode = rear;
-        while (tailNode != null)
+        LinkNode<T> tailNode = Tail
+            ?? throw new Exception("error. cannot remove from rear. deque is empty");
+        if (tailNode.Previous != null)
         {
-            Console.Write($"{tailNode.Value} ");
-            tailNode = tailNode.Previous;
+            tailNode.Previous.Next = null;
         }
 
-        Console.WriteLine();
-    }
-
-    public T? SearchValue(int index)
-    {
-        LinkNode<T>? currentNode = front;
-        int i = 0;
-        while (currentNode != null && i <= index)
-        {
-            currentNode = currentNode.Next;
-            i++;
-        }
-
-        if (currentNode == null)
-        {
-            return default;
-        }
-
-        return currentNode.Value;
-    }
-
-    public T SeekRear()
-    {
-        LinkNode<T> tailNode = rear
-            ?? throw new Exception("error. cannot seek at rear. deque is empty");
+        Tail = tailNode.Previous;
+        tailNode.Previous = null;
+        Size--;
 
         return tailNode.Value;
     }
 
+    public T? SearchValue(int index)
+    {
+        LinkNode<T>? current = Head;
+        int i = 0;
+        while (current != null && i <= index)
+        {
+            current = current.Next;
+            i++;
+        }
+
+        if (current == null)
+        {
+            return default;
+        }
+
+        return current.Value;
+    }
+
     public T SeekFront()
     {
-        LinkNode<T> headNode = front
+        LinkNode<T> headNode = Head
             ?? throw new Exception("error. cannot seek at front. deque is empty");
 
         return headNode.Value;
+    }
+
+    public T SeekRear()
+    {
+        LinkNode<T> tailNode = Tail
+            ?? throw new Exception("error. cannot seek at rear. deque is empty");
+
+        return tailNode.Value;
     }
 }
