@@ -15,7 +15,9 @@ public abstract class BinaryHeap<T> where T : IComparable<T>
 
     public abstract void Insert(T value);
 
-    // public abstract void Delete(T value);
+    public abstract void Update(T oldValue, T newValue);
 
-    // public abstract int Search(T value);
+    public abstract T Delete();
+
+    public abstract T Peek();
 }
