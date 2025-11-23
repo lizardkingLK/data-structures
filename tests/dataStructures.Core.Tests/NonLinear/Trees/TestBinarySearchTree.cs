@@ -220,4 +220,25 @@ public class TestBinarySearchTree
             Assert.Contains(item, nums);
         }
     }
+
+    [Fact]
+    public void Should_Test_Values_Of_Binary_Search_Tree_Inverse()
+    {
+        // Arrange
+        int[] nums = [20, 10, 40, 30, 50, 60];
+        BinarySearchTree<int> bst = new(nums);
+        string bfsNormalStringExpected = "20 10 40 30 50 60";
+        string bfsInvertedStringExpected = "20 40 10 50 30 60";
+
+        // Act
+        int[] bfsNormal = [.. bst.BreadthFirstSearch];
+        string bfsNormalStringActual = string.Join(' ', bfsNormal);
+        bst.Invert();
+        int[] bfsInverted = [.. bst.BreadthFirstSearch];
+        string bfsInvertedStringActual = string.Join(' ', bfsInverted);
+
+        // Assert
+        Assert.Equal(bfsNormalStringExpected, bfsNormalStringActual);
+        Assert.Equal(bfsInvertedStringExpected, bfsInvertedStringActual);
+    }
 }

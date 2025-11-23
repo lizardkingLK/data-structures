@@ -10,7 +10,7 @@ public class DynamicArray<T>
     public int Capacity;
 
     public int Size => _size;
-    public IEnumerable<T?> Values => GetValues();
+    public IEnumerable<T> Values => GetValues();
 
     public T? this[int index]
     {
@@ -307,11 +307,14 @@ public class DynamicArray<T>
         return true;
     }
 
-    private IEnumerable<T?> GetValues()
+    private IEnumerable<T> GetValues()
     {
-        foreach (T? value in _values)
+        for (int i = 0; i < Size; i++)
         {
-            yield return value;
+            if (_values[i] is not null)
+            {
+                yield return _values[i]!;
+            }
         }
     }
 

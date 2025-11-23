@@ -52,7 +52,37 @@ public class DoublyLinkedList<T>
         return newNode;
     }
 
-    public LinkNode<T> InsertBefore(LinkNode<T> target, T value)
+    public T RemoveFromFront()
+    {
+        LinkNode<T> headNode = Head
+            ?? throw new Exception("error. cannot remove from front. deque is empty");
+        if (headNode.Next != null)
+        {
+            headNode.Next.Previous = null;
+        }
+
+        Head = headNode.Next;
+        headNode.Next = null;
+
+        return headNode.Value;
+    }
+
+    public T RemoveFromRear()
+    {
+        LinkNode<T> tailNode = Tail
+            ?? throw new Exception("error. cannot remove from rear. deque is empty");
+        if (tailNode.Previous != null)
+        {
+            tailNode.Previous.Next = null;
+        }
+
+        Tail = tailNode.Previous;
+        tailNode.Previous = null;
+
+        return tailNode.Value;
+    }
+
+    public LinkNode<T> AddBefore(LinkNode<T> target, T value)
     {
         if (!TryGetLinkNode(target, out LinkNode<T>? current))
         {
@@ -77,7 +107,7 @@ public class DoublyLinkedList<T>
         return newNode;
     }
 
-    public LinkNode<T> InsertAfter(LinkNode<T> target, T value)
+    public LinkNode<T> AddAfter(LinkNode<T> target, T value)
     {
         if (!TryGetLinkNode(target, out LinkNode<T>? current))
         {

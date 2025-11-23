@@ -34,7 +34,6 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
         foreach (T value in values)
         {
             _ = Insert(value);
-            Size++;
         }
     }
 
@@ -81,6 +80,8 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
             break;
         }
 
+        Size++;
+
         return newNode;
     }
 
@@ -112,11 +113,50 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
         return null;
     }
 
+    public void Invert()
+    {
+        if (Root == null)
+        {
+            return;
+        }
+
+        Linear.Stacks.Stack<TreeNode<T>> items = new(StackTypeEnum.LinkedListTyped, Size);
+        items.Push(Root);
+        TreeNode<T>? current;
+        TreeNode<T>? left;
+        TreeNode<T>? right;
+        while (!items.IsEmpty())
+        {
+            current = items.Pop();
+            left = current.Left;
+            right = current.Right;
+            if (left != null)
+            {
+                items.Push(left);
+            }
+
+            if (right != null)
+            {
+                items.Push(right);
+            }
+
+            current.Left = right;
+            current.Right = left;
+        }
+    }
+
     public TreeNode<T>? Delete(T value)
     {
         TreeNode<T>? nodeToDelete = Search(value, out TreeNode<T>? parentNode)
         ?? throw new Exception("error. cannot find the given value");
 
+        Size--;
+
+        return DeleteNode(nodeToDelete, parentNode);
+    }
+
+    public TreeNode<T>? DeleteNode(TreeNode<T> nodeToDelete, TreeNode<T>? parentNode)
+    {
         if (TryDeleteIfLeafNode(nodeToDelete, parentNode))
         {
             return nodeToDelete;
@@ -135,19 +175,12 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
         return null;
     }
 
-    public void Invert()
-    {
-        
-    }
-
     private bool TryDeleteIfMultipleNodes(TreeNode<T> nodeToDelete, TreeNode<T>? parentNode)
     {
         T? nextInOrderValue = GetValuesInOrder(nodeToDelete.Right).First();
         TreeNode<T> nextInOrder = Search(nextInOrderValue, out TreeNode<T>? parentOfNextInOrder)!;
-        if (!TryDeleteIfLeafNode(nextInOrder, parentOfNextInOrder))
-        {
-            return false;
-        }
+
+        _ = DeleteNode(nextInOrder, parentOfNextInOrder);
 
         if (parentNode == null)
         {
