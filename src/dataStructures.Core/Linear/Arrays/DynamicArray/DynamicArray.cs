@@ -20,7 +20,7 @@ public class DynamicArray<T>
 
     public DynamicArray(int capacity = INITIAL_CAPACITY)
     {
-        if (capacity < INITIAL_CAPACITY)
+        if (capacity < 0)
         {
             throw InvalidCapacityException;
         }
@@ -343,13 +343,19 @@ public class DynamicArray<T>
             return;
         }
 
-        T?[] newValues = new T[_size];
+        int newCapacity = Size;
+        if (newCapacity <= INITIAL_CAPACITY)
+        {
+            newCapacity = INITIAL_CAPACITY;
+        }
+
+        T?[] newValues = new T[newCapacity];
         for (int i = 0; i < _size; i++)
         {
             newValues[i] = _values[i];
         }
 
-        Capacity = _size == 0 ? INITIAL_CAPACITY : _size;
+        Capacity = newCapacity;
         _values = newValues;
     }
 }
