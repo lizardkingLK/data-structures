@@ -55,7 +55,7 @@ public class DoublyLinkedList<T>
     public T RemoveFromFront()
     {
         LinkNode<T> headNode = Head
-            ?? throw new Exception("error. cannot remove from front. deque is empty");
+            ?? throw new Exception("error. cannot remove from front. list is empty");
         if (headNode.Next != null)
         {
             headNode.Next.Previous = null;
@@ -70,7 +70,7 @@ public class DoublyLinkedList<T>
     public T RemoveFromRear()
     {
         LinkNode<T> tailNode = Tail
-            ?? throw new Exception("error. cannot remove from rear. deque is empty");
+            ?? throw new Exception("error. cannot remove from rear. list is empty");
         if (tailNode.Previous != null)
         {
             tailNode.Previous.Next = null;
