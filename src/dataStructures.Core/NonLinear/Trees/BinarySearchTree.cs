@@ -155,7 +155,7 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
         return DeleteNode(nodeToDelete, parentNode);
     }
 
-    public TreeNode<T>? DeleteNode(TreeNode<T> nodeToDelete, TreeNode<T>? parentNode)
+    private TreeNode<T>? DeleteNode(TreeNode<T> nodeToDelete, TreeNode<T>? parentNode)
     {
         if (TryDeleteIfLeafNode(nodeToDelete, parentNode))
         {
@@ -273,7 +273,7 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
     }
 
     // NLR
-    private static IEnumerable<T> GetValuesPreOrder(TreeNode<T>? root)
+    public static IEnumerable<T> GetValuesPreOrder(TreeNode<T>? root)
     {
         if (root == null)
         {
@@ -294,7 +294,7 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
     }
 
     // LNR
-    private static IEnumerable<T> GetValuesInOrder(TreeNode<T>? root)
+    public static IEnumerable<T> GetValuesInOrder(TreeNode<T>? root)
     {
         if (root == null)
         {
@@ -315,7 +315,7 @@ public class BinarySearchTree<T> : ITree<T> where T : IComparable<T>
     }
 
     // LRN
-    private static IEnumerable<T> GetValuesPostOrder(TreeNode<T>? root)
+    public static IEnumerable<T> GetValuesPostOrder(TreeNode<T>? root)
     {
         if (root == null)
         {
