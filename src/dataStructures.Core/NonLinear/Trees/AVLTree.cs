@@ -5,12 +5,108 @@ namespace dataStructures.Core.NonLinear.Trees;
 
 public class AVLTree<T> : BinarySearchTree<T> where T : IComparable<T>
 {
+    public AVLTree(params T[] values)
+    => AddRange(values);
+
+    public new void AddRange(T[] values)
+    {
+        foreach (T value in values)
+        {
+            Root = Insert(value);
+        }
+    }
+
     public new TreeNode<T> Insert(T value)
     => Root = AVLTree<T>.Insert(Root, value);
 
     public new TreeNode<T>? Delete(T value)
+    => Root = AVLTree<T>.Delete(Root, value);
+
+    private static TreeNode<T>? Delete(TreeNode<T>? parent, T value)
     {
-        throw new NotImplementedException();
+        if (parent == null)
+        {
+            return null;
+        }
+
+        if (CompareHelper<T>.FirstLowerThanOrEqualsSecond(value, parent.Value))
+        {
+            parent.Left = Delete(parent.Left, value);
+        }
+        else if (CompareHelper<T>.FirstGreaterThanSecond(value, parent.Value))
+        {
+            parent.Right = Delete(parent.Right, value);
+        }
+        else
+        {
+            if (parent.Left == null || parent.Right == null)
+            {
+                TreeNode<T>? tempNode = parent.Left ?? parent.Right;
+                if (tempNode == null)
+                {
+                    parent = null;
+                }
+                else
+                {
+                    parent = tempNode;
+                }
+            }
+            else
+            {
+                TreeNode<T>? tempNode = parent.Right;
+                while (tempNode.Left != null)
+                {
+                    tempNode = tempNode.Left;
+                }
+
+                parent.Value = tempNode.Value;
+
+                parent.Right = Delete(parent.Right, tempNode.Value);
+            }
+        }
+
+        if (parent == null)
+        {
+            return null;
+        }
+
+        parent.Height = 1 + Math.Max(
+            Height(parent.Left),
+            Height(parent.Right));
+
+        int balance = GetBalance(parent);
+
+        if (balance > 1
+        && parent.Left != null
+        && GetBalance(parent.Left) >= 0)
+        {
+            return RightRotate(parent);
+        }
+
+        if (balance < -1
+        && parent.Right != null
+        && GetBalance(parent.Right) <= 0)
+        {
+            return RightRotate(parent);
+        }
+
+        if (balance > 1
+        && parent.Left != null
+        && GetBalance(parent.Left) < 0)
+        {
+            parent.Left = LeftRotate(parent.Left);
+            return RightRotate(parent);
+        }
+
+        if (balance < -1
+        && parent.Right != null
+        && GetBalance(parent.Right) > 0)
+        {
+            parent.Right = RightRotate(parent.Right);
+            return LeftRotate(parent);
+        }
+
+        return parent;
     }
 
     private static TreeNode<T> Insert(TreeNode<T>? parent, T value)
