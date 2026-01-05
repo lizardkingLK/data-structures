@@ -307,6 +307,14 @@ public class DynamicArray<T>
         return true;
     }
 
+    public void Reverse()
+    {
+        for (int i = 0; i < Size / 2; i++)
+        {
+            (_values[i], _values[Size - 1 - i]) = (_values[Size - 1 - i], _values[i]);
+        }
+    }
+
     private IEnumerable<T> GetValues()
     {
         for (int i = 0; i < Size; i++)
