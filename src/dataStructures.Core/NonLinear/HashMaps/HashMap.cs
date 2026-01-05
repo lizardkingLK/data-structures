@@ -95,4 +95,9 @@ public class HashMap<K, V> : IHashMap<K, V>
     {
         return _hashMap.TryRemove(key, out value);
     }
+
+    public bool ContainsKey(K key)
+    {
+        return _hashMap.ContainsKey(key);
+    }
 }

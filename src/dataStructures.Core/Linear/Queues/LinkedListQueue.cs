@@ -11,7 +11,7 @@ public class LinkedListQueue<T>(int size) : IQueue<T>
 
     private int _count = 0;
 
-    public void Insert(T item)
+    public void Enqueue(T item)
     {
         if (IsFull())
         {
@@ -22,7 +22,7 @@ public class LinkedListQueue<T>(int size) : IQueue<T>
         _count++;
     }
 
-    public T? Peek()
+    public T Peek()
     {
         if (IsEmpty())
         {
@@ -32,7 +32,7 @@ public class LinkedListQueue<T>(int size) : IQueue<T>
         return _list.Head!.Value;
     }
 
-    public T? Remove()
+    public T Dequeue()
     {
         if (IsEmpty())
         {

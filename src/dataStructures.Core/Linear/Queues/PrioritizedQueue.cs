@@ -22,7 +22,7 @@ IEnumerable<(K, V)> where K : notnull, IComparable
         Heapify(_values);
     }
 
-    public void Insert((K, V) item)
+    public void Enqueue((K, V) item)
     {
         int index = Size;
         _values.Insert(index, item);
@@ -57,7 +57,7 @@ IEnumerable<(K, V)> where K : notnull, IComparable
         return true;
     }
 
-    public (K, V) Remove()
+    public (K, V) Dequeue()
     {
         if (IsEmpty())
         {

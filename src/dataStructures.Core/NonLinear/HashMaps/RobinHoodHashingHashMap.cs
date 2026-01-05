@@ -149,6 +149,9 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         hashNode!.Value = value;
     }
 
+    public bool ContainsKey(K key)
+    => ContainsKey(key, out _, out _);
+
     private bool ContainsKey(
         K key,
         out (int, int) validIndexAndPsl,
@@ -204,7 +207,7 @@ public class RobinHoodHashingHashMap<K, V>(float loadFactor) : IHashMap<K, V>
         {
             return;
         }
-        
+
         Capacity *= 2;
         DynamicallyAllocatedArray<HashNode<K, V>?> tempBuckets = new(Capacity);
         int index;

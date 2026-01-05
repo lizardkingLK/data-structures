@@ -1,7 +1,5 @@
 using System.Collections;
-using dataStructures.Core.Linear.Arrays.DynamicallyAllocatedArray;
-using dataStructures.Core.Linear.Arrays.DynamicArray;
-using dataStructures.Core.Linear.Stacks;
+using dataStructures.Core.Linear.Queues.Enums;
 using dataStructures.Core.Linear.Stacks.Enums;
 using dataStructures.Core.NonLinear.HashMaps;
 
@@ -13,7 +11,7 @@ public class Graph<T> : IEnumerable<T>
 
     public void AddVector(T vector)
     {
-        if (!_adjacencyList.TryGet(vector, out _))
+        if (!_adjacencyList.ContainsKey(vector))
         {
             _adjacencyList.Add(vector, []);
         }
@@ -97,6 +95,190 @@ public class Graph<T> : IEnumerable<T>
                 }
             }
         }
+    }
+
+    public IEnumerable<T> BFSIterative()
+    {
+        HashSet<T> visited = [];
+
+        Linear.Queues.Queue<T> values = new(QueueTypeEnum.ArrayTyped, _adjacencyList.Size);
+        T? dequeued;
+        foreach ((T vertex, _) in _adjacencyList.GetKeyValues())
+        {
+            values.Enqueue(vertex);
+            while (!values.IsEmpty())
+            {
+                dequeued = values.Dequeue();
+                if (!visited.Add(dequeued))
+                {
+                    continue;
+                }
+
+                yield return dequeued;
+
+                foreach (T neighbor in GetNeighbors(dequeued))
+                {
+                    values.Enqueue(neighbor);
+                }
+            }
+        }
+    }
+
+    public bool FindCycleBFS(T from, T to, out List<T>? cycle)
+    {
+        cycle = null;
+
+        if (from!.Equals(to))
+        {
+            return false;
+        }
+
+        HashSet<T> visited = [];
+        HashMap<T, T?> parentTracker = new();
+        Linear.Queues.Queue<T> values = new(QueueTypeEnum.ArrayTyped, _adjacencyList.Size);
+
+        T? dequeued;
+
+        visited.Add(from);
+        values.Enqueue(from);
+        parentTracker.Add(from, default);
+
+        bool cycleFound = false;
+        while (!values.IsEmpty())
+        {
+            dequeued = values.Dequeue();
+            if (dequeued!.Equals(to))
+            {
+                return cycleFound;
+            }
+
+            foreach (T neighbor in GetNeighbors(dequeued))
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    visited.Add(neighbor);
+                    values.Enqueue(neighbor);
+                    parentTracker.Add(neighbor, dequeued);
+                }
+                else if (!parentTracker[dequeued]!.Equals(neighbor))
+                {
+                    if (cycleFound)
+                    {
+                        continue;
+                    }
+
+                    cycle = GetCycle(parentTracker, dequeued, neighbor);
+                    cycleFound = true;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public bool FindCycleDFS(T from, T to, out List<T>? cycle)
+    {
+        cycle = null;
+
+        if (from!.Equals(to))
+        {
+            return false;
+        }
+
+        HashSet<T> visited = [];
+        HashMap<T, T?> parentTracker = new();
+        Linear.Stacks.Stack<T> values = new(StackTypeEnum.ArrayTyped, _adjacencyList.Size);
+
+        T? popped;
+
+        visited.Add(from);
+        values.Push(from);
+        parentTracker.Add(from, default);
+
+        bool cycleFound = false;
+        while (!values.IsEmpty())
+        {
+            popped = values.Pop();
+            if (popped!.Equals(to))
+            {
+                return cycleFound;
+            }
+
+            foreach (T neighbor in GetNeighbors(popped))
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    visited.Add(neighbor);
+                    values.Push(neighbor);
+                    parentTracker.Add(neighbor, popped);
+                }
+                else if (!parentTracker[popped]!.Equals(neighbor))
+                {
+                    if (cycleFound)
+                    {
+                        continue;
+                    }
+
+                    cycle = GetCycle(parentTracker, popped, neighbor);
+                    cycleFound = true;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static List<T> GetCycle(HashMap<T, T?> parentTracker, T current, T neighbor)
+    {
+        List<T> currentToRoot = [];
+        T? temp = current;
+        while (temp != null && parentTracker.ContainsKey(temp))
+        {
+            currentToRoot.Add(temp);
+            temp = parentTracker[temp];
+        }
+
+        currentToRoot.Reverse();
+
+        List<T> neighborToRoot = [];
+        temp = neighbor;
+        while (temp != null && parentTracker.ContainsKey(temp))
+        {
+            neighborToRoot.Add(temp);
+            temp = parentTracker[temp];
+        }
+
+        neighborToRoot.Reverse();
+
+        int length = Math.Min(currentToRoot.Count, neighborToRoot.Count);
+        int commonIndex = 0;
+        int i;
+        for (i = 0; i < length; i++)
+        {
+            if (currentToRoot[i]!.Equals(neighborToRoot[i]))
+            {
+                commonIndex = i;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        List<T> cycle = [currentToRoot[commonIndex]];
+        length = currentToRoot.Count;
+        for (i = commonIndex + 1; i < length; i++)
+        {
+            cycle.Add(currentToRoot[i]);
+        }
+
+        length = neighborToRoot.Count;
+        for (i = commonIndex; i < length; i++)
+        {
+            cycle.Add(neighborToRoot[length - i]);
+        }
+
+        return cycle;
     }
 
     public IEnumerator<T> GetEnumerator()

@@ -6,41 +6,15 @@ class Program
 {
     static void Main()
     {
-        Graph<string> g = new();
+        Graph<int> g = new();
 
-        Console.WriteLine($"\nall vertices are below. {nameof(g.DFSRecursive)}");
-        foreach (string neighbor in g.DFSRecursive())
-        {
-            Console.WriteLine(neighbor);
-        }
+        g.AddEdge(5, 3, true);
+        g.AddEdge(3, 1, true);
+        g.AddEdge(1, 2, true);
+        g.AddEdge(2, 6, true);
+        g.AddEdge(3, 4, true);
+        g.AddEdge(4, 2, true);
 
-        g.AddEdge("foo", "bar");
-        g.AddEdge("me", "you");
-        g.AddEdge("you", "me");
-        g.AddEdge("me", "dad");
-        g.AddEdge("dad", "me");
-        g.AddEdge("me", "mom");
-        g.AddEdge("mom", "me");
-        g.AddEdge("dad", "mom");
-        g.AddEdge("mom", "dad");
-
-        string whose = "you";
-        Console.WriteLine($"\nneighbors of {whose} are below.");
-        foreach (string neighbor in g.GetNeighbors(whose))
-        {
-            Console.WriteLine(neighbor);
-        }
-
-        Console.WriteLine($"\nall vertices are below. {nameof(g.DFSRecursive)}");
-        foreach (string neighbor in g.DFSRecursive())
-        {
-            Console.WriteLine(neighbor);
-        }
-
-        Console.WriteLine($"\nall vertices are below. {nameof(g.DFSIterative)}");
-        foreach (string neighbor in g.DFSIterative())
-        {
-            Console.WriteLine(neighbor);
-        }
+        
     }
 }
