@@ -24,9 +24,8 @@ IEnumerable<(K, V)> where K : notnull, IComparable
 
     public void Enqueue((K, V) item)
     {
-        int index = Size;
-        _values.Insert(index, item);
-        HeapifyUp(_values, index);
+        _values.Add(item);
+        HeapifyUp(_values, Size - 1);
     }
 
     public bool IsEmpty() => Size == 0;

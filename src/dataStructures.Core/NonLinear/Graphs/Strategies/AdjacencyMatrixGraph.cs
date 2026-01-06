@@ -1,7 +1,9 @@
 using System.Collections;
 using dataStructures.Core.Linear.Arrays.DynamicArray;
+using dataStructures.Core.Linear.Queues;
 using dataStructures.Core.Linear.Queues.Enums;
 using dataStructures.Core.Linear.Stacks.Enums;
+using dataStructures.Core.NonLinear.Graphs.Enums;
 using dataStructures.Core.NonLinear.HashMaps;
 
 namespace dataStructures.Core.NonLinear.Graphs.Strategies;
@@ -257,6 +259,127 @@ public class AdjacencyMatrixGraph<T> : IEnumerable<T> where T : notnull
         }
 
         return true;
+    }
+
+    public bool FindShortestPath(
+        T from,
+        T to,
+        out DynamicArray<T>? path,
+        ShortestPathType type = ShortestPathType.Dijkstra)
+    {
+        try
+        {
+            return type switch
+            {
+                ShortestPathType.Dijkstra => FindShortestPath(from, to, out path),
+                ShortestPathType.BellmanFord => throw new NotImplementedException(),
+                _ => throw new NotImplementedException("error. algorithm not available"),
+            };
+        }
+        catch (Exception e)
+        {
+            throw new Exception(
+                string.Format("{0}. invalid for {1}",
+                e.Message,
+                nameof(ShortestPathType.Dijkstra)),
+                e);
+        }
+    }
+
+    private bool FindShortestPath(
+        T from,
+        T to,
+        out DynamicArray<T>? path)
+    {
+        path = null;
+
+        HashMap<T, T> parents = new();
+        HashSet<T> visited = [];
+        HashMap<T, double> distances = GetDistances();
+
+        T? current = from;
+        double currentWeight = 0;
+        PrioritizedQueue<double, T> queue = new();
+        queue.Enqueue((currentWeight, current));
+        while (!queue.IsEmpty())
+        {
+            (currentWeight, current) = queue.Dequeue();
+            if (currentWeight < 0)
+            {
+                throw new ApplicationException(
+                    "error. invalid weight in current context");
+            }
+
+            if (current.Equals(to))
+            {
+                break;
+            }
+
+            if (visited.Contains(current))
+            {
+                continue;
+            }
+
+            visited.Add(current);
+            distances[current] = currentWeight;
+
+            foreach ((T neighbor, double neighborWeight) in
+            GetNeighbors(current).Values)
+            {
+                double newNeighborWeight = currentWeight + neighborWeight;
+                if (newNeighborWeight > distances[neighbor])
+                {
+                    continue;
+                }
+
+                distances[neighbor] = newNeighborWeight;
+                if (!parents.TryAdd(neighbor, current))
+                {
+                    parents[neighbor] = current;
+                }
+
+                queue.Enqueue((newNeighborWeight, neighbor));
+            }
+        }
+
+        if (!current.Equals(to))
+        {
+            return false;
+        }
+
+        FindPath(to, parents, out path);
+
+        return true;
+    }
+
+    private static void FindPath(
+        T to,
+        HashMap<T, T> parents,
+        out DynamicArray<T>? path)
+    {
+        path = new();
+
+        T? current = to;
+        while (current != null)
+        {
+            path.Add(current);
+            if (!parents.TryGet(current, out current))
+            {
+                break;
+            }
+        }
+    }
+
+    private HashMap<T, double> GetDistances()
+    {
+        HashMap<T, double> distances = new();
+
+        foreach (T vertex in _vertices)
+        {
+            distances.Add(vertex, double.PositiveInfinity);
+        }
+
+        return distances;
     }
 
     private static DynamicArray<T> GetCycle(HashMap<T, T?> parents, T current, T neighbor)
