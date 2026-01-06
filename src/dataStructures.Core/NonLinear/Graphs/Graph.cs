@@ -6,5 +6,5 @@ public class Graph<T> where T : notnull
 {
     public static AdjacencyListGraph<T> CreateAdjacencyListGraph() => new();
 
-    public static AdjacencyMatrixGraph<T> CreateAdjacencyMatrixGraph(params T[] vertices) => new(vertices);
+    public static AdjacencyMatrixGraph<T> CreateAdjacencyMatrixGraph(T[] vertices) => new(vertices);
 }

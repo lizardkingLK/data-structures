@@ -271,8 +271,8 @@ public class AdjacencyMatrixGraph<T> : IEnumerable<T> where T : notnull
         {
             return type switch
             {
-                ShortestPathType.Dijkstra => FindShortestPath(from, to, out path),
-                ShortestPathType.BellmanFord => throw new NotImplementedException(),
+                ShortestPathType.Dijkstra => FindShortestPathDijkstra(from, to, out path),
+                ShortestPathType.BellmanFord => FindShortestPathBellmanFord(from, to, out path),
                 _ => throw new NotImplementedException("error. algorithm not available"),
             };
         }
@@ -281,15 +281,64 @@ public class AdjacencyMatrixGraph<T> : IEnumerable<T> where T : notnull
             throw new Exception(
                 string.Format("{0}. invalid for {1}",
                 e.Message,
-                nameof(ShortestPathType.Dijkstra)),
+                type),
                 e);
         }
     }
 
-    private bool FindShortestPath(
-        T from,
-        T to,
-        out DynamicArray<T>? path)
+    private bool FindShortestPathBellmanFord(T from, T to, out DynamicArray<T>? path)
+    {
+        path = null;
+
+        HashMap<T, T> parents = new();
+        HashMap<T, double> distances = GetDistances();
+
+        distances[from] = 0;
+
+        int length = _vertices.Length;
+        bool wasUpdated;
+        for (int i = 0; i < length; i++)
+        {
+            wasUpdated = false;
+            foreach (T vertexU in _vertices)
+            {
+                foreach ((T vertexV, double weight) in GetNeighbors(vertexU).Values)
+                {
+                    if (distances[vertexU] != double.PositiveInfinity
+                    && distances[vertexU] + weight < distances[vertexV])
+                    {
+                        wasUpdated = true;
+                        if (i == length - 1)
+                        {
+                            return false;
+                        }
+
+                        distances[vertexV] = distances[vertexU] + weight;
+                        if (!parents.TryAdd(vertexV, vertexU))
+                        {
+                            parents[vertexV] = vertexU;
+                        }
+                    }
+                }
+            }
+
+            if (!wasUpdated)
+            {
+                break;
+            }
+        }
+
+        if (distances[to] == double.PositiveInfinity)
+        {
+            return false;
+        }
+
+        FindPath(to, parents, out path);
+
+        return true;
+    }
+
+    private bool FindShortestPathDijkstra(T from, T to, out DynamicArray<T>? path)
     {
         path = null;
 
@@ -368,6 +417,8 @@ public class AdjacencyMatrixGraph<T> : IEnumerable<T> where T : notnull
                 break;
             }
         }
+
+        path.Reverse();
     }
 
     private HashMap<T, double> GetDistances()

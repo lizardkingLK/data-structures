@@ -85,16 +85,34 @@ class Program
         l.AddEdge("a", "d", 40);
         l.AddEdge("d", "f", 20);
 
-        if (l.FindShortestPath("a", "f", out DynamicArray<string>? path))
+        if (l.FindShortestPath("a", "f", out DynamicArray<string>? path0))
         {
-            Console.WriteLine("\nshortest path = {0}", string.Join('-', path!.Values));
+            Console.WriteLine("\nshortest path = {0}", string.Join('-', path0!.Values));
+        }
+
+        k = Graph<int>.CreateAdjacencyListGraph();
+
+        // k.AddEdge(0, 1, 5);
+        // k.AddEdge(1, 2, 1);
+        // k.AddEdge(1, 3, 2);
+        // k.AddEdge(2, 4, 1);
+        // k.AddEdge(4, 3, -1);
+
+        k.AddEdge(0, 1, 4);
+        k.AddEdge(1, 2, -6);
+        k.AddEdge(2, 3, 5);
+        k.AddEdge(3, 1, -2);
+
+        if (k.FindShortestPath(0, 3, out DynamicArray<int>? path1, Core.NonLinear.Graphs.Enums.ShortestPathType.BellmanFord))
+        {
+            Console.WriteLine("\nshortest path = {0}", string.Join('-', path1!.Values));
         }
     }
 
     static void TestAdjacencyMatrix()
     {
         AdjacencyMatrixGraph<string> g = Graph<string>.CreateAdjacencyMatrixGraph(
-            "foo", "bar", "me", "you", "dad", "mom");
+            ["foo", "bar", "me", "you", "dad", "mom"]);
 
         Console.WriteLine($"\nall vertices are below. {nameof(g.DFSRecursive)}");
         foreach (string neighbor in g.DFSRecursive())
@@ -138,7 +156,7 @@ class Program
         }
 
         AdjacencyMatrixGraph<int> k = Graph<int>.CreateAdjacencyMatrixGraph(
-            1, 2, 3, 4, 5, 6);
+            [1, 2, 3, 4, 5, 6]);
 
         k.AddEdge(5, 3, 1, true);
         k.AddEdge(3, 1, 1, true);
@@ -160,7 +178,7 @@ class Program
         }
 
         AdjacencyMatrixGraph<string> l = Graph<string>.CreateAdjacencyMatrixGraph(
-            "a", "b", "c", "d", "e", "f");
+            ["a", "b", "c", "d", "e", "f"]);
 
         l.AddEdge("a", "c", 35);
         l.AddEdge("c", "f", 30);
@@ -176,6 +194,33 @@ class Program
         if (l.FindShortestPath("a", "f", out DynamicArray<string>? path))
         {
             Console.WriteLine("\nshortest path = {0}", string.Join('-', path!.Values));
+        }
+
+        k = Graph<int>.CreateAdjacencyMatrixGraph(
+            [0, 1, 2, 3, 4]);
+
+        k.AddEdge(0, 1, 5);
+        k.AddEdge(1, 2, 1);
+        k.AddEdge(1, 3, 2);
+        k.AddEdge(2, 4, 1);
+        k.AddEdge(4, 3, -1);
+
+        // if (k.FindShortestPath(0, 3, out DynamicArray<int>? path0, Core.NonLinear.Graphs.Enums.ShortestPathType.BellmanFord))
+        // {
+        //     Console.WriteLine("\nshortest path = {0}", string.Join('-', path0!.Values));
+        // }
+
+        k = Graph<int>.CreateAdjacencyMatrixGraph(
+            [0, 1, 2, 3]);
+
+        k.AddEdge(0, 1, 4);
+        k.AddEdge(1, 2, -6);
+        k.AddEdge(2, 3, 5);
+        k.AddEdge(3, 1, -2);
+
+        if (k.FindShortestPath(0, 3, out DynamicArray<int>? path1, Core.NonLinear.Graphs.Enums.ShortestPathType.BellmanFord))
+        {
+            Console.WriteLine("\nshortest path = {0}", string.Join('-', path1!.Values));
         }
     }
 
