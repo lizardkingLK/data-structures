@@ -2,9 +2,9 @@ namespace dataStructures.Core.Linear.Queues.Abstractions;
 
 public interface IQueue<T>
 {
-    void Insert(T item);
-    T? Remove();
-    T? Peek();
+    void Enqueue(T item);
+    T Dequeue();
+    T Peek();
     bool IsEmpty();
     bool IsFull();
 }

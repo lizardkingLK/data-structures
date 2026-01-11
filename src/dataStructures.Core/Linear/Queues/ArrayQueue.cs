@@ -2,45 +2,52 @@ using dataStructures.Core.Linear.Queues.Abstractions;
 
 namespace dataStructures.Core.Linear.Queues;
 
-public class ArrayQueue<T>(int size) : IQueue<T>
+public class ArrayQueue<T>(int capacity) : IQueue<T>
 {
-    private int front = 0;
+    private int _front;
 
-    private int rear = -1;
+    private int _size;
 
-    private readonly T[] values = new T[size];
+    private readonly T?[] _values = new T[capacity];
 
-    public void Insert(T value)
+    public void Enqueue(T value)
     {
         if (IsFull())
         {
             throw new Exception("error. cannot insert queue is full");
         }
 
-        values[++rear] = value;
+        int rear = (_size + _front) % capacity;
+        _values[rear] = value;
+        _size++;
     }
 
-    public T? Peek()
+    public T Peek()
     {
         if (IsEmpty())
         {
             throw new Exception("error. cannot peek queue is empty");
         }
 
-        return values[front];
+        return _values[_front]!;
     }
 
-    public T? Remove()
+    public T Dequeue()
     {
         if (IsEmpty())
         {
             throw new Exception("error. cannot remove queue is empty");
         }
 
-        return values[front++];
+        T dequeued = _values[_front]!;
+        _values[_front] = default;
+        _front = (_front + 1) % capacity;
+        _size--;
+
+        return dequeued;
     }
 
-    public bool IsEmpty() => rear == -1 || front == size;
+    public bool IsEmpty() => _size == 0;
 
-    public bool IsFull() => rear == size - 1;
+    public bool IsFull() => capacity == _size;
 }

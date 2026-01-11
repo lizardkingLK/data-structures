@@ -151,6 +151,9 @@ internal class ClosedAddressingSeparateChainingHashMap<K, V>(float loadFactor) :
         return true;
     }
 
+    public bool ContainsKey(K key)
+    => ContainsKey(key, out _, out _);
+
     private bool ContainsKey(
         K key,
         out DoublyLinkedList<HashNode<K, V>>? bucket,

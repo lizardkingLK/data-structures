@@ -15,6 +15,7 @@ public interface IHashMap<K, V>
     bool TryUpdate(K key, V value);
     V Remove(K key);
     bool TryRemove(K key, out V? value);
+    bool ContainsKey(K key);
     IEnumerable<HashNode<K, V>> GetHashNodes();
     IEnumerable<KeyValuePair<K, V>> GetKeyValues();
 }

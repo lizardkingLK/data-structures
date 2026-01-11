@@ -20,13 +20,14 @@ public class Queue<T>(QueueTypeEnum queueType, int size) : IQueue<T>
         Size = size;
     }
 
-    public void Insert(T item) => _queue.Insert(item);
+    public void Enqueue(T item) => _queue.Enqueue(item);
+
+    public T Dequeue() => _queue.Dequeue();
 
     public bool IsEmpty() => _queue.IsEmpty();
 
     public bool IsFull() => _queue.IsFull();
 
-    public T? Peek() => _queue.Peek();
+    public T Peek() => _queue.Peek();
 
-    public T? Remove() => _queue.Remove();
 }
