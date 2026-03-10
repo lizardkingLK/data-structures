@@ -174,6 +174,62 @@ public class QuadTree<T>
         }
     }
 
+    public Node? Nearest(Point point)
+    {
+        if (!InBoundary(point))
+        {
+            return default;
+        }
+
+        if (!_n.Equals(default(Node)))
+        {
+            return _n;
+        }
+
+        if ((_topLeft.X + _bottomRight.X) / 2 >= point.X)
+        {
+            if ((_topLeft.Y + _bottomRight.Y) / 2 >= point.Y)
+            {
+                if (_topLeftTree == null)
+                {
+                    return default(Node);
+                }
+
+                return _topLeftTree.Nearest(point);
+            }
+            else
+            {
+                if (_bottomLeftTree == null)
+                {
+                    return default(Node);
+                }
+
+                return _bottomLeftTree.Nearest(point);
+            }
+        }
+        else
+        {
+            if ((_topLeft.Y + _bottomRight.Y) / 2 >= point.Y)
+            {
+                if (_topRightTree == null)
+                {
+                    return default(Node);
+                }
+
+                return _topRightTree.Nearest(point);
+            }
+            else
+            {
+                if (_bottomRightTree == null)
+                {
+                    return default(Node);
+                }
+
+                return _bottomRightTree.Nearest(point);
+            }
+        }
+    }
+
     private bool InBoundary(Point point)
     {
         return point.Y >= _topLeft.Y
