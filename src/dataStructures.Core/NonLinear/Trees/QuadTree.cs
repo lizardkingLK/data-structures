@@ -9,12 +9,21 @@ public class QuadTree<T>
 
         public static implicit operator Point((int y, int x) point)
         => new(point.y, point.x);
+
+        public override readonly string ToString()
+        => string.Format("[Y = {0}, X = {1}]", Y, X);
     }
 
-    struct Node(Point point, T data)
+    public struct Node(Point point, T data)
     {
         public Point Point { get; set; } = point;
         public T Data { get; set; } = data;
+
+        public static implicit operator Node((int y, int x, T data) node)
+        => new(new(node.y, node.x), node.data);
+
+        public override readonly string ToString()
+        => string.Format("[Point = {0}, Data = {1}]", Point, Data);
     }
 
     private Point _topLeft;
@@ -45,7 +54,7 @@ public class QuadTree<T>
 
     public void Insert(Node node)
     {
-        if (node.Equals(default))
+        if (node.Equals(default(Node)))
         {
             return;
         }
@@ -58,7 +67,7 @@ public class QuadTree<T>
         if (Math.Abs(_topLeft.X - _bottomRight.X) <= 1
         && Math.Abs(_topLeft.Y - _bottomRight.Y) <= 1)
         {
-            if (_n.Equals(default))
+            if (_n.Equals(default(Node)))
             {
                 _n = node;
             }
@@ -105,6 +114,62 @@ public class QuadTree<T>
                     new(_bottomRight.Y,
                     _bottomRight.X));
                 _bottomRightTree.Insert(node);
+            }
+        }
+    }
+
+    public Node? Search(Point point)
+    {
+        if (!InBoundary(point))
+        {
+            return default;
+        }
+
+        if (!_n.Equals(default(Node)))
+        {
+            return _n;
+        }
+
+        if ((_topLeft.X + _bottomRight.X) / 2 >= point.X)
+        {
+            if ((_topLeft.Y + _bottomRight.Y) / 2 >= point.Y)
+            {
+                if (_topLeftTree == null)
+                {
+                    return default(Node);
+                }
+
+                return _topLeftTree.Search(point);
+            }
+            else
+            {
+                if (_bottomLeftTree == null)
+                {
+                    return default(Node);
+                }
+
+                return _bottomLeftTree.Search(point);
+            }
+        }
+        else
+        {
+            if ((_topLeft.Y + _bottomRight.Y) / 2 >= point.Y)
+            {
+                if (_topRightTree == null)
+                {
+                    return default(Node);
+                }
+
+                return _topRightTree.Search(point);
+            }
+            else
+            {
+                if (_bottomRightTree == null)
+                {
+                    return default(Node);
+                }
+
+                return _bottomRightTree.Search(point);
             }
         }
     }
