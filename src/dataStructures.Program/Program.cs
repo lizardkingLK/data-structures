@@ -1,6 +1,7 @@
 ﻿using dataStructures.Core.Linear.Arrays.DynamicArray;
 using dataStructures.Core.NonLinear.Graphs;
 using dataStructures.Core.NonLinear.Graphs.Strategies;
+using dataStructures.Core.NonLinear.Trees;
 
 namespace dataStructures.Program;
 
@@ -224,9 +225,16 @@ class Program
         }
     }
 
+    static void TestQuadTree()
+    {
+        QuadTree<int> quadTree = new();
+        quadTree.Print();
+    }
+
     static void Main()
     {
         // TestAdjacencyList();
-        TestAdjacencyMatrix();
+        // TestAdjacencyMatrix();
+        TestQuadTree();
     }
 }
