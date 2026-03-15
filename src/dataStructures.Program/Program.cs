@@ -1,6 +1,7 @@
 ﻿using dataStructures.Core.Linear.Arrays.DynamicArray;
 using dataStructures.Core.NonLinear.Graphs;
 using dataStructures.Core.NonLinear.Graphs.Strategies;
+using dataStructures.Core.NonLinear.Trees;
 
 namespace dataStructures.Program;
 
@@ -224,9 +225,54 @@ class Program
         }
     }
 
+    static void TestQuadTree()
+    {
+        char[][] map = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'x', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ];
+
+        (int height, int width) = (map.Length, map[0].Length);
+        QuadTree<int> qt = new(new(0, 0), new(height - 1, width - 1));
+        int length = height * width;
+        for (int i = 0; i < length; i++)
+        {
+            (int y, int x) = (i / width, i % width);
+            if (map[y][x] == 'x')
+            {
+                qt.Insert((y, x, i));
+            }
+        }
+
+        // QuadTree<int>.Point point = new(4, 3);
+        QuadTree<int>.Point point = new(3, 3);
+        QuadTree<int>.Node? lookup = qt.Search(point);
+        if (lookup == null)
+        {
+            return;
+        }
+
+        Console.WriteLine(lookup);
+    }
+
     static void Main()
     {
         // TestAdjacencyList();
-        TestAdjacencyMatrix();
+        // TestAdjacencyMatrix();
+        TestQuadTree();
     }
 }
