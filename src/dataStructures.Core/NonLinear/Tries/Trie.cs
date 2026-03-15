@@ -1,10 +1,13 @@
+using dataStructures.Core.Linear.Arrays.DynamicArray;
+using dataStructures.Core.NonLinear.HashMaps;
+
 namespace dataStructures.Core.NonLinear.Tries;
 
 public class Trie
 {
     private record TrieNode
     {
-        public Dictionary<char, TrieNode> ChildMap = [];
+        public HashMap<char, TrieNode> ChildMap = new();
         public bool IsEndOfWord { get; set; }
     }
 
@@ -22,16 +25,16 @@ public class Trie
         TrieNode? current = _root;
         foreach (char letter in word)
         {
-            if (!current.ChildMap.TryGetValue(letter, out TrieNode? child))
+            if (current == null || !current.ChildMap.TryGet(letter, out TrieNode? child))
             {
                 child = new();
-                current.ChildMap[letter] = child;
+                current!.ChildMap[letter] = child;
             }
 
             current = child;
         }
 
-        current.IsEndOfWord = true;
+        current!.IsEndOfWord = true;
     }
 
     public void Delete(string word)
@@ -50,21 +53,21 @@ public class Trie
 
             current.IsEndOfWord = false;
 
-            return current.ChildMap.Count == 0;
+            return current.ChildMap.Size == 0;
         }
 
-        if (!current.ChildMap.TryGetValue(word[index], out TrieNode? childNode))
+        if (!current.ChildMap.TryGet(word[index], out TrieNode? childNode))
         {
             return false;
         }
 
-        bool canDeleteChild = Delete(word, childNode, index + 1);
+        bool canDeleteChild = Delete(word, childNode!, index + 1);
         if (canDeleteChild)
         {
             current.ChildMap.Remove(word[index]);
         }
 
-        return !current.IsEndOfWord && current.ChildMap.Count == 0;
+        return !current.IsEndOfWord && current.ChildMap.Size == 0;
     }
 
     public IEnumerable<string> AutocompleteIterative(string prefix)
@@ -74,7 +77,7 @@ public class Trie
         TrieNode? current = _root;
         for (int i = 0; i < prefix.Length; i++)
         {
-            if (!current.ChildMap.TryGetValue(prefix[i], out TrieNode? child))
+            if (current == null || !current.ChildMap.TryGet(prefix[i], out TrieNode? child))
             {
                 yield break;
             }
@@ -82,10 +85,10 @@ public class Trie
             current = child;
         }
 
-        List<char> chars = [.. prefix];
-        Stack<(TrieNode, List<char>)> tries = new();
-        tries.Push((current, chars));
-        while (tries.TryPop(out (TrieNode, List<char>) popped))
+        DynamicArray<char> chars = new([.. prefix]);
+        Stack<(TrieNode, DynamicArray<char>)> tries = new();
+        tries.Push((current!, chars));
+        while (tries.TryPop(out (TrieNode, DynamicArray<char>) popped))
         {
             (current, chars) = popped;
             if (current == null)
@@ -93,11 +96,11 @@ public class Trie
                 continue;
             }
 
-            foreach ((char childLetter, TrieNode? child) in current.ChildMap)
+            foreach ((char childLetter, TrieNode? child) in current.ChildMap.GetKeyValues())
             {
                 chars.Add(childLetter);
-                tries.Push((child, [.. chars]));
-                chars.RemoveAt(chars.Count - 1);
+                tries.Push((child, new([.. prefix])));
+                chars.Remove(chars.Size - 1);
             }
 
             if (current.IsEndOfWord)
@@ -127,7 +130,7 @@ public class Trie
         current = _root;
         foreach (char letter in prefix)
         {
-            if (!current.ChildMap.TryGetValue(letter, out TrieNode? child))
+            if (current == null || !current.ChildMap.TryGet(letter, out TrieNode? child))
             {
                 return false;
             }
@@ -145,7 +148,7 @@ public class Trie
             yield return string.Empty;
         }
 
-        foreach ((char letter, TrieNode? child) in current.ChildMap)
+        foreach ((char letter, TrieNode? child) in current.ChildMap.GetKeyValues())
         {
             foreach (string collected in AutoCompleteRecursively(child))
             {
@@ -161,7 +164,7 @@ public class Trie
         TrieNode? current = _root;
         foreach (char letter in word)
         {
-            if (!current.ChildMap.TryGetValue(letter, out TrieNode? child))
+            if (current == null || !current.ChildMap.TryGet(letter, out TrieNode? child))
             {
                 return false;
             }
@@ -169,7 +172,7 @@ public class Trie
             current = child;
         }
 
-        return current.IsEndOfWord;
+        return current!.IsEndOfWord;
     }
 
     public bool StartsWith(string prefix)
@@ -179,7 +182,7 @@ public class Trie
         TrieNode? current = _root;
         foreach (char letter in prefix)
         {
-            if (!current.ChildMap.TryGetValue(letter, out TrieNode? child))
+            if (current == null || !current.ChildMap.TryGet(letter, out TrieNode? child))
             {
                 return false;
             }
@@ -188,6 +191,26 @@ public class Trie
         }
 
         return true;
+    }
+
+    public string GetLongestCommonPrefix()
+    {
+        if (_root.ChildMap.Size == 0)
+        {
+            return string.Empty;
+        }
+
+        TrieNode current = _root;
+        string prefix = string.Empty;
+
+        while (current == null || current.ChildMap.Size == 1 && !current.IsEndOfWord)
+        {
+            (char letter, TrieNode? child) = current!.ChildMap.GetKeyValues().First();
+            prefix += letter;
+            current = child;
+        }
+
+        return prefix;
     }
 
     public int Count(string prefix) => AutocompleteIterative(prefix).Count();
