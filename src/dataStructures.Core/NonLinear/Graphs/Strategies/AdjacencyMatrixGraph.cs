@@ -237,7 +237,7 @@ public class AdjacencyMatrixGraph<T> : IEnumerable<T> where T : notnull
                 return cycleFound;
             }
 
-            foreach ((T neighbor, double weight) in GetNeighbors(popped).Values)
+            foreach ((T neighbor, _) in GetNeighbors(popped).Values)
             {
                 if (!visited.Contains(neighbor))
                 {
@@ -480,8 +480,9 @@ public class AdjacencyMatrixGraph<T> : IEnumerable<T> where T : notnull
         length = neighborToRoot.Size;
         for (i = commonIndex; i < length; i++)
         {
-            cycle.Add(neighborToRoot[length - i]!);
+            cycle.Add(neighborToRoot[length - 1 - i]!);
         }
+
 
         return cycle;
     }

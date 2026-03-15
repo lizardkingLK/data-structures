@@ -1,3 +1,4 @@
+﻿using dataStructures.Core.NonLinear.Tries;
 ﻿using dataStructures.Core.Linear.Arrays.DynamicArray;
 using dataStructures.Core.NonLinear.Graphs;
 using dataStructures.Core.NonLinear.Graphs.Strategies;
@@ -7,6 +8,16 @@ namespace dataStructures.Program;
 
 class Program
 {
+    static void Main()
+    {
+        SuffixTree st = new();
+        Trie trie = new();
+        trie.Insert("fo");
+        trie.Insert("fo sho");
+        trie.Insert("fo real");
+        trie.Insert("foobar");
+        trie.Insert("fus-ro-dah");
+        
     static void TestAdjacencyList()
     {
         AdjacencyListGraph<string> g = Graph<string>.CreateAdjacencyListGraph();
