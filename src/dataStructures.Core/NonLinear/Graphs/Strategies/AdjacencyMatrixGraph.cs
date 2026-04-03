@@ -487,6 +487,40 @@ public class AdjacencyMatrixGraph<T> : IEnumerable<T> where T : notnull
         return cycle;
     }
 
+    public double KruskalMST()
+    {
+        PrioritizedQueue<double, (T, T)> queue = new();
+        // int i = 0;
+        foreach ((T? parent, int index) in _verticeMap.GetKeyValues())
+        {
+            foreach ((T child, double weight) in GetNeighbors(parent).Values)
+            {
+                queue.Enqueue((weight, (parent, child)));
+            }
+        }
+
+        UnionFind uf = new(queue.Size);
+        (double cost, int count) = (0, 0);
+        while (queue.TryRemove(out (double, (T, T))? value))
+        {
+            (double weight, (T x, T y)) = value!.Value;
+            (int iX, int iY) = (_verticeMap[x], _verticeMap[y]);
+            if (!uf.Union(iX, iY))
+            {
+                continue;
+            }
+
+            cost += weight;
+            if (++count == _size)
+            {
+                break;
+            }
+        }
+
+        return cost;
+    }
+
+
     public IEnumerator<T> GetEnumerator()
     {
         foreach (T vertice in _vertices)
