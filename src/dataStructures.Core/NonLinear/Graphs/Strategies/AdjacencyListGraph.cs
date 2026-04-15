@@ -457,6 +457,41 @@ public class AdjacencyListGraph<T> : IEnumerable<T> where T : notnull
         return cycle;
     }
 
+    public double KruskalMST()
+    {
+        PrioritizedQueue<double, (T, T)> queue = new();
+        HashMap<T, int> values = new();
+        int i = 0;
+        foreach ((T? parent, DynamicArray<(T Neighbor, double Weight)>? children) in _adjacencyList.GetKeyValues())
+        {
+            values.Add(parent, i++);
+            foreach ((T? child, double weight) in children.Values)
+            {
+                queue.Enqueue((weight, (parent, child)));
+            }
+        }
+
+        UnionFind uf = new(queue.Size);
+        (double cost, int count) = (0, 0);
+        while (queue.TryRemove(out (double, (T, T))? value))
+        {
+            (double weight, (T x, T y)) = value!.Value;
+            (int iX, int iY) = (values[x], values[y]);
+            if (!uf.Union(iX, iY))
+            {
+                continue;
+            }
+
+            cost += weight;
+            if (++count == _adjacencyList.Size)
+            {
+                break;
+            }
+        }
+
+        return cost;
+    }
+
     public IEnumerator<T> GetEnumerator()
     {
         foreach ((T vertice, _) in _adjacencyList.GetKeyValues())
