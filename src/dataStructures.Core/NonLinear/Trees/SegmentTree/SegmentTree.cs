@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace dataStructures.Core.NonLinear.Trees;
+namespace dataStructures.Core.NonLinear.Trees.SegmentTree;
 
 public class SegmentTree<T> where T : INumber<T>
 {
