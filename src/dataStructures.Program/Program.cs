@@ -1,7 +1,6 @@
 ﻿using dataStructures.Core.NonLinear.Trees.SegmentTree;
-﻿using dataStructures.Core.NonLinear.Trees;
-using dataStructures.Core.NonLinear.Trees.SegmentTree;
-﻿using dataStructures.Core.NonLinear.Tries;
+using dataStructures.Core.NonLinear.Trees;
+using dataStructures.Core.NonLinear.Tries;
 using dataStructures.Core.Linear.Arrays.DynamicArray;
 using dataStructures.Core.NonLinear.Graphs;
 using dataStructures.Core.NonLinear.Graphs.Strategies;
@@ -45,10 +44,6 @@ class Program
             + st.GetSum(n, 0, n - 1));
     }
 
-    static void Main()
-    {
-        // TestSegmentTrees();
-        TestSegmentTreesLazy();
     static void TestSuffixTrees()
     {
         SuffixTree st = new();
@@ -324,8 +319,11 @@ class Program
 
     static void Main()
     {
+        // TestSegmentTrees();
+        TestSegmentTreesLazy();
+
         // TestAdjacencyList();
         // TestAdjacencyMatrix();
-        TestQuadTree();
+        // TestQuadTree();
     }
 }
