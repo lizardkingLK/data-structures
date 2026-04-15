@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "bin/Debug/net9.0/dataStructures.Program.dll",
+      "program": "${workspaceFolder}/src/dataStructures.Program/bin/Debug/net10.0/dataStructures.Program.dll",
       "args": [],
       "cwd": "${workspaceFolder}/src/dataStructures.Program",
       "console": "internalConsole",

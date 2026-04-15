@@ -1,3 +1,4 @@
+﻿using dataStructures.Core.NonLinear.Trees.SegmentTree;
 ﻿using dataStructures.Core.NonLinear.Trees;
 using dataStructures.Core.NonLinear.Trees.SegmentTree;
 ﻿using dataStructures.Core.NonLinear.Tries;
